@@ -11,13 +11,11 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 12,
-    sourceType: 'module',
+  rules: {
+    '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-explicit-any': 'error',
+    'import/prefer-default-export': 'off',
+    'no-case-declarations': 'off'
   },
-  plugins: ['react', '@typescript-eslint'],
-  rules: {},
 }

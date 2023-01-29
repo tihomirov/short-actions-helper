@@ -5,7 +5,9 @@
     "build": "rollup -c",
     "release": "cross-env NODE_ENV=production rollup -c",
     "start": "rollup -c -w",
-    "test": "jest"
+    "test": "jest",
+    "eslint": "eslint 'src/**/*.ts'",
+    "eslint:fix": "eslint --fix 'src/**/*.ts'"
   },
   "dependencies": {
     "@rollup/plugin-replace": "^3.0.0",
@@ -24,10 +26,14 @@
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-typescript": "^8.1.0",
     "@types/jest": "^26.0.19",
-    "@typescript-eslint/eslint-plugin": "^4.10.0",
-    "@typescript-eslint/parser": "^4.10.0",
+    "@typescript-eslint/eslint-plugin": "4.33.0",
+    "@typescript-eslint/parser": "4.33.0",
     "cross-env": "^7.0.3",
-    "eslint": "^7.16.0",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "^7.21.5",
     "jest": "^26.6.3",
     "jest-chrome": "^0.7.0",
