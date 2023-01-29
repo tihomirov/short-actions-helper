@@ -3,11 +3,11 @@
     "message": "Hello, World!"
   },
   "appName": {
-    "message": "React Web Extension Boilerplate",
+    "message": "Short Actions Helper",
     "description": "The title of the application, displayed in the web store."
   },
   "appShortName": {
-    "message": "RWEB",
+    "message": "ShAct",
     "description": "The short_name (maximum of 12 characters recommended) is a short version of the extension's name. "
   },
   "appDesc": {
