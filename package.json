@@ -1,5 +1,5 @@
 {
-  "name": "ShortActionsHelper",
+  "name": "short-actions-helper",
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
