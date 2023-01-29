@@ -26,7 +26,9 @@ export default {
         : JSON.stringify('development'),
       preventAssignment: true,
     }),
-    chromeExtension(),
+    chromeExtension({
+      manifest_version: 3,
+    }),
     // Adds a Chrome extension reloader during watch mode
     simpleReloader(),
     resolve(),

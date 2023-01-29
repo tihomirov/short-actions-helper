@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { TabEvent } from '../../common'
+import { CommandsList } from './components/commands-list'
 import s from './style.scss'
 
 const actionFn = (isDebbug: boolean) => {
@@ -30,50 +31,49 @@ const actionFn = (isDebbug: boolean) => {
       )
     })
   } else {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tabId = tabs[0]?.id
+    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    //   const tabId = tabs[0]?.id
 
-      if (tabId === undefined) return
+    //   if (tabId === undefined) return
 
-      console.log('tabId', tabId)
+    //   console.log('tabId', tabId)
 
-      chrome.tabs.sendMessage(
-        tabId,
-        {
-          event: TabEvent.ElementClick,
-          payload: {
-            tag: 'a',
-            innerText: 'наступна серія',
-          },
-        },
-        function (response) {
-          console.log('response', response)
+    //   chrome.tabs.sendMessage(
+    //     tabId,
+    //     {
+    //       event: TabEvent.ElementClick,
+    //       payload: {
+    //         tag: 'a',
+    //         innerText: 'наступна серія',
+    //       },
+    //     },
+    //     function (response) {
+    //       console.log('response', response)
 
-          if (outputEl) {
-            outputEl.innerHTML = response
-          }
-        },
-      )
-    })
+    //       if (outputEl) {
+    //         outputEl.innerHTML = response
+    //       }
+    //     },
+    //   )
+    // })
   }
 }
 
 function App(): JSX.Element {
   const onDebbug = useCallback(() => {
     actionFn(true);
-  }, [])
-  const onElementClick = useCallback(() => {
-    actionFn(false);
-  }, [])
+  }, []);
 
   return (
     // <div className='app'>
     <div className={s.app}>
       <h1>Popup Page</h1>
       <p>If you are seeing this, React is working!</p>
+      <div className='commands-list-wrapper'>
+        <CommandsList/>
+      </div>
 
       <button onClick={onDebbug}>Run Debbug</button>
-      <button onClick={onElementClick}>Run Element Click</button>
       <div id="output" />
     </div>
   )

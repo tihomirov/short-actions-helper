@@ -1,24 +1,27 @@
-import { TabEvent } from '../common'
+import { TabEvent, ElementAction } from '../common'
 
 console.log('content script')
+
+const elementActionsMethods: Record<ElementAction, (element: HTMLElement) => void> = {
+  [ElementAction.Click]: (element) => element.click(),
+}
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   switch (message.event) {
     case TabEvent.Debbug:
       sendResponse('Hello WWWWW')
       return
-    case TabEvent.ElementClick:
-      const { tag } = message.payload
-      const { innerText } = message.payload
-      const allElementsByTag = document.getElementsByTagName(tag)
+    case TabEvent.ElementAction:
+      const { elementTagName, elementInnerText, elementAction } = message.action;
+      const allElementsByTag = document.getElementsByTagName(elementTagName)
       const elementToClick = Array.from(allElementsByTag).filter(
-        (el) => el.innerText.toLowerCase() === innerText,
+        (el) => el.innerText.toLowerCase() === elementInnerText,
       )?.[0]
 
       console.log(elementToClick)
       
       if(elementToClick) {
-        elementToClick.click();
+        elementActionsMethods[elementAction as ElementAction]?.(elementToClick)
       }
 
       sendResponse('elementToClick Clicked');

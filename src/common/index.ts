@@ -1,4 +1,6 @@
+export * from './types/action';
+
 export enum TabEvent {
   Debbug = 'SAH_Debbug',
-  ElementClick = 'SAH_ElementClick',
+  ElementAction = 'SAH_ElementAction',
 }
