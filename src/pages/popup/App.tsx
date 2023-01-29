@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { TabEvent } from '../../common'
+import s from './style.scss'
 
 const actionFn = (isDebbug: boolean) => {
   console.log('run action')
@@ -66,7 +67,8 @@ function App(): JSX.Element {
   }, [])
 
   return (
-    <div>
+    // <div className='app'>
+    <div className={s.app}>
       <h1>Popup Page</h1>
       <p>If you are seeing this, React is working!</p>
 
