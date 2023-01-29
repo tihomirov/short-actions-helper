@@ -1,99 +1,72 @@
-<h1 align="center">React Web Extension Boilerplate</h1>
-<p>
-  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/ElForastero/react-browser-extension-boilerplate#readme">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" target="_blank" />
-  </a>
-  <a href="https://github.com/ElForastero/react-browser-extension-boilerplate/graphs/commit-activity">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" target="_blank" />
-  </a>
-  <a href="https://github.com/ElForastero/react-browser-extension-boilerplate/blob/master/LICENSE">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" target="_blank" />
-  </a>
-</p>
+# TypeScript React Chrome Extension Boilerplate
 
-> This project aims to provide a simple boilerplate for writing browser extensions for the most popular browsers, such as Chrome, Firefox, Opera, new Edge and other Chromium-based browsers.
+A basic TypeScript React Chrome Extension boilerplate that gets you started quickly. It supports **TypeScript**, **JSX**, and **automatic reloading** during development. Jest, ESLint and Prettier included, all bundled using [Rollup](https://rollupjs.org/guide/en/) and [`rollup-plugin-chrome-extension`](https://extend-chrome.dev/rollup-plugin).
 
-![React Web Extension Boilerplate](logo.png)
+## Get Started
 
-## 🎉 Features
+### Using `create-react-crx`
 
-- **Preact X or React** (you can switch them easily in webpack config)
-- **Shadow DOM** for injected content
-- **Styled-Components**
-- **Auto reloading** (there's no need to manually reload extension)
-- Ready-to-go setup with **internationalization**
-
-## 👨‍💻 Examples
-
-You can look at:
-
-- [Framer](https://github.com/ElForastero/framer): a todo list extension as an example of using this boilerplate.
-- [Good Block](https://github.com/LucasAndrad/block-sites-react-extension): an extension to block websites, also using this boilerplate.
-- [ScreenplaySubs](https://github.com/SMASH-CUT/extension): an extension to watch movies in Netflix with screenplays, in sync. Also using this boilerplate.
-
-There are no straight restrictions on how to use it, or any limitations on tools and technologies. Think of it as a regular react application with some special properties.
-
-## 📝 Description
-
-It's built with `preact` and `preact-compat` which allows you to switch between `react` and `preact`.
-
-Content and styles which are injected directly to the page, are isolated inside Shadow DOM.
-
-## 🏁 Install
+Type this into your terminal:
 
 ```sh
-git clone git@github.com:ElForastero/react-browser-extension-boilerplate.git <YOUR_PROJECT_NAME>
+npx create-react-crx
 ```
 
-## 🚀 Usage
+Follow the prompts to setup your Chrome extension project.
+
+### Using `git clone`
+
+Type this into your terminal:
 
 ```sh
-yarn watch
+git clone https://github.com/extend-chrome/ts-react-boilerplate.git my-chrome-extension
+cd my-chrome-extension
+npm install
 ```
 
-Runs webpack in watch mode. Automatically reloads the page after changes in files. Thanks to [webpack-extension-reloader](https://github.com/rubenspgcavalcante/webpack-extension-reloader).
+> 🖌️ Update your package name and version in `package.json` before you get started!
+
+### Development
+
+For development with automatic reloading:
 
 ```sh
-yarn build
+npm run start
 ```
 
-Builds the extension in production mode. This version can be shipped to the store.
+Open the [Extensions Dashboard](chrome://extensions), enable "Developer mode", click "Load unpacked", and choose the `dist` folder.
 
-## How to increment version
+When you make changes in `src` the background script and any content script will reload automatically.
 
-Use [npm version](https://docs.npmjs.com/cli/version) cli command to bump a version of your package.json. The version of manifest will stay in sync with version specified in package.json.
+### Production
 
-For example:
+When it's time to publish your Chrome extension, make a production build to submit to the Chrome Web Store. This boilerplate will use the version in `package.json`, unless you add a version to `src/manifest.json`.
+
+> Make sure you have updated the name and version of your extension in `package.json`.
+
+Run the following line:
 
 ```sh
-npm version patch
+npm run build
 ```
 
-This will increase your patch package.json version. During the next build output manifest file will have the same version.
+This will create a ZIP file with your package name and version in the `releases`
+folder.
 
-## ⚠️ Content Security Policy (CSP)
-"unsafe-eval" in directive "script-src" and "connect-src" are needed for auto reloading, and should be removed from production manifest.json.
+## Source Layout
 
-## 💻 Useful links
+Your manifest is at `src/manifest.json`, and Rollup will bundle any files you
+include here. All the filepaths in your manifest should point to files in `src`.
 
-- [Manifest File Format](https://developer.chrome.com/apps/manifest)
-- [Content Security Policy (CSP)](https://developer.chrome.com/extensions/contentSecurityPolicy)
-- [Chrome i18n](https://developer.chrome.com/extensions/i18n)
-- [Porting a Google Chrome extension to Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Porting_a_Google_Chrome_extension)
-- [Firefox add-ons examples](https://github.com/mdn/webextensions-examples)
-- [exthouse - tool for performance testing](https://github.com/treosh/exthouse)
-- [webext-redux - a set o utilities to use redux in web extensions](https://github.com/tshaddix/webext-redux)
-- [webpack-manifest-version-sync-plugin](https://github.com/ElForastero/webpack-manifest-version-sync-plugin)
+## Features
 
-## 🤝 Show your support
+- Uses Rollup to bundle your extension
+- Chrome Extension automatic reloader
+- Jest configuration for testing
 
-Give a ⭐️ if this project helped you!
+## Resources
 
-## 📝 License
+[Chrome Extension official documentation](https://developer.chrome.com/docs/webstore/)
 
-Copyright © 2019 [Eugene Dzhumak](https://github.com/ElForastero).<br />
-This project is [MIT](https://github.com/ElForastero/react-browser-extension-boilerplate/blob/master/LICENSE) licensed.
+[How to Publish your extension step by step video tutorial](https://www.youtube.com/playlist?list=PLYlOQabA4Mm0bPiMKIBMgZK0u2jbYsrC6)
 
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
