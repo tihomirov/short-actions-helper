@@ -1,5 +1,5 @@
-import React, {FC} from 'react'
-import {useLoaderData, LoaderFunctionArgs, useParams} from "react-router-dom";
+import React, { FC } from 'react'
+import { useLoaderData, LoaderFunctionArgs, useParams } from "react-router-dom";
 import { CommandsList } from '../components/commands-list'
 import { commandService } from "../services";
 import { Commands as CommandsType } from "../types";
@@ -9,19 +9,19 @@ type LoaderData = Readonly<{
 }>;
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<LoaderData> {
-  const {hostname} = params;
+  const { hostname } = params;
 
   if (!hostname) {
-    return {commands: []}
+    return { commands: [] }
   }
     
   const commands = commandService.getCommands(hostname)
-  return {commands};
+  return { commands };
 }
 
 export const Commands: FC = () => {
-  const {hostname} = useParams();
-  const {commands} = useLoaderData() as LoaderData;
+  const { hostname } = useParams();
+  const { commands } = useLoaderData() as LoaderData;
 
   return (
     <>

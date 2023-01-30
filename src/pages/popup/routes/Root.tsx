@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, { FC } from 'react'
 import { Outlet, Link } from "react-router-dom";
 import s from './style.scss'
 

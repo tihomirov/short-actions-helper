@@ -1,5 +1,5 @@
-import React, {FC} from 'react'
-import {useLoaderData, Link} from "react-router-dom";
+import React, { FC } from 'react'
+import { useLoaderData, Link } from "react-router-dom";
 import { tabsService } from '../services';
 
 type LoaderData = Readonly<{
@@ -12,7 +12,7 @@ export async function loader(): Promise<LoaderData> {
 }
 
 export const Home: FC = () => {
-  const {currentTabHostname} = useLoaderData() as LoaderData;
+  const { currentTabHostname } = useLoaderData() as LoaderData;
 
   if (!currentTabHostname) {
     return (

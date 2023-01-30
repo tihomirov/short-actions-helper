@@ -1,4 +1,4 @@
-import {TabEvent, Action} from '../../../common'
+import { TabEvent, Action } from '../../../common'
 
 class TabsService {
   async sendElementAction(action: Action): Promise<unknown> {
@@ -26,7 +26,7 @@ class TabsService {
       return undefined;
     }
 
-    const {hostname} = new URL(url)
+    const { hostname } = new URL(url)
 
     return hostname;
   }

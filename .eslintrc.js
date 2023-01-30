@@ -16,6 +16,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     'import/prefer-default-export': 'off',
-    'no-case-declarations': 'off'
+    'no-case-declarations': 'off',
+    "object-curly-spacing": ["error", "always"]
   },
 }
