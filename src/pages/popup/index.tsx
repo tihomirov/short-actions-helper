@@ -3,10 +3,10 @@ import { render } from 'react-dom'
 import {
   createMemoryRouter,
   RouterProvider,
-  Navigate
 } from "react-router-dom";
 import {Root} from './routes/Root'
-import {Commands} from './routes/Commands'
+import {Commands, loader as commandsLoader} from './routes/Commands'
+import {Home, loader as homeLoader} from './routes/Home'
 
 const router = createMemoryRouter([
   {
@@ -15,10 +15,12 @@ const router = createMemoryRouter([
     children: [
       {
         path: "/",
-        element: <Navigate to="/commands" replace={true} />,
+        loader: homeLoader,
+        element: <Home />,
       },
       {
-        path: "commands",
+        path: "commands/:hostname",
+        loader: commandsLoader,
         element: <Commands />,
       },
     ],

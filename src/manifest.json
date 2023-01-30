@@ -9,5 +9,8 @@
       "matches": ["https://*/*", "http://*/*"]
     }
   ],
-  "action": { "default_popup": "pages/popup/index.html" }
+  "action": { "default_popup": "pages/popup/index.html" },
+  "permissions": [
+    "tabs"
+  ]
 }

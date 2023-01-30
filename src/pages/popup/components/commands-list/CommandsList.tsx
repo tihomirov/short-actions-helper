@@ -1,19 +1,12 @@
-import React, {FC, useEffect, useState} from "react";
-import { commandService } from "../../services";
+import React, {FC} from "react";
 import { Commands } from "../../types";
 import { CommandItem } from "../command-item";
 
-export const CommandsList: FC = () => {
-  const [commands, setCommands] = useState<Commands | undefined>(undefined)
+type CommandsListProps = Readonly<{
+  commands: Commands;
+}>;
 
-  useEffect(() => {
-    setCommands(commandService.getCommands())
-  }, []);
-
-  if(!commands) {
-    return <div>Loading...</div>
-  }
-
+export const CommandsList: FC<CommandsListProps> = ({commands}) => {
   return (
     <>
       {commands.map((command, index) => (
