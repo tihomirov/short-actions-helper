@@ -1,10 +1,15 @@
-export const enum ElementAction {
+export const enum ElementEvent {
   Click = 'click',
 }
+
+export type ElementData = Readonly<{
+  tagName: keyof HTMLElementTagNameMap;
+  innerText?: string;
+  // there will be other selector creteria
+}>;
   
 export type Action = Readonly<{
-  elementAction: ElementAction,
-  elementTagName: keyof HTMLElementTagNameMap;
-  elementInnerText?: string;
+  event: ElementEvent,
+  element: ElementData
 }>;
   

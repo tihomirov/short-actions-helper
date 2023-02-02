@@ -1,11 +1,11 @@
 import React, { FC, useCallback, useState, useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import { tabsService } from "../services";
-import { Action } from '../../../common'
+import { ElementData } from '../../../common'
 
 export const AddCommand: FC = () => {
   const { hostname } = useParams();
-  const [action, setAction] = useState<undefined | Action>(undefined);
+  const [actionElement, setActionElement] = useState<undefined | ElementData>(undefined);
 
   const interceptElement = useCallback(async () => {
     const response = await tabsService.runInterceptElement();
@@ -16,10 +16,14 @@ export const AddCommand: FC = () => {
     }
   }, []);
 
+  const removeInterceptedElement = useCallback(async () => {
+    await chrome.storage.sync.remove('__test_intercept_element');
+  }, []);
+
   useEffect(() => {
     const loadInterceptElement = async () => {
       const d = await chrome.storage.sync.get('__test_intercept_element');
-      setAction(d.__test_intercept_element)
+      setActionElement(d.__test_intercept_element)
     }
     
     loadInterceptElement();
@@ -28,9 +32,10 @@ export const AddCommand: FC = () => {
   return (
     <>
       <h3>Add Command to {hostname}</h3>
-      <h3>elementInnerText {action?.elementInnerText}</h3>
-      <h3>elementTagName {action?.elementTagName}</h3>
+      <h3>innerText {actionElement?.innerText}</h3>
+      <h3>tagName {actionElement?.tagName}</h3>
       <button onClick={interceptElement}>Intercept Element</button>
+      <button onClick={removeInterceptedElement}>Remove Intercept Element</button>
     </>
   )
 }

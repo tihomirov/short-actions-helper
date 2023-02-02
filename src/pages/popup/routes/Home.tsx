@@ -1,18 +1,30 @@
 import React, { FC } from 'react'
-import { useLoaderData, Link } from "react-router-dom";
-import { tabsService } from '../services';
+import { useLoaderData, Link, Navigate } from "react-router-dom";
+import { tabsService, commandService } from '../services';
 
 type LoaderData = Readonly<{
   currentTabHostname: string | undefined;
+  hasPendingInterceptedElement: boolean;
 }>;
 
 export async function loader(): Promise<LoaderData> {
-  const currentTabHostname = await tabsService.getCurrentTabHostname();
-  return { currentTabHostname };
+
+  const [currentTabHostname, pendingInterceptedElement] = await Promise.all([
+    tabsService.getCurrentTabHostname(),
+    commandService.getPendingInterceptedElement()
+  ]);
+  return { 
+    currentTabHostname,
+    hasPendingInterceptedElement: !!pendingInterceptedElement,
+  };
 }
 
 export const Home: FC = () => {
-  const { currentTabHostname } = useLoaderData() as LoaderData;
+  const { currentTabHostname, hasPendingInterceptedElement } = useLoaderData() as LoaderData;
+
+  if (hasPendingInterceptedElement) {
+    return <Navigate to={`commands/${currentTabHostname}/new`} replace={true} />
+  }
 
   if (!currentTabHostname) {
     return (

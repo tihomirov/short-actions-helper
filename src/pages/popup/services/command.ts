@@ -1,4 +1,4 @@
-import { ElementAction } from '../../../common'
+import { ElementEvent, ElementData } from '../../../common'
 import { Commands } from "../types";
 
 const commands: Record<string, Commands> = {
@@ -7,9 +7,11 @@ const commands: Record<string, Commands> = {
       name: 'Open Next Series',
       actions: [
         {
-          elementAction: ElementAction.Click,
-          elementTagName: 'a',
-          elementInnerText: 'наступна серія'
+          event: ElementEvent.Click,
+          element: {
+            tagName: 'a',
+            innerText: 'наступна серія'
+          }
         }
       ]
     },
@@ -17,9 +19,11 @@ const commands: Record<string, Commands> = {
       name: 'Open Previous Series',
       actions: [
         {
-          elementAction: ElementAction.Click,
-          elementTagName: 'a',
-          elementInnerText: 'попередня серія'
+          event: ElementEvent.Click,
+          element: {
+            tagName: 'a',
+            innerText: 'попередня серія'
+          }
         }
       ]
     }
@@ -29,6 +33,16 @@ const commands: Record<string, Commands> = {
 class CommandService {
   getCommands(hostname: string): Commands {
     return commands[hostname] ?? [];
+  }
+
+  async getPendingInterceptedElement(): Promise<ElementData | undefined> {
+    const element = await chrome.storage.sync.get('__test_intercept_element');
+    console.log('!!!!! __test_intercept_element', element.__test_intercept_element);
+    return element.__test_intercept_element as ElementData
+  }
+
+  addCommand(): void {
+    console.log('add command')
   }
 }
 

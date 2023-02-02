@@ -1,9 +1,9 @@
-import { TabEvent, ElementAction } from '../common'
+import { TabEvent, ElementEvent } from '../common'
 
 console.log('content script')
 
-const elementActionsMethods: Record<ElementAction, (element: HTMLElement) => void> = {
-  [ElementAction.Click]: (element) => element.click(),
+const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void> = {
+  [ElementEvent.Click]: (element) => element.click(),
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -12,14 +12,14 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       sendResponse('Hello WWWWW')
       return
     case TabEvent.ElementAction:
-      const { elementTagName, elementInnerText, elementAction } = message.action;
-      const allElementsByTag = document.getElementsByTagName(elementTagName)
+      const { element: { tagName, innerText }, event } = message.action;
+      const allElementsByTag = document.getElementsByTagName(tagName)
       const elementToClick = Array.from(allElementsByTag).filter(
-        (el) => el.innerText.toLowerCase() === elementInnerText,
+        (el) => el.innerText.toLowerCase() === innerText,
       )?.[0]
       
       if(elementToClick) {
-        elementActionsMethods[elementAction as ElementAction]?.(elementToClick)
+        elementActionsMethods[event as ElementEvent]?.(elementToClick)
       }
 
       sendResponse('elementToClick Clicked');
@@ -44,6 +44,16 @@ function runInterceptMode() {
   dimmElement.style.opacity = '0.3';
   dimmElement.style.zIndex = '999999999';
   dimmElement.style.pointerEvents = 'none';
+  dimmElement.style.fontSize = '24px';
+  dimmElement.style.display = 'flex';
+  dimmElement.style.justifyContent = 'center';
+  dimmElement.style.alignItems = 'center';
+  dimmElement.style.gap = '20%';
+  dimmElement.innerHTML = `
+  <span>Select element and open Extention again please</span>
+  <span>Select element and open Extention again please</span>
+  <span>Select element and open Extention again please</span>
+  `;
 
   dimmElement.blur()
 
@@ -54,11 +64,11 @@ function runInterceptMode() {
     e.stopPropagation();
 
     if (e.target instanceof Element) {
-      const { tagName: elementTagName, innerText: elementInnerText } = e.target as HTMLElement;
+      const { tagName, innerText } = e.target as HTMLElement;
 
       chrome.storage.sync.set({ '__test_intercept_element': {
-        elementTagName,
-        elementInnerText
+        tagName,
+        innerText
       } });
   
     }
