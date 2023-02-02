@@ -4,25 +4,25 @@ import { tabsService, commandService } from '../services';
 
 type LoaderData = Readonly<{
   currentTabHostname: string | undefined;
-  hasPendingInterceptedElement: boolean;
+  hasPendingCommand: boolean;
 }>;
 
 export async function loader(): Promise<LoaderData> {
 
-  const [currentTabHostname, pendingInterceptedElement] = await Promise.all([
+  const [currentTabHostname, pendingCommand] = await Promise.all([
     tabsService.getCurrentTabHostname(),
-    commandService.getPendingInterceptedElement()
+    commandService.getPendingCommand()
   ]);
   return { 
     currentTabHostname,
-    hasPendingInterceptedElement: !!pendingInterceptedElement,
+    hasPendingCommand: !!pendingCommand,
   };
 }
 
 export const Home: FC = () => {
-  const { currentTabHostname, hasPendingInterceptedElement } = useLoaderData() as LoaderData;
+  const { currentTabHostname, hasPendingCommand } = useLoaderData() as LoaderData;
 
-  if (hasPendingInterceptedElement) {
+  if (hasPendingCommand) {
     return <Navigate to={`commands/${currentTabHostname}/new`} replace={true} />
   }
 
