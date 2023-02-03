@@ -10,6 +10,9 @@
     "eslint:fix": "eslint --fix 'src/**/*.ts'"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.11.7",
     "@rollup/plugin-replace": "^3.0.0",
     "@types/firefox-webext-browser": "^82.0.0",
     "@types/react": "^17.0.0",

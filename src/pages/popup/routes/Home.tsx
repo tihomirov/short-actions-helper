@@ -40,7 +40,6 @@ export const Home: FC = () => {
 
   return (
     <>
-      <h3>{hostname}</h3>
       <CommandsList commands={commands} hostname={hostname}/>
       <Link to={`commands/new`}>New Comamnd</Link>
     </>
