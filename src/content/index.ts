@@ -60,6 +60,17 @@ function runInterceptMode() {
 
   document.body.appendChild(dimmElement);
 
+  // iframes does not support for now
+  // const iframes = document.getElementsByTagName('iframe');
+  // Array.from(iframes).forEach(iframe => {
+  //   const contentWindow = iframe.contentWindow || iframe.contentDocument; //this is better approach
+
+  //   contentWindow?.addEventListener('click', (e) => {
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //   });
+  // });
+
   document.addEventListener('click', (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
