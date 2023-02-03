@@ -1,6 +1,10 @@
 import { TabEvent, Action } from '../../../common'
 
+type BrowserTab = chrome.tabs.Tab;
+
 class TabsService {
+  private _currentTab: BrowserTab | undefined = undefined;
+
   async sendElementAction(action: Action): Promise<unknown> {
     const id = await this.getCurrentTabId();
 
@@ -17,8 +21,12 @@ class TabsService {
   }
 
   async getCurrentTabHostname(): Promise<string | undefined> {
+    console.log('!!! getCurrentTabHostname START');
     const tab = await this.getCurrentTab();
+    console.log('!!! getCurrentTabHostname tab', tab);
     const url = tab?.url;
+
+    console.log('!!! getCurrentTabHostname url', url);
 
     if (!url) {
       return undefined;
@@ -43,11 +51,15 @@ class TabsService {
     return response;
   }
 
-  private async getCurrentTab(): Promise<chrome.tabs.Tab | undefined> {
-    const queryOptions = { active: true, lastFocusedWindow: true };
-    const [tab] = await chrome.tabs.query(queryOptions);
+  private async getCurrentTab(): Promise<BrowserTab | undefined> {
+    if (!this._currentTab) {
+      const queryOptions = { active: true, lastFocusedWindow: true };
+      const [tab] = await chrome.tabs.query(queryOptions);
 
-    return tab;
+      this._currentTab = tab
+    }
+
+    return this._currentTab;
   }
 
   private async getCurrentTabId(): Promise<number | undefined> {

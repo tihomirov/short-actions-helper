@@ -1,11 +1,11 @@
-import React, { FC, useCallback, useState, useEffect, ChangeEvent } from 'react'
-import { useParams } from "react-router-dom";
+import React, { FC, useCallback, useState, useEffect, ChangeEvent, FormEvent } from 'react'
+import { useNavigate } from "react-router-dom";
 import { commandService, tabsService } from "../services";
 import { ElementData, ElementEvent } from '../../../common'
 import { Command } from '../types'
 
 export const AddCommand: FC = () => {
-  const { hostname } = useParams();
+  const navigate = useNavigate();
   const [command, setCommand] = useState<Command | undefined>(undefined);
 
   const interceptElement = useCallback(async () => {
@@ -40,6 +40,22 @@ export const AddCommand: FC = () => {
     });
   }, [command]);
 
+  const onSubmitCommand = useCallback(async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const hostname = await tabsService.getCurrentTabHostname();
+
+    if (!command || !hostname) {
+      return;
+    }
+
+    await commandService.saveCommand(hostname, command);
+    await removeInterceptedElement();
+    await removePendingCommand();
+    
+    navigate(`/`)
+  }, [command, removePendingCommand, removePendingCommand]);
+
   useEffect(() => {
     const loadInterceptElement = async () => {
       console.log('!!! start getPendingCommand')
@@ -63,24 +79,25 @@ export const AddCommand: FC = () => {
 
   return (
     <>
-      <h3>Add Command to {hostname}</h3>
+      <h3>Add Command</h3>
 
-      <form>
+      <form onSubmit={onSubmitCommand}>
         <label>Name:
           <input type="text" name="name" value={command.name} onChange={onCommandNameChange} />
         </label>
+
+        {command.actions.map((action, index) => (
+          <div key={index}>
+            <span>Action {index + 1}</span>
+            <span>Event {action.event}</span>
+            <span>Element Tag Name {action.element?.tagName}</span>
+            <span>Element Inner Text {action.element?.innerText}</span>
+          </div>
+        ))}
+
+        <input type="submit" value="Save Command" />
+
       </form>
-
-      {command.actions.map((action, index) => (
-        <div key={index}>
-          <span>Action {index + 1}</span>
-          <span>Event {action.event}</span>
-          <span>Element Tag Name {action.element?.tagName}</span>
-          <span>Element Inner Text {action.element?.innerText}</span>
-        </div>
-      ))}
-
-      <input type="submit" value="Submit" />
 
       <button onClick={interceptElement}>Intercept Element</button>
       <button onClick={removeInterceptedElement}>Remove Intercept Element</button>

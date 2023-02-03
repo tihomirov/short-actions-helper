@@ -5,7 +5,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Root } from './routes/Root'
-import { Commands, loader as commandsLoader } from './routes/Commands'
 import { Home, loader as homeLoader } from './routes/Home'
 import { AddCommand } from './routes/AddCommand'
 
@@ -20,12 +19,7 @@ const router = createMemoryRouter([
         element: <Home />,
       },
       {
-        path: "commands/:hostname",
-        loader: commandsLoader,
-        element: <Commands />,
-      },
-      {
-        path: "commands/:hostname/new",
+        path: "commands/new",
         element: <AddCommand />,
       },
     ],

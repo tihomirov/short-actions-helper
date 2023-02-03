@@ -1,46 +1,48 @@
 import React, { FC } from 'react'
 import { useLoaderData, Link, Navigate } from "react-router-dom";
+import { CommandsList } from '../components/commands-list'
 import { tabsService, commandService } from '../services';
+import { Commands } from "../types";
 
 type LoaderData = Readonly<{
-  currentTabHostname: string | undefined;
+  hostname: string | undefined;
+  commands: Commands;
   hasPendingCommand: boolean;
 }>;
 
 export async function loader(): Promise<LoaderData> {
-
-  const [currentTabHostname, pendingCommand] = await Promise.all([
+  const [hostname, pendingCommand] = await Promise.all([
     tabsService.getCurrentTabHostname(),
     commandService.getPendingCommand()
   ]);
+
+  const commands = hostname ? await commandService.getCommands(hostname) : [];
+
   return { 
-    currentTabHostname,
+    hostname,
+    commands,
     hasPendingCommand: !!pendingCommand,
   };
 }
 
 export const Home: FC = () => {
-  const { currentTabHostname, hasPendingCommand } = useLoaderData() as LoaderData;
+  const { hostname, hasPendingCommand, commands } = useLoaderData() as LoaderData;
 
-  if (hasPendingCommand) {
-    return <Navigate to={`commands/${currentTabHostname}/new`} replace={true} />
-  }
-
-  if (!currentTabHostname) {
+  if (!hostname) {
     return (
       <div>This site is not availale</div>
     )
   }
 
+  if (hasPendingCommand) {
+    return <Navigate to={`commands/new`} replace={true} />
+  }
+
   return (
     <>
-      <h3>{currentTabHostname}</h3>
-      <Link to={`commands/${currentTabHostname}`}>
-        <div>Check all commands</div>
-      </Link>
-      <Link to={`commands/${currentTabHostname}/new`}>
-        <div>Add comamnd</div>
-      </Link>
+      <h3>{hostname}</h3>
+      <CommandsList commands={commands} hostname={hostname}/>
+      <Link to={`commands/new`}>Add comamnd</Link>
     </>
   )
 }

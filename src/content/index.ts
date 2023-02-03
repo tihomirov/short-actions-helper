@@ -15,7 +15,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       const { element: { tagName, innerText }, event } = message.action;
       const allElementsByTag = document.getElementsByTagName(tagName)
       const elementToClick = Array.from(allElementsByTag).filter(
-        (el) => el.innerText.toLowerCase() === innerText,
+        (el) => el.innerText.toLowerCase() === innerText.toLowerCase(),
       )?.[0]
       
       if(elementToClick) {
