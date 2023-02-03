@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Root } from './routes/Root'
 import { Home, loader as homeLoader } from './routes/Home'
-import { AddCommand } from './routes/AddCommand'
+import { NewCommand } from './routes/NewCommand'
 
 const router = createMemoryRouter([
   {
@@ -20,7 +20,7 @@ const router = createMemoryRouter([
       },
       {
         path: "commands/new",
-        element: <AddCommand />,
+        element: <NewCommand />,
       },
     ],
   },

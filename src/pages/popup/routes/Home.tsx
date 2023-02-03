@@ -42,7 +42,7 @@ export const Home: FC = () => {
     <>
       <h3>{hostname}</h3>
       <CommandsList commands={commands} hostname={hostname}/>
-      <Link to={`commands/new`}>Add comamnd</Link>
+      <Link to={`commands/new`}>New Comamnd</Link>
     </>
   )
 }

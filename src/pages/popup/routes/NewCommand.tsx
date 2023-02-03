@@ -4,7 +4,7 @@ import { commandService, tabsService } from "../services";
 import { ElementData, ElementEvent } from '../../../common'
 import { Command } from '../types'
 
-export const AddCommand: FC = () => {
+export const NewCommand: FC = () => {
   const navigate = useNavigate();
   const [command, setCommand] = useState<Command | undefined>(undefined);
 
