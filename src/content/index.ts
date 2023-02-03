@@ -46,6 +46,7 @@ function runInterceptMode() {
   dimmElement.style.pointerEvents = 'none';
   dimmElement.style.fontSize = '24px';
   dimmElement.style.display = 'flex';
+  dimmElement.style.flexDirection = 'column';
   dimmElement.style.justifyContent = 'center';
   dimmElement.style.alignItems = 'center';
   dimmElement.style.gap = '20%';
