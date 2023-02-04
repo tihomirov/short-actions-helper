@@ -4,6 +4,7 @@ console.log('content script')
 
 const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void> = {
   [ElementEvent.Click]: (element) => element.click(),
+  [ElementEvent.Focus]: (element) => element.focus(),
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {

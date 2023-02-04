@@ -41,7 +41,13 @@ class CommandService {
     const { __test_intercept_element,  __test_pending_command } = await chrome.storage.sync.get(['__test_intercept_element', '__test_pending_command']);
 
     if (__test_pending_command) {
-      __test_pending_command.actions[__test_pending_command.actions.length - 1].element = __test_intercept_element;
+      if (__test_pending_command.actions.length === 0) {
+        __test_pending_command.actions.push({
+          element: __test_intercept_element
+        })
+      } else {
+        __test_pending_command.actions[__test_pending_command.actions.length - 1].element = __test_intercept_element;
+      }
 
       return __test_pending_command;
     }

@@ -1,5 +1,6 @@
-export const enum ElementEvent {
+export enum ElementEvent {
   Click = 'click',
+  Focus = 'focus',
 }
 
 export type ElementData = Readonly<{
