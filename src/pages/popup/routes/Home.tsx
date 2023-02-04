@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { useLoaderData, Link, Navigate } from "react-router-dom";
+import { useLoaderData, Navigate } from "react-router-dom";
 import { CommandsList } from '../components/commands-list'
 import { tabsService, commandService } from '../services';
 import { Commands } from "../types";
@@ -41,7 +41,7 @@ export const Home: FC = () => {
   return (
     <>
       <CommandsList commands={commands} hostname={hostname}/>
-      <Link to={`commands/new`}>New Comamnd</Link>
+      {/* <Link to={`commands/new`}>New Comamnd</Link> */}
     </>
   )
 }

@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Outlet, Link } from "react-router-dom";
+import { Box } from '@mui/material';
 import { tabsService } from '../services';
 import s from './style.scss'
 
@@ -27,7 +28,9 @@ export const Root: FC = () => {
           <span className={s.headerSubTitle}>{hostname}</span>
         </Link>
       </header>
-      <Outlet />
+      <Box padding="12px" display="flex" flexDirection="column">
+        <Outlet />
+      </Box>
     </div>
   )
 }
