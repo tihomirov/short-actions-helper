@@ -1,6 +1,6 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 import { commandService } from '../services';
-import { Commands } from '../types';
+import { Command, Commands } from '../types';
 
 export class CommandStore {
   @observable
@@ -27,5 +27,11 @@ export class CommandStore {
     this._isLoading = true;
     this._commands = await commandService.getCommands(hostname);
     this._isLoading = false;
+  }
+
+  @action
+  async removeCommand(hostname: string, command: Command): Promise<void> {
+    await commandService.deleteCommand(hostname, command);
+    this._commands = await commandService.getCommands(hostname);
   }
 }
