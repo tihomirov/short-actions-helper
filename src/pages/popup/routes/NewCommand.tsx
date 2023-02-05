@@ -16,64 +16,6 @@ export const NewCommand: FC = () => {
   const [loadingPendingCommand, setLoadingPendingCommand] = useState<boolean>(true);
   const [commandName, setCommandName] = useState<string>('');
   const [commandActions, setCommandActions] = useState<Array<Partial<Action>>>([]);
-  // const [command, setCommand] = useState<Command>({
-  //   name: '',
-  //   actions: [{
-  //     event: '',
-  //     element: {
-  //       tagName: '',
-  //       innerText: '',
-  //     }
-  //   }]
-  // });
-
-  // const interceptElement = useCallback(async () => {
-  //   if (!command) {
-  //     return;
-  //   }
-  //   await commandService.savePendingCommand(command)
-  //   const response = await tabsService.runInterceptElement();
-
-  //   if (response === 'ok') {
-  //     console.log('Intercept', response);
-  //     window.close();
-  //   }
-  // }, [command]);
-
-  // const removeInterceptedElement = useCallback(async () => {
-  //   await chrome.storage.sync.remove('__test_intercept_element');
-  // }, []);
-
-  // const removePendingCommand = useCallback(async () => {
-  //   await chrome.storage.sync.remove('__test_pending_command');
-  // }, []);
-
-  // const onCommandNameChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-  //   if (!command) {
-  //     return;
-  //   }
-
-  //   setCommand({
-  //     ...command,
-  //     name: event.target.value,
-  //   });
-  // }, [command]);
-
-  // const onSubmitCommand = useCallback(async (event: FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-
-  //   const hostname = await tabsService.getCurrentTabHostname();
-
-  //   if (!command || !hostname) {
-  //     return;
-  //   }
-
-  //   await commandService.saveCommand(hostname, command);
-  //   await removeInterceptedElement();
-  //   await removePendingCommand();
-    
-  //   navigate(`/`)
-  // }, [command, removePendingCommand, removePendingCommand]);
 
   const onSelectElement = useCallback(async () => {
     await commandService.savePendingCommand({
