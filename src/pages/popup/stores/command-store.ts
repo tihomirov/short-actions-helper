@@ -34,4 +34,10 @@ export class CommandStore {
     await commandService.deleteCommand(hostname, command);
     this._commands = await commandService.getCommands(hostname);
   }
+
+  @action
+  async saveCommand(hostname: string, command: Command): Promise<void> {
+    await commandService.saveCommand(hostname, command);
+    this._commands = await commandService.getCommands(hostname);
+  }
 }

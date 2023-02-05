@@ -5,6 +5,7 @@ import { commandService, tabsService } from '../../services';
 import { ElementEvent, ElementData } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
 import { Command } from '../../types';
+import { useStores } from '../../hooks';
 
 type CommandFormProps = Readonly<{
   pendingCommand: Partial<Command> | undefined;
@@ -12,6 +13,7 @@ type CommandFormProps = Readonly<{
 
 export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const navigate = useNavigate();
+  const { commandStore } = useStores();
   const [command, setCommand] = useState<{
     name: string;
     actions: Array<{
@@ -71,7 +73,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
       return;
     }
 
-    await commandService.saveCommand(hostname, command as Command);
+    await commandStore.saveCommand(hostname, command as Command);
 
     await commandService.removePendingCommand();
 
