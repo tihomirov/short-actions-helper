@@ -59,6 +59,11 @@ class CommandService {
     await chrome.storage.sync.set({ __test_pending_command: command });
   }
 
+  async removePendingCommand(): Promise<void> {
+    await chrome.storage.sync.remove('__test_intercept_element');
+    await chrome.storage.sync.remove('__test_pending_command');
+  }
+
   async saveCommand(hostname: string, command: Command): Promise<void> {
     const { __test_commands = {} } = await chrome.storage.sync.get('__test_commands');
 

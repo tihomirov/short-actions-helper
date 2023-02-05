@@ -3,7 +3,7 @@ import { Box, TextField, FormControl, Select, MenuItem, Button, InputLabel, Tool
 import { Colorize } from '@mui/icons-material';
 import { commandService, tabsService } from "../services";
 import { ElementEvent, Action } from '../../../common';
-// import { Command } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 const elementEventNames: Record<ElementEvent, string> = {
   [ElementEvent.Click]: 'Click',
@@ -12,7 +12,7 @@ const elementEventNames: Record<ElementEvent, string> = {
 const elementEvents = Object.values(ElementEvent);
 
 export const NewCommand: FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [loadingPendingCommand, setLoadingPendingCommand] = useState<boolean>(true);
   const [commandName, setCommandName] = useState<string>('');
   const [commandActions, setCommandActions] = useState<Array<Partial<Action>>>([]);
@@ -40,13 +40,13 @@ export const NewCommand: FC = () => {
   //   }
   // }, [command]);
 
-  const removeInterceptedElement = useCallback(async () => {
-    await chrome.storage.sync.remove('__test_intercept_element');
-  }, []);
+  // const removeInterceptedElement = useCallback(async () => {
+  //   await chrome.storage.sync.remove('__test_intercept_element');
+  // }, []);
 
-  const removePendingCommand = useCallback(async () => {
-    await chrome.storage.sync.remove('__test_pending_command');
-  }, []);
+  // const removePendingCommand = useCallback(async () => {
+  //   await chrome.storage.sync.remove('__test_pending_command');
+  // }, []);
 
   // const onCommandNameChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
   //   if (!command) {
@@ -80,34 +80,58 @@ export const NewCommand: FC = () => {
       name: commandName,
       actions: commandActions as Array<Action>,
     })
+
     const response = await tabsService.runInterceptElement();
 
     if (response === 'ok') {
-      console.log('Intercept', response);
       window.close();
     }
   }, [commandName, commandActions]);
 
   const onActionEventChange = useCallback((event: SelectChangeEvent) => {
-    setCommandActions(prevActions => [{
-      ...prevActions,
-      event: event.target.value as ElementEvent
-    }]);
+    setCommandActions(prevActions => {
+      return [{
+        ...prevActions[0],
+        event: event.target.value as ElementEvent
+      }];
+    });
   }, []);
 
   const onNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setCommandName(event.target.value)
   }, []);
 
+  const onSave = useCallback(async () => {
+    const hostname = await tabsService.getCurrentTabHostname();
+
+    if (!hostname) {
+      navigate(`/`);
+      return;
+    }
+
+    await commandService.saveCommand(hostname, {
+      name: commandName,
+      // TODO: validate
+      actions: commandActions as Array<Action>,
+    });
+
+    await commandService.removePendingCommand();
+
+    navigate(`/`)
+  }, [navigate, commandName, commandActions]);
+
+  const onCancel = useCallback(async () => {
+    await commandService.removePendingCommand();
+    navigate(`/`)
+  }, [navigate, commandName, commandActions]);
+
   useEffect(() => {
     const loadInterceptElement = async () => {
       const pendingCommand = await commandService.getPendingCommand();
-      console.log('!!! end getPendingCommand', pendingCommand)
 
       if (pendingCommand) {
         setCommandName(pendingCommand.name)
         setCommandActions([...pendingCommand.actions])
-        // setCommand(pendingCommand)
       }
 
       setLoadingPendingCommand(false)
@@ -160,39 +184,9 @@ export const NewCommand: FC = () => {
         </Tooltip>
       </FormControl>
       <FormControl fullWidth margin="normal" sx={{ justifyContent: 'center', flexDirection: 'row', gap: '12px' }}>
-        <Button variant="contained">Save Command</Button>
-        <Button variant="outlined">Cancel</Button>
+        <Button variant="contained" onClick={onSave}>Save Command</Button>
+        <Button variant="outlined" onClick={onCancel}>Cancel</Button>
       </FormControl>
-      <button onClick={removeInterceptedElement}>Remove Intercept Element</button>
-      <button onClick={removePendingCommand}>Remove Pending Command</button>
     </Box>
   )
-
-  // return (
-  //   <>
-  //     <h3>Add Command</h3>
-
-  //     <form onSubmit={onSubmitCommand}>
-  //       <label>Name:
-  //         <input type="text" name="name" value={command.name} onChange={onCommandNameChange} />
-  //       </label>
-
-  //       {command.actions.map((action, index) => (
-  //         <div key={index}>
-  //           <span>Action {index + 1}</span>
-  //           <span>Event {action.event}</span>
-  //           <span>Element Tag Name {action.element?.tagName}</span>
-  //           <span>Element Inner Text {action.element?.innerText}</span>
-  //         </div>
-  //       ))}
-
-  //       <input type="submit" value="Save Command" />
-
-  //     </form>
-
-  //     <button onClick={interceptElement}>Intercept Element</button>
-  //     <button onClick={removeInterceptedElement}>Remove Intercept Element</button>
-  //     <button onClick={removePendingCommand}>Remove Pending Command</button>
-  //   </>
-  // )
 }
