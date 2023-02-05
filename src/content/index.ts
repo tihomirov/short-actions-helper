@@ -1,7 +1,5 @@
 import { TabEvent, ElementEvent } from '../common'
 
-console.log('content script')
-
 const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void> = {
   [ElementEvent.Click]: (element) => element.click(),
   [ElementEvent.Focus]: (element) => element.focus(),
@@ -61,33 +59,54 @@ function runInterceptMode() {
 
   document.body.appendChild(dimmElement);
 
-  // iframes does not support for now
-  // const iframes = document.getElementsByTagName('iframe');
-  // Array.from(iframes).forEach(iframe => {
-  //   const contentWindow = iframe.contentWindow || iframe.contentDocument; //this is better approach
+  const iframes = document.getElementsByTagName('iframe');
 
-  //   contentWindow?.addEventListener('click', (e) => {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //   });
-  // });
+  Array.from(iframes).filter(filterOtherDomainIframes).forEach(iframe => {
+    const contentWindow = iframe.contentWindow || iframe.contentDocument; //this is better approach
 
-  document.addEventListener('click', (e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    contentWindow?.addEventListener('click', (e: Event) => {
+      onDocumentClick(e);
+      dimmElement.remove();
+    }, {
+      once: true
+    });
+  });
 
-    if (e.target instanceof Element) {
-      const { tagName, innerText } = e.target as HTMLElement;
-
-      chrome.storage.sync.set({ '__test_intercept_element': {
-        tagName,
-        innerText
-      } });
-  
-    }
-
+  document.addEventListener('click', (e: Event) => {
+    onDocumentClick(e);
     dimmElement.remove();
   }, {
     once: true
   })
+}
+
+function filterOtherDomainIframes(iframe: HTMLIFrameElement): boolean {
+  if (!iframe.src) {
+    return true;
+  }
+
+  const iframeUrl = new URL(iframe.src);
+  return window.location.origin === iframeUrl.origin;
+}
+
+function onDocumentClick(e: Event): void {
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (!e.target) {
+    return;
+  }
+
+  const { tagName, innerText } = e.target as HTMLElement;
+
+  if (!tagName) {
+    return
+  }
+
+  chrome.storage.sync.set({ 
+    '__test_intercept_element': {
+      tagName,
+      innerText
+    } 
+  });
 }
