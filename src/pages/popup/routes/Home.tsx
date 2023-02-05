@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { useLoaderData, Navigate } from 'react-router-dom';
 import { CommandsList } from '../components/commands-list';
 import { tabsService, commandService } from '../services';
-import { Commands } from '../types';
+import { useStores } from '../hooks';
 
 type LoaderData = Readonly<{
   hostname: string | undefined;
-  commands: Commands;
   hasPendingCommand: boolean;
 }>;
 
@@ -16,17 +16,23 @@ export async function loader(): Promise<LoaderData> {
     commandService.getPendingCommand(),
   ]);
 
-  const commands = hostname ? await commandService.getCommands(hostname) : [];
-
   return {
     hostname,
-    commands,
     hasPendingCommand: !!pendingCommand,
   };
 }
 
-export const Home: FC = () => {
-  const { hostname, hasPendingCommand, commands } = useLoaderData() as LoaderData;
+export const Home: FC = observer(() => {
+  const { hostname, hasPendingCommand } = useLoaderData() as LoaderData;
+  const { commandStore } = useStores();
+
+  useEffect(() => {
+    if (!hostname) {
+      return;
+    }
+
+    commandStore.loadCommands(hostname);
+  }, []);
 
   if (!hostname) {
     return <div>This site is not availale for now</div>;
@@ -36,9 +42,13 @@ export const Home: FC = () => {
     return <Navigate to={`commands/new`} replace={true} />;
   }
 
+  if (commandStore.isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
-      <CommandsList commands={commands} hostname={hostname} />
+      <CommandsList commands={commandStore.commands} hostname={hostname} />
     </>
   );
-};
+});

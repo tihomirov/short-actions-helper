@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "jsx": "react",
     "lib": ["dom", "es2019"],
