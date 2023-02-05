@@ -7,7 +7,11 @@
     "start": "rollup -c -w",
     "test": "jest",
     "eslint": "eslint 'src/**/*.ts'",
-    "eslint:fix": "eslint --fix 'src/**/*.ts'"
+    "eslint:fix": "eslint --fix 'src/**/*.ts'",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -20,7 +24,6 @@
     "@types/react-dom": "^17.0.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
-    "prettier": "^2.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.8.0",
@@ -38,15 +41,18 @@
     "@typescript-eslint/parser": "4.33.0",
     "cross-env": "^7.0.3",
     "eslint": "7.32.0",
-    "eslint-config-prettier": "8.6.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "^7.21.5",
+    "husky": "^8.0.3",
     "jest": "^26.6.3",
     "jest-chrome": "^0.7.0",
+    "lint-staged": "^13.1.0",
     "node-sass": "^8.0.0",
     "postcss": "^8.4.21",
+    "prettier": "2.8.3",
     "rollup": "^2.56.3",
     "rollup-plugin-chrome-extension": "^3.6.1",
     "rollup-plugin-empty-dir": "^1.0.5",
