@@ -1,5 +1,4 @@
-import { ElementEvent, ElementData } from '../../../common';
-import { Commands, Command } from '../types';
+import { Commands, Command, PendingCommand } from '../types';
 
 // const commands: Record<string, Commands> = {
 //   'simpsonsua.tv': [
@@ -29,14 +28,6 @@ import { Commands, Command } from '../types';
 //     }
 //   ]
 // }
-
-export type PendingCommand = Readonly<{
-  name: string;
-  actions: ReadonlyArray<{
-    event?: ElementEvent;
-    element?: Partial<ElementData>;
-  }>;
-}>;
 
 class CommandService {
   async getCommands(hostname: string): Promise<Commands> {

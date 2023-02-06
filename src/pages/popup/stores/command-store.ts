@@ -1,6 +1,6 @@
 import { observable, computed, action, makeObservable } from 'mobx';
-import { commandService, PendingCommand } from '../services';
-import { Command, Commands } from '../types';
+import { actionService, commandService } from '../services';
+import { Command, Commands, PendingCommand } from '../types';
 import { RootStore } from './root-store';
 
 export class CommandStore {
@@ -65,6 +65,11 @@ export class CommandStore {
   async saveCommand(command: Command): Promise<void> {
     const hostname = this._rootStore.tabStore.hostname;
     await commandService.saveCommand(hostname, command);
+  }
+
+  @action
+  async runCommand(command: Command): Promise<void> {
+    await actionService.runActions(command.actions);
   }
 
   @action

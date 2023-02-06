@@ -34,8 +34,12 @@ export class TabStore {
     return hostname;
   }
 
+  async runInterceptElementMode(): Promise<void> {
+    await tabsService.runInterceptElement();
+  }
+
   @action
-  async loadCurrentTab(): Promise<void> {
+  private async loadCurrentTab(): Promise<void> {
     this._currentTabLoading = true;
 
     const tab = await tabsService.getCurrentTab();

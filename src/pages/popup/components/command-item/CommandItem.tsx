@@ -2,7 +2,6 @@ import React, { FC, useCallback, useState } from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { DeleteOutlineOutlined, PlayArrowOutlined } from '@mui/icons-material';
 import { Command } from '../../types';
-import { actionService } from '../../services';
 import { useStores } from '../../hooks';
 
 type CommandProps = Readonly<{
@@ -14,7 +13,7 @@ export const CommandItem: FC<CommandProps> = ({ command }) => {
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const onRun = useCallback(() => {
-    actionService.runActions(command.actions);
+    commandStore.runCommand(command);
   }, [command]);
 
   const onDelete = useCallback(async () => {

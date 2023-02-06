@@ -1,10 +1,9 @@
 import React, { FC, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
-import { tabsService, PendingCommand } from '../../services';
 import { ElementEvent, ElementData } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
-import { Command } from '../../types';
+import { Command, PendingCommand } from '../../types';
 import { useStores } from '../../hooks';
 
 type CommandFormProps = Readonly<{
@@ -13,7 +12,7 @@ type CommandFormProps = Readonly<{
 
 export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const navigate = useNavigate();
-  const { commandStore } = useStores();
+  const { commandStore, tabStore } = useStores();
   const [command, setCommand] = useState<{
     name: string;
     actions: Array<{
@@ -27,12 +26,8 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
 
   const onSelectElement = useCallback(async () => {
     await commandStore.savePendingCommand(command);
-
-    const response = await tabsService.runInterceptElement();
-
-    if (response === 'ok') {
-      window.close();
-    }
+    await tabStore.runInterceptElementMode();
+    window.close();
   }, [command]);
 
   const onNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
