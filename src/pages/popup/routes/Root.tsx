@@ -9,11 +9,25 @@ export const Root: FC = observer(() => {
   const { tabStore } = useStores();
 
   if (tabStore.currentTabLoading) {
-    return <div>Loading</div>;
+    return (
+      <div className={s.app}>
+        <header className={s.header}>
+          <div className={s.headerTitle}>Lazy Actions Widget</div>
+        </header>
+        <div>Loading</div>
+      </div>
+    );
   }
 
   if (tabStore.currentTabMissing) {
-    return <div>Can not get current Browser Tab</div>;
+    return (
+      <div className={s.app}>
+        <header className={s.header}>
+          <div className={s.headerTitle}>Lazy Actions Widget</div>
+        </header>
+        <div>Can not get current Browser Tab</div>
+      </div>
+    );
   }
 
   return (

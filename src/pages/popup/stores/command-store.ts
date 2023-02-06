@@ -1,5 +1,5 @@
 import { observable, computed, action, makeObservable } from 'mobx';
-import { commandService } from '../services';
+import { commandService, PendingCommand } from '../services';
 import { Command, Commands } from '../types';
 import { RootStore } from './root-store';
 
@@ -7,7 +7,11 @@ export class CommandStore {
   @observable
   private _commands: Commands = [];
   @observable
+  private _pendingCommand: PendingCommand | undefined = undefined;
+  @observable
   private _isLoading = true;
+  @observable
+  private _isPendingCommandLoading = true;
 
   constructor(private readonly _rootStore: RootStore) {
     makeObservable(this);
@@ -19,8 +23,18 @@ export class CommandStore {
   }
 
   @computed
+  get pendingCommand(): PendingCommand | undefined {
+    return this._pendingCommand;
+  }
+
+  @computed
   get isLoading(): boolean {
     return this._isLoading;
+  }
+
+  @computed
+  get isPendingCommandLoading(): boolean {
+    return this._isPendingCommandLoading;
   }
 
   @action
@@ -34,6 +48,13 @@ export class CommandStore {
   }
 
   @action
+  async loadPendingCommands(): Promise<void> {
+    this._isPendingCommandLoading = true;
+    this._pendingCommand = await commandService.getPendingCommand();
+    this._isPendingCommandLoading = false;
+  }
+
+  @action
   async removeCommand(command: Command): Promise<void> {
     const hostname = this._rootStore.tabStore.hostname;
     await commandService.deleteCommand(hostname, command);
@@ -44,6 +65,17 @@ export class CommandStore {
   async saveCommand(command: Command): Promise<void> {
     const hostname = this._rootStore.tabStore.hostname;
     await commandService.saveCommand(hostname, command);
-    this._commands = await commandService.getCommands(hostname);
+  }
+
+  @action
+  async savePendingCommand(command: PendingCommand): Promise<void> {
+    await commandService.savePendingCommand(command);
+    this._pendingCommand = command;
+  }
+
+  @action
+  async removePendingCommand(): Promise<void> {
+    await commandService.removePendingCommand();
+    this._pendingCommand = undefined;
   }
 }

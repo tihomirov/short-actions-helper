@@ -30,6 +30,14 @@ import { Commands, Command } from '../types';
 //   ]
 // }
 
+export type PendingCommand = Readonly<{
+  name: string;
+  actions: ReadonlyArray<{
+    event?: ElementEvent;
+    element?: Partial<ElementData>;
+  }>;
+}>;
+
 class CommandService {
   async getCommands(hostname: string): Promise<Commands> {
     const { __test_commands } = await chrome.storage.sync.get('__test_commands');
@@ -58,15 +66,7 @@ class CommandService {
     return undefined;
   }
 
-  async savePendingCommand(
-    command: Readonly<{
-      name: string;
-      actions: ReadonlyArray<{
-        event?: ElementEvent;
-        element?: Partial<ElementData>;
-      }>;
-    }>,
-  ): Promise<void> {
+  async savePendingCommand(command: PendingCommand): Promise<void> {
     await chrome.storage.sync.set({ __test_pending_command: command });
   }
 

@@ -1,31 +1,19 @@
 import { Box } from '@mui/material';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC } from 'react';
+import { observer } from 'mobx-react-lite';
 import { CommandForm } from '../components/command-form';
-import { commandService } from '../services';
-import { Command } from '../types';
+import { useStores } from '../hooks';
 
-export const NewCommand: FC = () => {
-  const [loadingPendingCommand, setLoadingPendingCommand] = useState<boolean>(true);
-  const [pendingCommand, setPendingCommand] = useState<Partial<Command> | undefined>(undefined);
+export const NewCommand: FC = observer(() => {
+  const { commandStore } = useStores();
 
-  useEffect(() => {
-    const loadInterceptElement = async () => {
-      const pendingCommand = await commandService.getPendingCommand();
-
-      setPendingCommand(pendingCommand);
-      setLoadingPendingCommand(false);
-    };
-
-    loadInterceptElement();
-  }, []);
-
-  if (loadingPendingCommand) {
+  if (commandStore.isPendingCommandLoading) {
     return <span>Loading...</span>;
   }
 
   return (
     <Box component="form" noValidate autoComplete="off">
-      <CommandForm pendingCommand={pendingCommand} />
+      <CommandForm pendingCommand={commandStore.pendingCommand} />
     </Box>
   );
-};
+});

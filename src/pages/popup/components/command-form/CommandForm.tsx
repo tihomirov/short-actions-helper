@@ -1,14 +1,14 @@
 import React, { FC, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
-import { commandService, tabsService } from '../../services';
+import { tabsService, PendingCommand } from '../../services';
 import { ElementEvent, ElementData } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
 import { Command } from '../../types';
 import { useStores } from '../../hooks';
 
 type CommandFormProps = Readonly<{
-  pendingCommand: Partial<Command> | undefined;
+  pendingCommand: PendingCommand | undefined;
 }>;
 
 export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
@@ -26,7 +26,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   });
 
   const onSelectElement = useCallback(async () => {
-    await commandService.savePendingCommand(command);
+    await commandStore.savePendingCommand(command);
 
     const response = await tabsService.runInterceptElement();
 
@@ -67,14 +67,13 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
     }
 
     await commandStore.saveCommand(command as Command);
-
-    await commandService.removePendingCommand();
+    await commandStore.removePendingCommand();
 
     navigate(`/`);
   }, [navigate, command]);
 
   const onCancel = useCallback(async () => {
-    await commandService.removePendingCommand();
+    await commandStore.removePendingCommand();
     navigate(`/`);
   }, [navigate]);
 
