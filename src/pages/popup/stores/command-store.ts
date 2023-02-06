@@ -1,13 +1,13 @@
 import { observable, computed, action, makeObservable } from 'mobx';
-import { actionService, commandService } from '../services';
-import { Command, Commands, PendingCommand } from '../types';
+import { commandService } from '../services';
+import { Command, Commands, PendingCommandForm } from '../types';
 import { RootStore } from './root-store';
 
 export class CommandStore {
   @observable
   private _commands: Commands = [];
   @observable
-  private _pendingCommand: PendingCommand | undefined = undefined;
+  private _pendingCommand: PendingCommandForm | undefined = undefined;
   @observable
   private _isLoading = true;
   @observable
@@ -23,7 +23,7 @@ export class CommandStore {
   }
 
   @computed
-  get pendingCommand(): PendingCommand | undefined {
+  get pendingCommand(): PendingCommandForm | undefined {
     return this._pendingCommand;
   }
 
@@ -68,12 +68,7 @@ export class CommandStore {
   }
 
   @action
-  async runCommand(command: Command): Promise<void> {
-    await actionService.runActions(command.actions);
-  }
-
-  @action
-  async savePendingCommand(command: PendingCommand): Promise<void> {
+  async savePendingCommand(command: PendingCommandForm): Promise<void> {
     await commandService.savePendingCommand(command);
     this._pendingCommand = command;
   }

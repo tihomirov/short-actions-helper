@@ -12,7 +12,7 @@ const elementEvents = Object.values(ElementEvent);
 type CommandFormActionProps = Readonly<{
   index: number;
   onSelectElement: () => void;
-  onActionSet: (index: number, action: ElementEvent) => void;
+  onElementEventSet: (index: number, elementEvent: ElementEvent) => void;
   actionEvent?: ElementEvent;
   tagName?: string;
   innerText?: string;
@@ -24,16 +24,16 @@ export const CommandFormAction: FC<CommandFormActionProps> = ({
   tagName,
   innerText,
   onSelectElement,
-  onActionSet,
+  onElementEventSet,
 }) => {
   const onActionChange = useCallback(
     (event: SelectChangeEvent) => {
-      const action = event.target.value as ElementEvent;
-      if (action) {
-        onActionSet(index, action);
+      const elementEvent = event.target.value as ElementEvent;
+      if (elementEvent) {
+        onElementEventSet(index, elementEvent);
       }
     },
-    [onActionSet],
+    [onElementEventSet],
   );
 
   return (

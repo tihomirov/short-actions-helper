@@ -1,4 +1,4 @@
-import { Commands, Command, PendingCommand } from '../types';
+import { Commands, Command, PendingCommandForm } from '../types';
 
 // const commands: Record<string, Commands> = {
 //   'simpsonsua.tv': [
@@ -14,50 +14,39 @@ import { Commands, Command, PendingCommand } from '../types';
 //         }
 //       ]
 //     },
-//     {
-//       name: 'Open Previous Series',
-//       actions: [
-//         {
-//           event: ElementEvent.Click,
-//           element: {
-//             tagName: 'a',
-//             innerText: 'попередня серія'
-//           }
-//         }
-//       ]
-//     }
 //   ]
 // }
 
 class CommandService {
   async getCommands(hostname: string): Promise<Commands> {
     const { __test_commands } = await chrome.storage.sync.get('__test_commands');
-    console.log('!!!! get cpmmands', __test_commands, hostname);
     return __test_commands?.[hostname] ?? [];
   }
 
   async getPendingCommand(): Promise<Command | undefined> {
-    const { __test_intercept_element, __test_pending_command } = await chrome.storage.sync.get([
-      '__test_intercept_element',
-      '__test_pending_command',
-    ]);
+    const { __test_intercept_element: interceptedElement, __test_pending_command: pendingCommand } =
+      await chrome.storage.sync.get(['__test_intercept_element', '__test_pending_command']);
 
-    if (__test_pending_command) {
-      if (__test_pending_command.actions.length === 0) {
-        __test_pending_command.actions.push({
-          element: __test_intercept_element,
+    if (pendingCommand) {
+      if (pendingCommand.actions.length === 0) {
+        pendingCommand.actions.push({
+          ...interceptedElement,
         });
       } else {
-        __test_pending_command.actions[__test_pending_command.actions.length - 1].element = __test_intercept_element;
+        const lastIndex = pendingCommand.actions.length - 1;
+        pendingCommand.actions[lastIndex] = {
+          ...pendingCommand.actions[lastIndex],
+          ...interceptedElement,
+        };
       }
 
-      return __test_pending_command;
+      return pendingCommand;
     }
 
     return undefined;
   }
 
-  async savePendingCommand(command: PendingCommand): Promise<void> {
+  async savePendingCommand(command: PendingCommandForm): Promise<void> {
     await chrome.storage.sync.set({ __test_pending_command: command });
   }
 
@@ -75,8 +64,6 @@ class CommandService {
 
     __test_commands[hostname].push(command);
 
-    console.log('!!!! save cpmmands', __test_commands);
-
     await chrome.storage.sync.set({ __test_commands });
   }
 
@@ -89,8 +76,6 @@ class CommandService {
     }
 
     __test_commands[hostname] = __test_commands[hostname].filter((c: Command) => c.name !== command.name);
-
-    console.log('!!!! save deleted commands', __test_commands);
 
     await chrome.storage.sync.set({ __test_commands });
   }

@@ -1,16 +1,13 @@
-import { Action, ElementEvent, ElementData } from '../../../common';
+import { TabAction } from '../../../common';
 
 export type Command = Readonly<{
   name: string;
-  actions: ReadonlyArray<Action>;
+  actions: ReadonlyArray<TabAction>;
 }>;
 
-export type PendingCommand = Readonly<{
+export type PendingCommandForm = Readonly<{
   name: string;
-  actions: ReadonlyArray<{
-    event?: ElementEvent;
-    element?: Partial<ElementData>;
-  }>;
+  actions: ReadonlyArray<Partial<TabAction>>;
 }>;
 
 export type Commands = ReadonlyArray<Command>;

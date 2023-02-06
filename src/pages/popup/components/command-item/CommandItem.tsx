@@ -9,11 +9,11 @@ type CommandProps = Readonly<{
 }>;
 
 export const CommandItem: FC<CommandProps> = ({ command }) => {
-  const { commandStore } = useStores();
+  const { commandStore, messageChannelStore } = useStores();
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const onRun = useCallback(() => {
-    commandStore.runCommand(command);
+    messageChannelStore.runCommand(command);
   }, [command]);
 
   const onDelete = useCallback(async () => {
