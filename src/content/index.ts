@@ -1,4 +1,4 @@
-import { TabEvent, ElementEvent, TabMessage } from '../common';
+import { TabEvent, ElementEvent, TabMessage, ResponseFactory } from '../common';
 
 const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void> = {
   [ElementEvent.Click]: (element) => element.click(),
@@ -8,8 +8,7 @@ const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void
 chrome.runtime.onMessage.addListener((message: TabMessage, sender, sendResponse) => {
   switch (message.event) {
     case TabEvent.Debbug:
-      sendResponse('Hello WWWWW');
-      return;
+      return sendResponse(ResponseFactory.success(undefined));
     case TabEvent.RunAction:
       const { elementEvent, tagName, innerText } = message.action;
       const allElementsByTag = document.getElementsByTagName(tagName);
@@ -26,12 +25,10 @@ chrome.runtime.onMessage.addListener((message: TabMessage, sender, sendResponse)
         elementActionsMethods[elementEvent](elementToClick);
       }
 
-      sendResponse('elementToClick Clicked');
-      return;
+      return sendResponse(ResponseFactory.success(undefined));
     case TabEvent.InterceptElement:
       runInterceptMode();
-      sendResponse('ok');
-      return;
+      return sendResponse(ResponseFactory.success(undefined));
     default:
       return;
   }

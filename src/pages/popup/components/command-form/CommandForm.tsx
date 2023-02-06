@@ -21,7 +21,6 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const onSelectElement = useCallback(async () => {
     await commandStore.savePendingCommand(command);
     await messageChannelStore.runInterceptElementMode();
-    window.close();
   }, [command]);
 
   const onNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {

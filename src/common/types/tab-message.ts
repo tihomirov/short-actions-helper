@@ -20,3 +20,9 @@ type DebbugTabMessage = Readonly<{
 }>;
 
 export type TabMessage = RunActionTabMessage | InterceptElementTabMessage | DebbugTabMessage;
+
+export type TabMessageResponse = {
+  [TabEvent.Debbug]: undefined;
+  [TabEvent.RunAction]: undefined;
+  [TabEvent.InterceptElement]: undefined;
+};

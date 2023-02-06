@@ -1,6 +1,6 @@
 import { observable, computed, action, makeObservable } from 'mobx';
 import { BrowserTab, tabsService } from '../services';
-import { assertExists } from '../../../utils';
+import { assertExists } from '../../../common';
 
 export class TabStore {
   @observable
