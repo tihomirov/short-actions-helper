@@ -58,13 +58,6 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   );
 
   const onSave = useCallback(async () => {
-    const hostname = await tabsService.getCurrentTabHostname();
-
-    if (!hostname) {
-      navigate(`/`);
-      return;
-    }
-
     if (!command.name) {
       return;
     }
@@ -73,7 +66,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
       return;
     }
 
-    await commandStore.saveCommand(hostname, command as Command);
+    await commandStore.saveCommand(command as Command);
 
     await commandService.removePendingCommand();
 

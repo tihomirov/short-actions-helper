@@ -1,6 +1,6 @@
-import { TabEvent, Action } from '../../../common'
+import { TabEvent, Action } from '../../../common';
 
-type BrowserTab = chrome.tabs.Tab;
+export type BrowserTab = chrome.tabs.Tab;
 
 class TabsService {
   private _currentTab: BrowserTab | undefined = undefined;
@@ -32,7 +32,7 @@ class TabsService {
       return undefined;
     }
 
-    const { hostname } = new URL(url)
+    const { hostname } = new URL(url);
 
     return hostname;
   }
@@ -51,12 +51,12 @@ class TabsService {
     return response;
   }
 
-  private async getCurrentTab(): Promise<BrowserTab | undefined> {
+  async getCurrentTab(): Promise<BrowserTab | undefined> {
     if (!this._currentTab) {
       const queryOptions = { active: true, lastFocusedWindow: true };
       const [tab] = await chrome.tabs.query(queryOptions);
 
-      this._currentTab = tab
+      this._currentTab = tab;
     }
 
     return this._currentTab;

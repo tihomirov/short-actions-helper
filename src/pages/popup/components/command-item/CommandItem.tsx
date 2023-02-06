@@ -7,10 +7,9 @@ import { useStores } from '../../hooks';
 
 type CommandProps = Readonly<{
   command: Command;
-  hostname: string;
 }>;
 
-export const CommandItem: FC<CommandProps> = ({ command, hostname }) => {
+export const CommandItem: FC<CommandProps> = ({ command }) => {
   const { commandStore } = useStores();
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
@@ -20,7 +19,7 @@ export const CommandItem: FC<CommandProps> = ({ command, hostname }) => {
 
   const onDelete = useCallback(async () => {
     setDeleteLoading(true);
-    await commandStore.removeCommand(hostname, command);
+    await commandStore.removeCommand(command);
     setDeleteLoading(false);
   }, [command]);
 
