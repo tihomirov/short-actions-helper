@@ -44,7 +44,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
       return;
     }
 
-    if (command.actions.length > 0) {
+    if (command.actions.length === 0) {
       return;
     }
 

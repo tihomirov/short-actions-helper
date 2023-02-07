@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid';
+import hexoid from 'hexoid';
 import { Commands, Command, PendingCommandForm } from '../types';
 import { ElementData } from '../../../common';
 
@@ -19,16 +19,18 @@ export interface IStorageService {
   removeInterceptedElement(): Promise<void>;
 }
 
+const getCommandId = hexoid();
+
 class BrowserStorageService implements IStorageService {
   async getCommands(hostname: string): Promise<Commands> {
-    const { commands } = await chrome.storage.sync.get(StorageKey.Commands);
+    const { commands = [] } = await chrome.storage.sync.get(StorageKey.Commands);
     return commands.filter((command: Command) => command.hostname === hostname);
   }
 
   async createCommand(command: Omit<Command, 'id'>): Promise<Command> {
     const { commands = [] } = await chrome.storage.sync.get(StorageKey.Commands);
     const newCommand = {
-      id: nanoid(),
+      id: getCommandId(),
       ...command,
     };
 

@@ -116,7 +116,7 @@ function onDocumentClick(e: Event): void {
   }
 
   chrome.storage.sync.set({
-    __test_intercept_element: {
+    interceptedElement: {
       tagName,
       innerText,
     },
