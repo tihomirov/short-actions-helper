@@ -55,16 +55,14 @@ export class CommandStore {
   }
 
   @action
-  async removeCommand(command: Command): Promise<void> {
+  async removeCommand(id: string): Promise<void> {
     const hostname = this._rootStore.tabStore.hostname;
-    await commandService.deleteCommand(hostname, command);
-    this._commands = await commandService.getCommands(hostname);
+    this._commands = await commandService.deleteCommand(id, hostname);
   }
 
   @action
-  async saveCommand(command: Command): Promise<void> {
-    const hostname = this._rootStore.tabStore.hostname;
-    await commandService.saveCommand(hostname, command);
+  async saveCommand(command: Omit<Command, 'id'>): Promise<void> {
+    await commandService.createCommand(command);
   }
 
   @action

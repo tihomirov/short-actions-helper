@@ -18,7 +18,7 @@ export const CommandItem: FC<CommandProps> = ({ command }) => {
 
   const onDelete = useCallback(async () => {
     setDeleteLoading(true);
-    await commandStore.removeCommand(command);
+    await commandStore.removeCommand(command.id);
     setDeleteLoading(false);
   }, [command]);
 

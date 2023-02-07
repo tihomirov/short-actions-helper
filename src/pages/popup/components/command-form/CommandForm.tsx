@@ -12,8 +12,9 @@ type CommandFormProps = Readonly<{
 
 export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const navigate = useNavigate();
-  const { commandStore, messageChannelStore } = useStores();
+  const { commandStore, messageChannelStore, tabStore } = useStores();
   const [command, setCommand] = useState<PendingCommandForm>({
+    hostname: pendingCommand?.hostname ?? tabStore.hostname,
     name: pendingCommand?.name ?? '',
     actions: pendingCommand?.actions ? [...pendingCommand?.actions] : [{}],
   });
@@ -38,15 +39,22 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   }, []);
 
   const onSave = useCallback(async () => {
-    if (!command.name) {
+    // TODO validate form
+    if (!command.name || !command.hostname) {
       return;
     }
 
-    if (command.actions.length === 0) {
+    if (command.actions.length > 0) {
       return;
     }
 
-    await commandStore.saveCommand(command as Command);
+    for (const action of command.actions) {
+      if (!action.elementEvent || !action.tagName) {
+        return;
+      }
+    }
+
+    await commandStore.saveCommand(command as Omit<Command, 'id'>);
     await commandStore.removePendingCommand();
 
     navigate(`/`);

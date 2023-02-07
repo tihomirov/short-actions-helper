@@ -1,32 +1,26 @@
 import { Commands, Command, PendingCommandForm } from '../types';
-
-// const commands: Record<string, Commands> = {
-//   'simpsonsua.tv': [
-//     {
-//       name: 'Open Next Series',
-//       actions: [
-//         {
-//           event: ElementEvent.Click,
-//           element: {
-//             tagName: 'a',
-//             innerText: 'наступна серія'
-//           }
-//         }
-//       ]
-//     },
-//   ]
-// }
+import { browserStorageService, IStorageService } from './browser-storage';
 
 class CommandService {
+  constructor(private readonly _storageService: IStorageService) {}
+
   async getCommands(hostname: string): Promise<Commands> {
-    const { __test_commands } = await chrome.storage.sync.get('__test_commands');
-    return __test_commands?.[hostname] ?? [];
+    return await this._storageService.getCommands(hostname);
   }
 
-  async getPendingCommand(): Promise<Command | undefined> {
-    const { __test_intercept_element: interceptedElement, __test_pending_command: pendingCommand } =
-      await chrome.storage.sync.get(['__test_intercept_element', '__test_pending_command']);
+  async createCommand(command: Omit<Command, 'id'>): Promise<void> {
+    await this._storageService.createCommand(command);
+  }
 
+  async deleteCommand(id: string, hostname: string): Promise<Commands> {
+    return await this._storageService.deleteCommand(id, hostname);
+  }
+
+  async getPendingCommand(): Promise<PendingCommandForm | undefined> {
+    const pendingCommand = await this._storageService.getPendingCommand();
+    const interceptedElement = await this._storageService.getInterceptedElement();
+
+    // TODO: update intercepted element logic
     if (pendingCommand) {
       if (pendingCommand.actions.length === 0) {
         pendingCommand.actions.push({
@@ -47,38 +41,13 @@ class CommandService {
   }
 
   async savePendingCommand(command: PendingCommandForm): Promise<void> {
-    await chrome.storage.sync.set({ __test_pending_command: command });
+    await this._storageService.savePendingCommand(command);
   }
 
   async removePendingCommand(): Promise<void> {
-    await chrome.storage.sync.remove('__test_intercept_element');
-    await chrome.storage.sync.remove('__test_pending_command');
-  }
-
-  async saveCommand(hostname: string, command: Command): Promise<void> {
-    const { __test_commands = {} } = await chrome.storage.sync.get('__test_commands');
-
-    if (!__test_commands[hostname]) {
-      __test_commands[hostname] = [];
-    }
-
-    __test_commands[hostname].push(command);
-
-    await chrome.storage.sync.set({ __test_commands });
-  }
-
-  async deleteCommand(hostname: string, command: Command): Promise<void> {
-    const { __test_commands = {} } = await chrome.storage.sync.get('__test_commands');
-
-    if (!__test_commands?.[hostname]) {
-      // there is no this command
-      return;
-    }
-
-    __test_commands[hostname] = __test_commands[hostname].filter((c: Command) => c.name !== command.name);
-
-    await chrome.storage.sync.set({ __test_commands });
+    await this._storageService.removeInterceptedElement();
+    await this._storageService.removePendingCommand();
   }
 }
 
-export const commandService = new CommandService();
+export const commandService = new CommandService(browserStorageService);

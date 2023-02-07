@@ -3,8 +3,12 @@ export enum ElementEvent {
   Focus = 'focus',
 }
 
-export type TabAction = Readonly<{
-  elementEvent: ElementEvent;
+export type ElementData = Readonly<{
   tagName: keyof HTMLElementTagNameMap;
   innerText?: string;
 }>;
+
+export type TabAction = ElementData &
+  Readonly<{
+    elementEvent: ElementEvent;
+  }>;
