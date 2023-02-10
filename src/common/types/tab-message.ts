@@ -6,16 +6,16 @@ export enum TabEvent {
   InterceptElement = 'SAH_InterceptElement',
 }
 
-type RunActionTabMessage = Readonly<{
+export type RunActionTabMessage = Readonly<{
   event: TabEvent.RunAction;
   action: TabAction;
 }>;
 
-type InterceptElementTabMessage = Readonly<{
+export type InterceptElementTabMessage = Readonly<{
   event: TabEvent.InterceptElement;
 }>;
 
-type DebbugTabMessage = Readonly<{
+export type DebbugTabMessage = Readonly<{
   event: TabEvent.Debbug;
 }>;
 
