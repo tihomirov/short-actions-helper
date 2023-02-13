@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
-import { TabAction } from '../../../../common';
+import { TabAction, truncate } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
 import { Command, PendingCommandForm } from '../../types';
 import { useStores } from '../../hooks';
@@ -13,10 +13,15 @@ type CommandFormProps = Readonly<{
 export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const navigate = useNavigate();
   const { commandStore, messageChannelStore, tabStore } = useStores();
-  const [command, setCommand] = useState<PendingCommandForm>({
-    hostname: pendingCommand?.hostname ?? tabStore.hostname,
-    name: pendingCommand?.name ?? '',
-    actions: pendingCommand?.actions ? [...pendingCommand?.actions] : [{}],
+  const [command, setCommand] = useState<PendingCommandForm>(() => {
+    const { name, actions, hostname } = pendingCommand || {};
+    const predefinedName = getPredefinedName(name, actions) ?? '';
+
+    return {
+      hostname: hostname ?? tabStore.hostname,
+      name: name ? name : predefinedName,
+      actions: actions ? [...actions] : [{}],
+    };
   });
 
   const onSelectElement = useCallback(async () => {
@@ -32,10 +37,15 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   }, []);
 
   const onActionsChange = useCallback((actions: Array<Partial<TabAction>>) => {
-    setCommand((prevCommand) => ({
-      ...prevCommand,
-      actions,
-    }));
+    setCommand((prevCommand) => {
+      const predefinedName = getPredefinedName(prevCommand.name, actions);
+
+      return {
+        ...prevCommand,
+        name: prevCommand.name ?? predefinedName,
+        actions,
+      };
+    });
   }, []);
 
   const onSave = useCallback(async () => {
@@ -67,7 +77,12 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
 
   return (
     <>
-      <FormControl fullWidth>
+      <CommandFormActions
+        actions={command.actions}
+        onActionsChange={onActionsChange}
+        onSelectElement={onSelectElement}
+      />
+      <FormControl fullWidth margin="normal">
         <TextField
           id="form-new-command-name"
           label="Set Your Command Name First"
@@ -76,11 +91,6 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
           onChange={onNameChange}
         />
       </FormControl>
-      <CommandFormActions
-        actions={command.actions}
-        onActionsChange={onActionsChange}
-        onSelectElement={onSelectElement}
-      />
       <FormControl fullWidth margin="normal" sx={{ justifyContent: 'center', flexDirection: 'row', gap: '12px' }}>
         <Button variant="contained" onClick={onSave}>
           Save Command
@@ -92,3 +102,12 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
     </>
   );
 };
+
+function getPredefinedName(name?: string, actions?: Array<Partial<TabAction>>): string | undefined {
+  if (name || !actions || actions.length !== 1) {
+    return undefined;
+  }
+
+  const [{ tagName, innerText, elementEvent }] = actions;
+  return elementEvent && tagName ? `${elementEvent}: <${tagName}> ${truncate(innerText ?? '')}` : undefined;
+}

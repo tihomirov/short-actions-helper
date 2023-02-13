@@ -38,7 +38,7 @@ export const CommandFormAction: FC<CommandFormActionProps> = ({
 
   return (
     <div>
-      <FormControl margin="normal" size="small" sx={{ width: '35%' }}>
+      <FormControl size="small" margin="dense" sx={{ width: '35%' }}>
         <InputLabel id="form-new-command-action-label">Action</InputLabel>
         <Select
           labelId="form-new-command-action-label"
@@ -54,7 +54,7 @@ export const CommandFormAction: FC<CommandFormActionProps> = ({
         </Select>
       </FormControl>
       <FormControl
-        margin="normal"
+        margin="dense"
         sx={{
           width: '65%',
           flexDirection: 'row',
