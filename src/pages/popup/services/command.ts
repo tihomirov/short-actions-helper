@@ -4,15 +4,19 @@ import { browserStorageService, IStorageService } from './browser-storage';
 class CommandService {
   constructor(private readonly _storageService: IStorageService) {}
 
-  async getCommands(hostname: string): Promise<Commands> {
-    return await this._storageService.getCommands(hostname);
+  async getCommands(): Promise<Commands> {
+    return await this._storageService.getCommands();
+  }
+
+  async getCommandsByHostname(hostname: string): Promise<Commands> {
+    return await this._storageService.getCommandsByHostname(hostname);
   }
 
   async createCommand(command: Omit<Command, 'id'>): Promise<void> {
     await this._storageService.createCommand(command);
   }
 
-  async deleteCommand(id: string, hostname: string): Promise<Commands> {
+  async deleteCommand(id: string, hostname?: string): Promise<Commands> {
     return await this._storageService.deleteCommand(id, hostname);
   }
 

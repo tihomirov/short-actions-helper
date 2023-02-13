@@ -1,11 +1,14 @@
 import { observable, computed, action, makeObservable } from 'mobx';
+import { assertUnreachable } from '../../../common';
 import { commandService } from '../services';
-import { Command, Commands, PendingCommandForm } from '../types';
+import { Command, Commands, PendingCommandForm, CommandsType } from '../types';
 import { RootStore } from './root-store';
 
 export class CommandStore {
   @observable
   private _commands: Commands = [];
+  @observable
+  private _commandsType: CommandsType = CommandsType.General;
   @observable
   private _pendingCommand: PendingCommandForm | undefined = undefined;
   @observable
@@ -37,12 +40,31 @@ export class CommandStore {
     return this._isPendingCommandLoading;
   }
 
+  @computed
+  get commandsType(): CommandsType {
+    return this._commandsType;
+  }
+
+  @action
+  setCommandsType(type: CommandsType): void {
+    this._commandsType = type;
+  }
+
   @action
   async loadCommands(): Promise<void> {
     this._isLoading = true;
 
     const hostname = this._rootStore.tabStore.hostname;
-    this._commands = await commandService.getCommands(hostname);
+    switch (this._commandsType) {
+      case CommandsType.General:
+        this._commands = await commandService.getCommands();
+        break;
+      case CommandsType.Hostname:
+        this._commands = await commandService.getCommandsByHostname(hostname);
+        break;
+      default:
+        assertUnreachable(this._commandsType);
+    }
 
     this._isLoading = false;
   }
@@ -62,6 +84,7 @@ export class CommandStore {
 
   @action
   async saveCommand(command: Omit<Command, 'id'>): Promise<void> {
+    this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.General;
     await commandService.createCommand(command);
   }
 

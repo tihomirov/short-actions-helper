@@ -29,6 +29,7 @@ export const CommandItem: FC<CommandProps> = ({ command }) => {
       alignItems="center"
       justifyContent="space-between"
       marginBottom="12px"
+      width="100%"
       sx={{
         background: '#fef6ec',
         boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',

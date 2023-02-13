@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { Box } from '@mui/material';
 import { Commands } from '../../types';
 import { CommandItem } from '../command-item';
 import { NewCommandButton } from '../new-command-button';
@@ -11,10 +10,10 @@ type CommandsListProps = Readonly<{
 export const CommandsList: FC<CommandsListProps> = ({ commands }) => {
   if (commands.length === 0) {
     return (
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+      <>
         <h3>There are no Commands yet</h3>
         <NewCommandButton />
-      </Box>
+      </>
     );
   }
 
