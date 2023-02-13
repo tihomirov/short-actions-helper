@@ -8,21 +8,13 @@ export const Home: FC = observer(() => {
   const { commandStore } = useStores();
 
   useEffect(() => {
-    console.log('Mount Home, loadCommands, loadPendingCommands');
     commandStore.loadCommands();
     commandStore.loadPendingCommands();
   }, []);
 
   if (commandStore.isLoading || commandStore.isPendingCommandLoading) {
-    console.log(
-      'commandStore.isLoading || commandStore.isPendingCommandLoading',
-      commandStore.isLoading,
-      commandStore.isPendingCommandLoading,
-    );
     return <div>Loading...</div>;
   }
-
-  console.log('commandStore.pendingCommand', commandStore.pendingCommand);
 
   if (commandStore.pendingCommand) {
     return <Navigate to={`commands/new`} replace={true} />;
