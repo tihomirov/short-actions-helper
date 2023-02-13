@@ -1,69 +1,88 @@
-import { Response, ResponseFactory, InterceptElementTabMessage } from '../../common';
+import { Response, ResponseFactory, InterceptElementTabMessage, isSomething } from '../../common';
 import { MessageEvent } from './event';
 
+const EVENT_LISTENER_OPTIONS: AddEventListenerOptions = {
+  once: true,
+};
+
 export class InterceptElementEvent extends MessageEvent<InterceptElementTabMessage> {
-  run(): Response<undefined> {
-    runInterceptMode();
-    return ResponseFactory.success(undefined);
+  private readonly _backgroundElement: HTMLDivElement;
+  private readonly _removeEventListeners: Array<() => void>;
+
+  constructor(protected readonly _message: InterceptElementTabMessage) {
+    super(_message);
+    this._backgroundElement = getBackgroundElement();
+    this._removeEventListeners = [];
   }
-}
 
-function runInterceptMode() {
-  const dimmElement = document.createElement('div');
-  dimmElement.style.position = 'fixed';
-  dimmElement.style.top = '0';
-  dimmElement.style.bottom = '0';
-  dimmElement.style.left = '0';
-  dimmElement.style.right = '0';
-  dimmElement.style.backgroundColor = 'gray';
-  dimmElement.style.opacity = '0.3';
-  dimmElement.style.zIndex = '999999999';
-  dimmElement.style.pointerEvents = 'none';
-  dimmElement.style.fontSize = '24px';
-  dimmElement.style.display = 'flex';
-  dimmElement.style.flexDirection = 'column';
-  dimmElement.style.justifyContent = 'center';
-  dimmElement.style.alignItems = 'center';
-  dimmElement.style.gap = '20%';
-  dimmElement.innerHTML = `
-    <span>Select element and open Extention again please</span>
-    <span>Select element and open Extention again please</span>
-    <span>Select element and open Extention again please</span>
-    `;
+  run(): Response<undefined | string> {
+    try {
+      this.runInterceptMode();
+      return ResponseFactory.success(undefined);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return ResponseFactory.fail(`Error: ${error.message}`);
+      }
 
-  dimmElement.blur();
+      return ResponseFactory.fail(`Unexpected Error: ${error}`);
+    }
+  }
 
-  document.body.appendChild(dimmElement);
+  private runInterceptMode(): void {
+    this.appendBackgroundElement();
+    const iframesDocuments = this.querySupportedIframeDocuments();
 
-  const iframes = document.getElementsByTagName('iframe');
-
-  Array.from(iframes)
-    .filter(filterOtherDomainIframes)
-    .forEach((iframe) => {
-      const contentWindow = iframe.contentWindow || iframe.contentDocument; //this is better approach
-
-      contentWindow?.addEventListener(
-        'click',
-        (e: Event) => {
-          onDocumentClick(e);
-          dimmElement.remove();
-        },
-        {
-          once: true,
-        },
-      );
+    iframesDocuments.forEach((iframeDocument) => {
+      iframeDocument.addEventListener('click', this.eventHandler, EVENT_LISTENER_OPTIONS);
+      this._removeEventListeners.push(() => iframeDocument.removeEventListener('click', this.eventHandler));
     });
 
-  document.addEventListener(
-    'click',
-    (e: Event) => {
-      onDocumentClick(e);
-      dimmElement.remove();
-    },
-    {
-      once: true,
-    },
-  );
+    document.addEventListener('click', this.eventHandler, EVENT_LISTENER_OPTIONS);
+    this._removeEventListeners.push(() => document.removeEventListener('click', this.eventHandler));
+  }
+
+  private finishInterceptMode(): void {
+    this._backgroundElement.remove();
+    this._removeEventListeners.forEach((removeEventListener) => removeEventListener());
+    this._removeEventListeners.length = 0;
+  }
+
+  private eventHandler = (event: Event): void => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!event.target) {
+      throw new Error('Target of event is not presented');
+    }
+
+    const { tagName, innerText } = event.target as HTMLElement;
+
+    if (!tagName) {
+      throw new Error('Target can not be parsed. "tagName" is not defined');
+    }
+
+    chrome.storage.sync.set({
+      interceptedElement: {
+        tagName,
+        innerText,
+      },
+    });
+
+    this.finishInterceptMode();
+  };
+
+  private appendBackgroundElement(): void {
+    document.body.appendChild(this._backgroundElement);
+  }
+
+  private querySupportedIframeDocuments(): ReadonlyArray<Window | Document> {
+    const iframes = document.getElementsByTagName('iframe');
+
+    return Array.from(iframes)
+      .filter(filterOtherDomainIframes)
+      .map((iframe) => iframe.contentWindow || iframe.contentDocument)
+      .filter(isSomething);
+  }
 }
 
 function filterOtherDomainIframes(iframe: HTMLIFrameElement): boolean {
@@ -75,24 +94,40 @@ function filterOtherDomainIframes(iframe: HTMLIFrameElement): boolean {
   return window.location.origin === iframeUrl.origin;
 }
 
-function onDocumentClick(e: Event): void {
-  e.preventDefault();
-  e.stopPropagation();
+function getBackgroundElement(): HTMLDivElement {
+  const element = document.createElement('div');
+  const spanElementsCount = 4;
+  const spanElementsColors = ['#FFFF00', '#00FF00', '#00FFFF', '#FF00FF'];
+  const cssProps: Partial<CSSStyleDeclaration> = {
+    position: 'fixed',
+    top: '0',
+    bottom: '0',
+    left: '0',
+    right: '0',
+    backgroundColor: 'rgba(102, 102, 153, 0.3)',
+    zIndex: '999999999',
+    pointerEvents: 'none',
+    fontSize: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '20%',
+  };
 
-  if (!e.target) {
-    return;
+  for (const property in cssProps) {
+    const propertyValue = cssProps[property];
+    if (property && propertyValue) {
+      element.style[property] = propertyValue;
+    }
   }
 
-  const { tagName, innerText } = e.target as HTMLElement;
-
-  if (!tagName) {
-    return;
+  for (let i = 0; i < spanElementsCount; i++) {
+    const spanElement = document.createElement('span');
+    spanElement.innerText = 'Click on Element and open Extention again please';
+    spanElement.style.color = spanElementsColors[i];
+    element.appendChild(spanElement);
   }
 
-  chrome.storage.sync.set({
-    interceptedElement: {
-      tagName,
-      innerText,
-    },
-  });
+  return element;
 }
