@@ -1,4 +1,4 @@
-import { TabAction } from '../../../common';
+import { DocumentContentAction } from '../../../common';
 
 export enum CommandsType {
   General,
@@ -9,12 +9,12 @@ export type Command = Readonly<{
   id: string;
   hostname?: string;
   name: string;
-  actions: ReadonlyArray<TabAction>;
+  actions: ReadonlyArray<DocumentContentAction>;
 }>;
 
 export type PendingCommandForm = Readonly<{
   name: string;
-  actions: Array<Partial<TabAction>>;
+  actions: Array<Partial<DocumentContentAction>>;
   hostname?: string;
 }>;
 

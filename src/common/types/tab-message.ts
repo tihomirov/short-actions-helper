@@ -1,4 +1,4 @@
-import { TabAction } from './tab-action';
+import { DocumentContentAction } from './actions';
 
 export enum TabEvent {
   Debbug = 'SAH_Debbug',
@@ -6,20 +6,20 @@ export enum TabEvent {
   InterceptElement = 'SAH_InterceptElement',
 }
 
-export type RunActionTabMessage = Readonly<{
+export type RunDocumentContentActionMessage = Readonly<{
   event: TabEvent.RunAction;
-  action: TabAction;
+  action: DocumentContentAction;
 }>;
 
-export type InterceptElementTabMessage = Readonly<{
+export type InterceptDocumentElementMessage = Readonly<{
   event: TabEvent.InterceptElement;
 }>;
 
-export type DebbugTabMessage = Readonly<{
+export type DebbugMessage = Readonly<{
   event: TabEvent.Debbug;
 }>;
 
-export type TabMessage = RunActionTabMessage | InterceptElementTabMessage | DebbugTabMessage;
+export type TabMessage = RunDocumentContentActionMessage | InterceptDocumentElementMessage | DebbugMessage;
 
 export type TabMessageResponse = {
   [TabEvent.Debbug]: undefined;

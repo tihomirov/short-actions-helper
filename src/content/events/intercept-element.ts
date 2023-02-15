@@ -1,15 +1,15 @@
-import { Response, ResponseFactory, InterceptElementTabMessage, isSomething } from '../../common';
+import { Response, ResponseFactory, InterceptDocumentElementMessage, isSomething } from '../../common';
 import { MessageEvent } from './event';
 
 const EVENT_LISTENER_OPTIONS: AddEventListenerOptions = {
   once: true,
 };
 
-export class InterceptElementEvent extends MessageEvent<InterceptElementTabMessage> {
+export class InterceptElementEvent extends MessageEvent<InterceptDocumentElementMessage> {
   private readonly _backgroundElement: HTMLDivElement;
   private readonly _removeEventListeners: Array<() => void>;
 
-  constructor(protected readonly _message: InterceptElementTabMessage) {
+  constructor(protected readonly _message: InterceptDocumentElementMessage) {
     super(_message);
     this._backgroundElement = getBackgroundElement();
     this._removeEventListeners = [];

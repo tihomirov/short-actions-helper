@@ -1,4 +1,4 @@
-import { TabEvent, TabAction, ResponseFactory, Response, TabMessageResponse } from '../../../common';
+import { TabEvent, DocumentContentAction, ResponseFactory, Response, TabMessageResponse } from '../../../common';
 import { tabsService } from '../services';
 import { Command } from '../types';
 
@@ -33,7 +33,7 @@ export class MessageChannelStore {
     }
   }
 
-  private async runAction(action: TabAction): Promise<RunActionMessageResponse> {
+  private async runAction(action: DocumentContentAction): Promise<RunActionMessageResponse> {
     return await tabsService.sendMessageToCurrentTab<TabEvent.RunAction>({
       event: TabEvent.RunAction,
       action,

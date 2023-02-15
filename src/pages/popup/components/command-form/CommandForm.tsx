@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
-import { TabAction, truncate } from '../../../../common';
+import { DocumentContentAction, truncate } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
 import { Command, PendingCommandForm } from '../../types';
 import { useStores } from '../../hooks';
@@ -36,7 +36,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
     }));
   }, []);
 
-  const onActionsChange = useCallback((actions: Array<Partial<TabAction>>) => {
+  const onActionsChange = useCallback((actions: Array<Partial<DocumentContentAction>>) => {
     setCommand((prevCommand) => {
       const predefinedName = getPredefinedName(prevCommand.name, actions);
 
@@ -103,7 +103,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   );
 };
 
-function getPredefinedName(name?: string, actions?: Array<Partial<TabAction>>): string | undefined {
+function getPredefinedName(name?: string, actions?: Array<Partial<DocumentContentAction>>): string | undefined {
   if (name || !actions || actions.length !== 1) {
     return undefined;
   }

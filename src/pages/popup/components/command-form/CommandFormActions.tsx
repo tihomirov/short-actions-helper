@@ -1,10 +1,10 @@
 import React, { FC, useCallback } from 'react';
-import { ElementEvent, TabAction } from '../../../../common';
+import { ElementEvent, DocumentContentAction } from '../../../../common';
 import { CommandFormAction } from './CommandFormAction';
 
 type CommandFormProps = Readonly<{
-  actions: ReadonlyArray<Partial<TabAction>>;
-  onActionsChange: (actions: Array<Partial<TabAction>>) => void;
+  actions: ReadonlyArray<Partial<DocumentContentAction>>;
+  onActionsChange: (actions: Array<Partial<DocumentContentAction>>) => void;
   onSelectElement: () => void;
 }>;
 

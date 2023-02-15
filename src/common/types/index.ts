@@ -1,2 +1,2 @@
-export * from './tab-action';
+export * from './actions';
 export * from './tab-message';

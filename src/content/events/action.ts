@@ -1,4 +1,4 @@
-import { ElementEvent, Response, ResponseFactory, RunActionTabMessage } from '../../common';
+import { ElementEvent, Response, ResponseFactory, RunDocumentContentActionMessage } from '../../common';
 import { MessageEvent } from './event';
 
 const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void> = {
@@ -6,7 +6,7 @@ const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void
   [ElementEvent.Focus]: (element) => element.focus(),
 };
 
-export class ActionEvent extends MessageEvent<RunActionTabMessage> {
+export class ActionEvent extends MessageEvent<RunDocumentContentActionMessage> {
   run(): Response<undefined | string> {
     const { elementEvent } = this._message.action;
     const element = this.queryElement();

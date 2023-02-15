@@ -8,7 +8,7 @@ export type ElementData = Readonly<{
   innerText?: string;
 }>;
 
-export type TabAction = ElementData &
+export type DocumentContentAction = ElementData &
   Readonly<{
     elementEvent: ElementEvent;
   }>;
