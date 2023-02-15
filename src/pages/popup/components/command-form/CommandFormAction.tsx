@@ -1,83 +1,93 @@
 import React, { FC, useCallback } from 'react';
-import { Box, FormControl, Select, MenuItem, InputLabel, Tooltip, IconButton, SelectChangeEvent } from '@mui/material';
-import { Colorize } from '@mui/icons-material';
-import { ElementEvent } from '../../../../common';
+import { FormControl, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
+import {
+  ElementEvent,
+  SupportedAction,
+  ActionType,
+  DocumentContentAction,
+  TabEventType,
+  TabAction,
+} from '../../../../common';
+import { DocumentContentActionForm } from './DocumentContentActionForm';
+import { TabActionForm } from './TabActionForm';
 
-const elementEventNames: Record<ElementEvent, string> = {
-  [ElementEvent.Click]: 'Click',
-  [ElementEvent.Focus]: 'Focus',
+const actionTypeNames: Record<ActionType, string> = {
+  [ActionType.DocumentContentAction]: 'Document Content Action',
+  [ActionType.TabAction]: 'Tab Action',
 };
-const elementEvents = Object.values(ElementEvent);
+const actionTypeElements = Object.values(ActionType);
 
 type CommandFormActionProps = Readonly<{
   index: number;
+  action: Partial<SupportedAction>;
+  onActionChange: (index: number, action: Partial<SupportedAction>) => void;
   onSelectElement: () => void;
-  onElementEventSet: (index: number, elementEvent: ElementEvent) => void;
-  actionEvent?: ElementEvent;
-  tagName?: string;
-  innerText?: string;
 }>;
 
-export const CommandFormAction: FC<CommandFormActionProps> = ({
-  index,
-  actionEvent,
-  tagName,
-  innerText,
-  onSelectElement,
-  onElementEventSet,
-}) => {
-  const onActionChange = useCallback(
+export const CommandFormAction: FC<CommandFormActionProps> = ({ index, action, onActionChange, onSelectElement }) => {
+  const onActionTypeChange = useCallback(
     (event: SelectChangeEvent) => {
-      const elementEvent = event.target.value as ElementEvent;
-      if (elementEvent) {
-        onElementEventSet(index, elementEvent);
+      const value = event.target.value as ActionType;
+      if (value) {
+        onActionChange(index, {
+          ...action,
+          type: value,
+        });
       }
     },
-    [onElementEventSet],
+    [action, index],
+  );
+
+  const onElementEventSet = useCallback(
+    (elementEvent: ElementEvent) => {
+      onActionChange(index, {
+        ...action,
+        elementEvent,
+      } as DocumentContentAction);
+    },
+    [action, index],
+  );
+
+  const onSelectTabEventType = useCallback(
+    (tabEvent: TabEventType) => {
+      onActionChange(index, {
+        ...action,
+        tabEvent,
+      } as TabAction);
+    },
+    [action, index],
   );
 
   return (
     <div>
       <FormControl size="small" margin="dense" sx={{ width: '35%' }}>
-        <InputLabel id="form-new-command-action-label">Action</InputLabel>
+        <InputLabel id="form-new-command-action-type-label">Action Type</InputLabel>
         <Select
           labelId="form-new-command-action-label"
-          value={actionEvent ?? ''}
-          label="Action"
-          onChange={onActionChange}
+          value={action.type ?? ''}
+          label="Action Type"
+          onChange={onActionTypeChange}
         >
-          {elementEvents.map((event) => (
-            <MenuItem key={event} value={event}>
-              {elementEventNames[event]}
+          {actionTypeElements.map((item) => (
+            <MenuItem key={item} value={item}>
+              {actionTypeNames[item]}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      <FormControl
-        margin="dense"
-        sx={{
-          width: '65%',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'start',
-        }}
-      >
-        <Box display="flex" justifyContent="center" flexDirection="column" fontSize="12px" paddingLeft="12px">
-          {tagName ? (
-            <>
-              <Box>Tag Name: {tagName}</Box>
-              {innerText && <Box>Inner Text: {innerText}</Box>}
-            </>
-          ) : (
-            <Box>Click on icon and select element. After this open extentions again and finish creating command</Box>
-          )}
-        </Box>
-        <Tooltip title="Select Element" placement="top">
-          <IconButton onClick={onSelectElement}>
-            <Colorize />
-          </IconButton>
-        </Tooltip>
-      </FormControl>
+      {action.type === ActionType.DocumentContentAction && (
+        <DocumentContentActionForm
+          key={index}
+          actionEvent={action.elementEvent}
+          tagName={action.tagName}
+          innerText={action.innerText}
+          onElementEventSet={onElementEventSet}
+          onSelectElement={onSelectElement}
+        />
+      )}
+      {action.type === ActionType.TabAction && (
+        <TabActionForm key={index} tabEventType={action.tabEvent} onSelectTabEventType={onSelectTabEventType} />
+      )}
     </div>
   );
 };

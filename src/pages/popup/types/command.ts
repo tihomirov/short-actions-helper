@@ -1,4 +1,4 @@
-import { DocumentContentAction } from '../../../common';
+import { SupportedAction } from '../../../common';
 
 export enum CommandsType {
   General,
@@ -9,12 +9,12 @@ export type Command = Readonly<{
   id: string;
   hostname?: string;
   name: string;
-  actions: ReadonlyArray<DocumentContentAction>;
+  actions: ReadonlyArray<SupportedAction>;
 }>;
 
 export type PendingCommandForm = Readonly<{
   name: string;
-  actions: Array<Partial<DocumentContentAction>>;
+  actions: Array<Partial<SupportedAction>>;
   hostname?: string;
 }>;
 

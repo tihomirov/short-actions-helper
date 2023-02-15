@@ -1,4 +1,4 @@
-import { TabEvent, TabMessage } from '../common';
+import { TabMessageEvent, TabMessage } from '../common';
 import { DebbugEvent, ActionEvent, InterceptElementEvent, MessageEvent } from './events';
 
 chrome.runtime.onMessage.addListener((message: TabMessage, sender, sendResponse) => {
@@ -13,11 +13,11 @@ chrome.runtime.onMessage.addListener((message: TabMessage, sender, sendResponse)
 
 function mapMessageToEvent(message: TabMessage): MessageEvent | undefined {
   switch (message.event) {
-    case TabEvent.Debbug:
+    case TabMessageEvent.Debbug:
       return new DebbugEvent(message);
-    case TabEvent.RunAction:
+    case TabMessageEvent.RunAction:
       return new ActionEvent(message);
-    case TabEvent.InterceptElement:
+    case TabMessageEvent.InterceptElement:
       return new InterceptElementEvent(message);
     default:
       return undefined;

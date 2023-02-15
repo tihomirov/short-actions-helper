@@ -1,11 +1,13 @@
-import { assertExists, TabEvent, TabMessage, TabMessageResponse, Response } from '../../../common';
+import { assertExists, TabMessageEvent, TabMessage, TabMessageResponse, Response } from '../../../common';
 
 export type BrowserTab = chrome.tabs.Tab;
 
 class TabsService {
   private _currentTab: BrowserTab | undefined = undefined;
 
-  async sendMessageToCurrentTab<T extends TabEvent>(message: TabMessage): Promise<Response<TabMessageResponse[T]>> {
+  async sendMessageToCurrentTab<T extends TabMessageEvent>(
+    message: TabMessage,
+  ): Promise<Response<TabMessageResponse[T]>> {
     const tabId = this._currentTab?.id;
     assertExists(tabId, 'currentTab id must be defined to send message');
 
@@ -21,6 +23,18 @@ class TabsService {
     this._currentTab = tab;
 
     return tab;
+  }
+
+  async reloadCurrentTab(): Promise<void> {
+    const tabId = this._currentTab?.id;
+    assertExists(tabId, 'currentTab id must be defined to reload current tab');
+    await chrome.tabs.reload(tabId);
+  }
+
+  async closeCurrentTab(): Promise<void> {
+    const tabId = this._currentTab?.id;
+    assertExists(tabId, 'currentTab id must be defined to reload current tab');
+    await chrome.tabs.remove(tabId);
   }
 }
 

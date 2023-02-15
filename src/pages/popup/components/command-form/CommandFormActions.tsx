@@ -1,21 +1,20 @@
 import React, { FC, useCallback } from 'react';
-import { ElementEvent, DocumentContentAction } from '../../../../common';
+import { SupportedAction } from '../../../../common';
 import { CommandFormAction } from './CommandFormAction';
 
 type CommandFormProps = Readonly<{
-  actions: ReadonlyArray<Partial<DocumentContentAction>>;
-  onActionsChange: (actions: Array<Partial<DocumentContentAction>>) => void;
+  actions: ReadonlyArray<Partial<SupportedAction>>;
+  onActionsChange: (actions: Array<Partial<SupportedAction>>) => void;
   onSelectElement: () => void;
 }>;
 
 export const CommandFormActions: FC<CommandFormProps> = ({ actions, onActionsChange, onSelectElement }) => {
-  const onElementEventSet = useCallback(
-    (index: number, elementEvent: ElementEvent) => {
+  const onActionChange = useCallback(
+    (index: number, action: Partial<SupportedAction>) => {
       onActionsChange([
         ...actions.slice(0, index),
         {
-          ...actions[index],
-          elementEvent,
+          ...action,
         },
         ...actions.slice(index + 1),
       ]);
@@ -29,10 +28,8 @@ export const CommandFormActions: FC<CommandFormProps> = ({ actions, onActionsCha
         <CommandFormAction
           key={index}
           index={index}
-          actionEvent={action.elementEvent}
-          tagName={action.tagName}
-          innerText={action.innerText}
-          onElementEventSet={onElementEventSet}
+          action={action}
+          onActionChange={onActionChange}
           onSelectElement={onSelectElement}
         />
       ))}

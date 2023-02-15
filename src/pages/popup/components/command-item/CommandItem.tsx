@@ -2,6 +2,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { DeleteOutlineOutlined, PlayArrowOutlined } from '@mui/icons-material';
 import { Command } from '../../types';
+import { commandRunnerService } from '../../services';
 import { useStores } from '../../hooks';
 
 type CommandProps = Readonly<{
@@ -9,11 +10,11 @@ type CommandProps = Readonly<{
 }>;
 
 export const CommandItem: FC<CommandProps> = ({ command }) => {
-  const { commandStore, messageChannelStore } = useStores();
+  const { commandStore } = useStores();
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const onRun = useCallback(() => {
-    messageChannelStore.runCommand(command);
+    commandRunnerService.runCommand(command);
   }, [command]);
 
   const onDelete = useCallback(async () => {

@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
-import { DocumentContentAction, truncate } from '../../../../common';
+import { ActionType, SupportedAction, truncate } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
 import { Command, PendingCommandForm } from '../../types';
 import { useStores } from '../../hooks';
@@ -36,7 +36,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
     }));
   }, []);
 
-  const onActionsChange = useCallback((actions: Array<Partial<DocumentContentAction>>) => {
+  const onActionsChange = useCallback((actions: Array<Partial<SupportedAction>>) => {
     setCommand((prevCommand) => {
       const predefinedName = getPredefinedName(prevCommand.name, actions);
 
@@ -58,11 +58,11 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
       return;
     }
 
-    for (const action of command.actions) {
-      if (!action.elementEvent || !action.tagName) {
-        return;
-      }
-    }
+    // for (const action of command.actions) {
+    //   if (!action.elementEvent || !action.tagName) {
+    //     return;
+    //   }
+    // }
 
     await commandStore.saveCommand(command as Omit<Command, 'id'>);
     await commandStore.removePendingCommand();
@@ -103,11 +103,17 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   );
 };
 
-function getPredefinedName(name?: string, actions?: Array<Partial<DocumentContentAction>>): string | undefined {
+function getPredefinedName(name?: string, actions?: Array<Partial<SupportedAction>>): string | undefined {
   if (name || !actions || actions.length !== 1) {
     return undefined;
   }
 
-  const [{ tagName, innerText, elementEvent }] = actions;
-  return elementEvent && tagName ? `${elementEvent}: <${tagName}> ${truncate(innerText ?? '')}` : undefined;
+  const [action] = actions;
+
+  if (action.type === ActionType.DocumentContentAction) {
+    const { tagName, innerText, elementEvent } = action;
+    return elementEvent && tagName ? `${elementEvent}: <${tagName}> ${truncate(innerText ?? '')}` : undefined;
+  }
+
+  return undefined;
 }
