@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
-import { ActionType, SupportedAction, truncate } from '../../../../common';
+import { ActionType, assertUnreachable, SupportedAction, truncate } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
 import { Command, CommandsType, PendingCommandForm } from '../../types';
 import { useStores } from '../../hooks';
@@ -40,10 +40,11 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const onActionsChange = useCallback((actions: Array<Partial<SupportedAction>>) => {
     setCommand((prevCommand) => {
       const predefinedName = getPredefinedName(prevCommand.name, actions);
+      const usePredefinedName = !prevCommand.name && predefinedName;
 
       return {
         ...prevCommand,
-        name: prevCommand.name ?? predefinedName,
+        name: usePredefinedName ? predefinedName : prevCommand.name,
         actions,
       };
     });
@@ -111,10 +112,20 @@ function getPredefinedName(name?: string, actions?: Array<Partial<SupportedActio
 
   const [action] = actions;
 
-  if (action.type === ActionType.DocumentContentAction) {
-    const { tagName, innerText, elementEvent } = action;
-    return elementEvent && tagName ? `${elementEvent}: <${tagName}> ${truncate(innerText ?? '')}` : undefined;
+  if (action.type === undefined) {
+    return undefined;
   }
 
-  return undefined;
+  switch (action.type) {
+    case ActionType.DocumentContentAction: {
+      const { tagName, innerText, elementEvent } = action;
+      return elementEvent && tagName ? `${elementEvent}: <${tagName}> ${truncate(innerText ?? '')}` : undefined;
+    }
+    case ActionType.TabAction: {
+      const { tabEvent } = action;
+      return tabEvent;
+    }
+    default:
+      assertUnreachable(action.type);
+  }
 }
