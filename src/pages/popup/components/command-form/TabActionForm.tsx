@@ -3,8 +3,9 @@ import { FormControl, Select, MenuItem, InputLabel, SelectChangeEvent } from '@m
 import { TabEventType } from '../../../../common';
 
 const tabEventTypeNames: Record<TabEventType, string> = {
-  [TabEventType.Close]: 'Close Tab',
-  [TabEventType.Reload]: 'Reload Tab',
+  [TabEventType.Close]: 'Close',
+  [TabEventType.Reload]: 'Reload',
+  [TabEventType.ToggleMute]: 'Toggle Mute',
 };
 const tabEventTypeElements = Object.values(TabEventType);
 

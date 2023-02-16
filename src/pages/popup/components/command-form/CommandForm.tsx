@@ -123,7 +123,7 @@ function getPredefinedName(name?: string, actions?: Array<Partial<SupportedActio
     }
     case ActionType.TabAction: {
       const { tabEvent } = action;
-      return tabEvent;
+      return tabEvent !== undefined ? `${tabEvent} Tab` : undefined;
     }
     default:
       assertUnreachable(action.type);

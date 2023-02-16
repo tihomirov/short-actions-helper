@@ -36,6 +36,12 @@ class TabsService {
     assertExists(tabId, 'currentTab id must be defined to reload current tab');
     await chrome.tabs.remove(tabId);
   }
+
+  async toggleMuteCurrentTab(): Promise<void> {
+    const tabId = this._currentTab?.id;
+    assertExists(tabId, 'currentTab id must be defined to reload current tab');
+    this._currentTab = await chrome.tabs.update(tabId, { muted: !this._currentTab?.mutedInfo?.muted });
+  }
 }
 
 export const tabsService = new TabsService();

@@ -67,6 +67,10 @@ class CommandRunnerService {
           await tabsService.reloadCurrentTab();
           return ResponseFactory.success(undefined);
         }
+        case TabEventType.ToggleMute: {
+          await tabsService.toggleMuteCurrentTab();
+          return ResponseFactory.success(undefined);
+        }
         default: {
           assertUnreachable(tabEvent);
         }

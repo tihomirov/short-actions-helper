@@ -4,13 +4,14 @@ export enum ActionType {
 }
 
 export enum TabEventType {
-  Reload = 'reload',
-  Close = 'focus',
+  Reload = 'Reload',
+  Close = 'Close',
+  ToggleMute = 'Toggle Mute',
 }
 
 export enum ElementEvent {
-  Click = 'click',
-  Focus = 'focus',
+  Click = 'Click',
+  Focus = 'Focus',
 }
 
 export type ElementData = Readonly<{
