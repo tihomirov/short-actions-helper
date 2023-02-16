@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import { DeleteOutlineOutlined, PlayArrowOutlined } from '@mui/icons-material';
 import { Command } from '../../types';
@@ -11,17 +11,12 @@ type CommandProps = Readonly<{
 
 export const CommandItem: FC<CommandProps> = ({ command }) => {
   const { commandStore } = useStores();
-  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const onRun = useCallback(() => {
     commandRunnerService.runCommand(command);
   }, [command]);
 
-  const onDelete = useCallback(async () => {
-    setDeleteLoading(true);
-    await commandStore.removeCommand(command.id);
-    setDeleteLoading(false);
-  }, [command]);
+  const onDelete = useCallback(() => commandStore.removeCommand(command.id), [command]);
 
   return (
     <Box
@@ -34,7 +29,6 @@ export const CommandItem: FC<CommandProps> = ({ command }) => {
       sx={{
         background: '#fef6ec',
         boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-        pointerEvents: deleteLoading ? 'none' : undefined,
       }}
     >
       <div style={{ marginLeft: '6px' }}>{command.name}</div>
@@ -50,9 +44,6 @@ export const CommandItem: FC<CommandProps> = ({ command }) => {
           </IconButton>
         </Tooltip>
       </Box>
-      {deleteLoading && (
-        <Box position="absolute" width="100%" height="100%" sx={{ backgroundColor: 'gray', opacity: 0.7 }} />
-      )}
     </Box>
   );
 };

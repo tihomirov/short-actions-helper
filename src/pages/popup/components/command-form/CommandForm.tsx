@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
 import { ActionType, SupportedAction, truncate } from '../../../../common';
 import { CommandFormActions } from './CommandFormActions';
-import { Command, PendingCommandForm } from '../../types';
+import { Command, CommandsType, PendingCommandForm } from '../../types';
 import { useStores } from '../../hooks';
 
 type CommandFormProps = Readonly<{
@@ -16,9 +16,10 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const [command, setCommand] = useState<PendingCommandForm>(() => {
     const { name, actions, hostname } = pendingCommand || {};
     const predefinedName = getPredefinedName(name, actions) ?? '';
+    const defaultHostname = commandStore.commandsType === CommandsType.Hostname ? tabStore.hostname : undefined;
 
     return {
-      hostname: hostname ?? tabStore.hostname,
+      hostname: hostname ?? defaultHostname,
       name: name ? name : predefinedName,
       actions: actions ? [...actions] : [{}],
     };
@@ -50,7 +51,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
 
   const onSave = useCallback(async () => {
     // TODO validate form
-    if (!command.name || !command.hostname) {
+    if (!command.name) {
       return;
     }
 

@@ -16,8 +16,8 @@ class CommandService {
     await this._storageService.createCommand(command);
   }
 
-  async deleteCommand(id: string, hostname?: string): Promise<Commands> {
-    return await this._storageService.deleteCommand(id, hostname);
+  async deleteCommand(id: string): Promise<void> {
+    await this._storageService.deleteCommand(id);
   }
 
   async getPendingCommand(): Promise<PendingCommandForm | undefined> {

@@ -1,14 +1,17 @@
 import React, { FC } from 'react';
-import { Commands } from '../../types';
+import { observer } from 'mobx-react-lite';
 import { CommandItem } from '../command-item';
 import { NewCommandButton } from '../new-command-button';
+import { useStores } from '../../hooks';
 
-type CommandsListProps = Readonly<{
-  commands: Commands;
-}>;
+export const CommandsList: FC = observer(() => {
+  const { commandStore } = useStores();
 
-export const CommandsList: FC<CommandsListProps> = ({ commands }) => {
-  if (commands.length === 0) {
+  if (commandStore.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (commandStore.commands.length === 0) {
     return (
       <>
         <h3>There are no Commands yet</h3>
@@ -19,10 +22,10 @@ export const CommandsList: FC<CommandsListProps> = ({ commands }) => {
 
   return (
     <>
-      {commands.map((command, index) => (
+      {commandStore.commands.map((command, index) => (
         <CommandItem key={index} command={command} />
       ))}
       <NewCommandButton />
     </>
   );
-};
+});

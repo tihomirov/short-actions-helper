@@ -39,7 +39,7 @@ export const Home: FC = observer(() => {
         </Tabs>
       </Box>
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" paddingTop="6px">
-        {commandStore.isLoading ? <div>Loading...</div> : <CommandsList commands={commandStore.commands} />}
+        <CommandsList />
       </Box>
     </Box>
   );

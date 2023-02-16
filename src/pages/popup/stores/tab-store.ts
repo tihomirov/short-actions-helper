@@ -1,4 +1,4 @@
-import { observable, computed, action, makeObservable } from 'mobx';
+import { observable, computed, action, makeObservable, runInAction } from 'mobx';
 import { BrowserTab, tabsService } from '../services';
 import { assertExists } from '../../../common';
 
@@ -7,8 +7,6 @@ export class TabStore {
   private _currentTab: BrowserTab | undefined = undefined;
   @observable
   private _currentTabLoading = true;
-  @observable
-  private _currentTabMissing = true;
 
   constructor() {
     makeObservable(this);
@@ -22,7 +20,7 @@ export class TabStore {
 
   @computed
   get currentTabMissing(): boolean {
-    return this._currentTabMissing;
+    return !this._currentTab;
   }
 
   @computed
@@ -36,18 +34,14 @@ export class TabStore {
 
   @action
   private async loadCurrentTab(): Promise<void> {
-    this._currentTabLoading = true;
+    runInAction(() => (this._currentTabLoading = true));
 
     const tab = await tabsService.gueryCurrentTab();
 
-    if (tab) {
+    runInAction(() => {
       this._currentTab = tab;
-      this._currentTabMissing = false;
-    } else {
-      this._currentTabMissing = true;
-    }
-
-    this._currentTabLoading = false;
+      this._currentTabLoading = false;
+    });
   }
 
   @computed

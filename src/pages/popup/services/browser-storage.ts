@@ -12,7 +12,7 @@ export interface IStorageService {
   getCommands(): Promise<Commands>;
   getCommandsByHostname(hostname: string): Promise<Commands>;
   createCommand(command: Omit<Command, 'id'>): Promise<Command>;
-  deleteCommand(id: string, hostname?: string): Promise<Commands>;
+  deleteCommand(id: string): Promise<void>;
   getPendingCommand(): Promise<PendingCommandForm | undefined>;
   savePendingCommand(command: PendingCommandForm): Promise<PendingCommandForm>;
   removePendingCommand(): Promise<void>;
@@ -45,17 +45,11 @@ class BrowserStorageService implements IStorageService {
     return newCommand;
   }
 
-  async deleteCommand(id: string, hostname?: string): Promise<Commands> {
+  async deleteCommand(id: string): Promise<void> {
     const { commands = [] } = await chrome.storage.sync.get(StorageKey.Commands);
     const filteredCommands = commands.filter((command: Command) => command.id !== id);
 
     await chrome.storage.sync.set({ [StorageKey.Commands]: filteredCommands });
-
-    if (hostname) {
-      return filteredCommands.filter((command: Command) => command.hostname === hostname);
-    } else {
-      return filteredCommands.filter((command: Command) => !command.hostname);
-    }
   }
 
   async getPendingCommand(): Promise<PendingCommandForm | undefined> {

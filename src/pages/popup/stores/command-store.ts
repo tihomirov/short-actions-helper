@@ -1,4 +1,4 @@
-import { observable, computed, action, makeObservable } from 'mobx';
+import { observable, computed, action, makeObservable, runInAction } from 'mobx';
 import { assertUnreachable } from '../../../common';
 import { commandService } from '../services';
 import { Command, Commands, PendingCommandForm, CommandsType } from '../types';
@@ -50,53 +50,55 @@ export class CommandStore {
     this._commandsType = type;
   }
 
-  @action
   async loadCommands(): Promise<void> {
-    this._isLoading = true;
+    runInAction(() => (this._isLoading = true));
 
     const hostname = this._rootStore.tabStore.hostname;
+
     switch (this._commandsType) {
       case CommandsType.General:
-        this._commands = await commandService.getCommands();
+        const generalCommands = await commandService.getCommands();
+        runInAction(() => (this._commands = generalCommands));
         break;
       case CommandsType.Hostname:
-        this._commands = await commandService.getCommandsByHostname(hostname);
+        const hostnameCommands = await commandService.getCommandsByHostname(hostname);
+        runInAction(() => (this._commands = hostnameCommands));
         break;
       default:
         assertUnreachable(this._commandsType);
     }
 
-    this._isLoading = false;
+    runInAction(() => (this._isLoading = false));
   }
 
-  @action
   async loadPendingCommands(): Promise<void> {
-    this._isPendingCommandLoading = true;
-    this._pendingCommand = await commandService.getPendingCommand();
-    this._isPendingCommandLoading = false;
+    runInAction(() => (this._isPendingCommandLoading = true));
+
+    const pendingCommand = await commandService.getPendingCommand();
+
+    runInAction(() => {
+      this._pendingCommand = pendingCommand;
+      this._isPendingCommandLoading = false;
+    });
   }
 
-  @action
   async removeCommand(id: string): Promise<void> {
-    const hostname = this._rootStore.tabStore.hostname;
-    this._commands = await commandService.deleteCommand(id, hostname);
+    await commandService.deleteCommand(id);
+    runInAction(() => (this._commands = this._commands.filter((command) => command.id !== id)));
   }
 
-  @action
   async saveCommand(command: Omit<Command, 'id'>): Promise<void> {
     this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.General;
     await commandService.createCommand(command);
   }
 
-  @action
   async savePendingCommand(command: PendingCommandForm): Promise<void> {
     await commandService.savePendingCommand(command);
-    this._pendingCommand = command;
+    runInAction(() => (this._pendingCommand = command));
   }
 
-  @action
   async removePendingCommand(): Promise<void> {
     await commandService.removePendingCommand();
-    this._pendingCommand = undefined;
+    runInAction(() => (this._pendingCommand = undefined));
   }
 }
