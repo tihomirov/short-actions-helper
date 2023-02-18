@@ -1,19 +1,7 @@
-import {
-  TabMessageEvent,
-  SupportedAction,
-  ResponseFactory,
-  Response,
-  TabMessageResponse,
-  ActionType,
-  assertUnreachable,
-  DocumentContentAction,
-  TabAction,
-  TabEventType,
-} from '../../../common';
+import { SupportedAction, ResponseFactory, Response } from '../../../common';
+import { createAction } from '../actions';
 import { Command } from '../types';
-import { tabsService } from './tabs';
-
-type RunActionMessageResponse = Response<TabMessageResponse[TabMessageEvent.RunAction]>;
+import { TabsService } from './tabs';
 
 class CommandRunnerService {
   async runCommand(command: Command): Promise<void> {
@@ -33,55 +21,11 @@ class CommandRunnerService {
   }
 
   private async runAction(action: SupportedAction): Promise<Response<unknown>> {
-    const type = action.type;
+    const currentTab = await TabsService.getCurrentTab();
+    const actionInstanse = createAction(action, currentTab);
+    const response = await actionInstanse.run();
 
-    switch (type) {
-      case ActionType.DocumentContentAction: {
-        return await this.runDocumentContentAction(action);
-      }
-      case ActionType.TabAction: {
-        return await this.runTabAction(action);
-      }
-      default:
-        assertUnreachable(type);
-    }
-  }
-
-  private async runDocumentContentAction(action: DocumentContentAction): Promise<RunActionMessageResponse> {
-    return await tabsService.sendMessageToCurrentTab<TabMessageEvent.RunAction>({
-      event: TabMessageEvent.RunAction,
-      action,
-    });
-  }
-
-  private async runTabAction(action: TabAction): Promise<Response> {
-    try {
-      const { tabEvent } = action;
-
-      switch (tabEvent) {
-        case TabEventType.Close: {
-          await tabsService.closeCurrentTab();
-          return ResponseFactory.success(undefined);
-        }
-        case TabEventType.Reload: {
-          await tabsService.reloadCurrentTab();
-          return ResponseFactory.success(undefined);
-        }
-        case TabEventType.ToggleMute: {
-          await tabsService.toggleMuteCurrentTab();
-          return ResponseFactory.success(undefined);
-        }
-        default: {
-          assertUnreachable(tabEvent);
-        }
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        return ResponseFactory.fail(error.message);
-      }
-
-      return ResponseFactory.fail('Unexpected Error; runTabAction');
-    }
+    return response || ResponseFactory.success(undefined);
   }
 }
 

@@ -1,47 +1,41 @@
 import { assertExists, TabMessageEvent, TabMessage, TabMessageResponse, Response } from '../../../common';
+import browser from 'webextension-polyfill';
 
-export type BrowserTab = chrome.tabs.Tab;
+export type BrowserTab = browser.Tabs.Tab;
 
-class TabsService {
-  private _currentTab: BrowserTab | undefined = undefined;
-
-  async sendMessageToCurrentTab<T extends TabMessageEvent>(
-    message: TabMessage,
-  ): Promise<Response<TabMessageResponse[T]>> {
-    const tabId = this._currentTab?.id;
-    assertExists(tabId, 'currentTab id must be defined to send message');
-
-    const response = await chrome.tabs.sendMessage<TabMessage, Response<TabMessageResponse[T]>>(tabId, message);
-
-    return response;
-  }
-
-  async gueryCurrentTab(): Promise<BrowserTab | undefined> {
-    const queryOptions = { active: true, lastFocusedWindow: true };
-    const [tab] = await chrome.tabs.query(queryOptions);
-
-    this._currentTab = tab;
+export class TabsService {
+  static async getCurrentTab(): Promise<BrowserTab> {
+    const queryOptions = { active: true };
+    const [tab] = await browser.tabs.query(queryOptions);
 
     return tab;
   }
 
-  async reloadCurrentTab(): Promise<void> {
-    const tabId = this._currentTab?.id;
-    assertExists(tabId, 'currentTab id must be defined to reload current tab');
-    await chrome.tabs.reload(tabId);
+  static async removeTab(tabId: number): Promise<void> {
+    await browser.tabs.remove(tabId);
   }
 
-  async closeCurrentTab(): Promise<void> {
-    const tabId = this._currentTab?.id;
-    assertExists(tabId, 'currentTab id must be defined to reload current tab');
-    await chrome.tabs.remove(tabId);
+  static async reloadTab(tabId: number): Promise<void> {
+    await browser.tabs.reload(tabId);
   }
 
-  async toggleMuteCurrentTab(): Promise<void> {
-    const tabId = this._currentTab?.id;
-    assertExists(tabId, 'currentTab id must be defined to reload current tab');
-    this._currentTab = await chrome.tabs.update(tabId, { muted: !this._currentTab?.mutedInfo?.muted });
+  static async updateTab(tabId: number, update: browser.Tabs.UpdateUpdatePropertiesType): Promise<BrowserTab> {
+    return await browser.tabs.update(tabId, update);
+  }
+
+  static async sendMessageToCurrentTab<T extends TabMessageEvent>(
+    message: TabMessage,
+  ): Promise<Response<TabMessageResponse[T]>> {
+    const { id } = await TabsService.getCurrentTab();
+    assertExists(id, 'currentTab id must be defined to send message');
+
+    return await TabsService.sendMessageToTab(id, message);
+  }
+
+  static async sendMessageToTab<T extends TabMessageEvent>(
+    tabId: number,
+    message: TabMessage,
+  ): Promise<Response<TabMessageResponse[T]>> {
+    return await browser.tabs.sendMessage(tabId, message);
   }
 }
-
-export const tabsService = new TabsService();

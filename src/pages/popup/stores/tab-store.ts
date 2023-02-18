@@ -1,5 +1,5 @@
 import { observable, computed, action, makeObservable, runInAction } from 'mobx';
-import { BrowserTab, tabsService } from '../services';
+import { BrowserTab, TabsService } from '../services';
 import { assertExists } from '../../../common';
 
 export class TabStore {
@@ -36,7 +36,7 @@ export class TabStore {
   private async loadCurrentTab(): Promise<void> {
     runInAction(() => (this._currentTabLoading = true));
 
-    const tab = await tabsService.gueryCurrentTab();
+    const tab = await TabsService.getCurrentTab();
 
     runInAction(() => {
       this._currentTab = tab;

@@ -1,9 +1,9 @@
 import { TabMessageEvent, ResponseFactory } from '../../../common';
-import { tabsService } from '../services';
+import { TabsService } from '../services';
 
 export class MessageChannelStore {
   async runInterceptElementMode(): Promise<void> {
-    const response = await tabsService.sendMessageToCurrentTab<TabMessageEvent.InterceptElement>({
+    const response = await TabsService.sendMessageToCurrentTab<TabMessageEvent.InterceptElement>({
       event: TabMessageEvent.InterceptElement,
     });
 
