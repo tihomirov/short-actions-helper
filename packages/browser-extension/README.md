@@ -69,4 +69,3 @@ include here. All the filepaths in your manifest should point to files in `src`.
 [Chrome Extension official documentation](https://developer.chrome.com/docs/webstore/)
 
 [How to Publish your extension step by step video tutorial](https://www.youtube.com/playlist?list=PLYlOQabA4Mm0bPiMKIBMgZK0u2jbYsrC6)
-
