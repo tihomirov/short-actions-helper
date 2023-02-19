@@ -1,45 +1,25 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Outlet, Link } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
+import { Header } from '../components/header';
 import { useStores } from '../hooks';
 import s from './style.scss';
 
 export const Root: FC = observer(() => {
   const { tabStore } = useStores();
 
-  if (tabStore.currentTabLoading) {
-    return (
-      <div className={s.app}>
-        <header className={s.header}>
-          <div className={s.headerTitle}>Lazy Actions Widget</div>
-        </header>
-        <div>Loading</div>
-      </div>
-    );
-  }
-
-  if (tabStore.currentTabMissing) {
-    return (
-      <div className={s.app}>
-        <header className={s.header}>
-          <div className={s.headerTitle}>Lazy Actions Widget</div>
-        </header>
-        <div>Can not get current Browser Tab</div>
-      </div>
-    );
-  }
-
   return (
     <div className={s.app}>
-      <header className={s.header}>
-        <Link className={s.headerLink} to="/">
-          <div className={s.headerTitle}>Lazy Actions Widget</div>
-          <span className={s.headerSubTitle}>{tabStore.hostname}</span>
-        </Link>
-      </header>
-      <Box padding="12px" display="flex" flexDirection="column">
-        <Outlet />
+      <Header hostname={tabStore.hostname} />
+      <Box width="100%" height="100%" padding="12px" display="flex" flexDirection="column">
+        {tabStore.currentTabLoading ? (
+          <Box margin="auto">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Outlet />
+        )}
       </Box>
     </div>
   );

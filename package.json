@@ -1,5 +1,5 @@
 {
-  "name": "short-actions-helper",
+  "name": "remote-shortcuts",
   "version": "1.0.0",
   "scripts": {
     "build": "rollup -c",
@@ -40,7 +40,6 @@
     "@rollup/plugin-typescript": "^8.1.0",
     "@types/chrome": "0.0.210",
     "@types/jest": "^26.0.19",
-    "@types/webextension-polyfill": "^0.10.0",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
     "cross-env": "^7.0.3",

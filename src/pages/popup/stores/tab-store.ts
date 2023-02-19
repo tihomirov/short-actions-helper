@@ -1,6 +1,5 @@
 import { observable, computed, action, makeObservable, runInAction } from 'mobx';
 import { BrowserTab, TabsService } from '../services';
-import { assertExists } from '../../../common';
 
 export class TabStore {
   @observable
@@ -24,9 +23,12 @@ export class TabStore {
   }
 
   @computed
-  get hostname(): string {
-    const { url } = this.currentTab;
-    assertExists(url, 'Can not get ta URL. The permissions are probably missing "tabs"');
+  get hostname(): string | undefined {
+    const url = this._currentTab?.url;
+
+    if (!url) {
+      return undefined;
+    }
 
     const { hostname } = new URL(url);
     return hostname;
@@ -42,11 +44,5 @@ export class TabStore {
       this._currentTab = tab;
       this._currentTabLoading = false;
     });
-  }
-
-  @computed
-  private get currentTab(): BrowserTab {
-    assertExists(this._currentTab, 'Can not get current Tab');
-    return this._currentTab;
   }
 }

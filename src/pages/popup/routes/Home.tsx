@@ -31,16 +31,16 @@ export const Home: FC = observer(() => {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={commandStore.commandsType} onChange={onChangeCommandsType}>
           <Tab value={CommandsType.General} label="General" />
-          <Tab value={CommandsType.Hostname} label={tabStore.hostname} />
+          {tabStore.hostname && <Tab value={CommandsType.Hostname} label={tabStore.hostname} />}
         </Tabs>
       </Box>
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" paddingTop="6px">
         <CommandsList />
       </Box>
-    </Box>
+    </>
   );
 });

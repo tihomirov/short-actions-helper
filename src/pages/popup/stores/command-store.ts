@@ -1,5 +1,5 @@
 import { observable, computed, action, makeObservable, runInAction } from 'mobx';
-import { assertUnreachable } from '../../../common';
+import { assertExists, assertUnreachable } from '../../../common';
 import { commandService } from '../services';
 import { Command, Commands, PendingCommandForm, CommandsType } from '../types';
 import { RootStore } from './root-store';
@@ -47,13 +47,16 @@ export class CommandStore {
 
   @action
   setCommandsType(type: CommandsType): void {
+    if (type === CommandsType.Hostname && !this._rootStore.tabStore.hostname) {
+      // can not set CommandsType.Hostname if current tab is not defined
+      return;
+    }
+
     this._commandsType = type;
   }
 
   async loadCommands(): Promise<void> {
     runInAction(() => (this._isLoading = true));
-
-    const hostname = this._rootStore.tabStore.hostname;
 
     switch (this._commandsType) {
       case CommandsType.General:
@@ -61,6 +64,9 @@ export class CommandStore {
         runInAction(() => (this._commands = generalCommands));
         break;
       case CommandsType.Hostname:
+        const hostname = this._rootStore.tabStore.hostname;
+        assertExists(hostname, 'can not load commands by hostname; hostname is missing');
+
         const hostnameCommands = await commandService.getCommandsByHostname(hostname);
         runInAction(() => (this._commands = hostnameCommands));
         break;
