@@ -2,7 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { User, IUser } from '../models/user';
+import { UserModel, User } from '../models/user';
 
 export const authRouter = Router();
 
@@ -13,7 +13,7 @@ passport.use(
       passwordField: 'password',
     },
     async (email, password, cb) => {
-      const user = await User.findOne<IUser>({ email });
+      const user = await UserModel.findOne<User>({ email });
       if (!user) {
         return cb(new Error('User with this email is not found'));
       }
@@ -35,7 +35,7 @@ passport.serializeUser((user: Express.User, cb) => {
   });
 });
 
-passport.deserializeUser((user, cb) => process.nextTick(() => cb(null, user as IUser)));
+passport.deserializeUser((user, cb) => process.nextTick(() => cb(null, user as User)));
 
 authRouter.post('/register', async (req, res) => {
   try {
@@ -45,7 +45,7 @@ authRouter.post('/register', async (req, res) => {
       throw new Error('Email or Password is not presented in request');
     }
 
-    const userWithProvidedEmail = await User.findOne({ email });
+    const userWithProvidedEmail = await UserModel.findOne({ email });
     if (userWithProvidedEmail) {
       return res.status(401).json('User with this email is already exist');
     }
@@ -53,7 +53,7 @@ authRouter.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(password, salt);
 
-    const newUser = new User({
+    const newUser = new UserModel({
       email,
       password: hashedPass,
     });
@@ -72,7 +72,7 @@ authRouter.post('/register', async (req, res) => {
 });
 
 authRouter.post('/login', (req, res, next) => {
-  passport.authenticate('local', (error: unknown, user: IUser, info: unknown) => {
+  passport.authenticate('local', (error: unknown, user: User, info: unknown) => {
     if (error) {
       return res.status(500).json(error);
     }
