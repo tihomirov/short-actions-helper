@@ -47,7 +47,7 @@ authRouter.post('/register', async (req, res) => {
 
     const userWithProvidedEmail = await User.findOne({ email });
     if (userWithProvidedEmail) {
-      return res.status(400).json('User with this email is already exist');
+      return res.status(401).json('User with this email is already exist');
     }
 
     const salt = await bcrypt.genSalt(10);
