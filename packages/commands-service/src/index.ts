@@ -1,6 +1,8 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import passport from 'passport';
+import expressSession from 'express-session';
 
 import { authRouter } from './routes';
 
@@ -17,6 +19,16 @@ if (process.env.DB_URL) {
 }
 
 app.use(express.json());
+app.use(
+  expressSession({
+    secret: 'remote-shortcuts',
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/auth', authRouter);
 
