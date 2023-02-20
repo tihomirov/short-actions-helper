@@ -4,31 +4,35 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, FormControl, TextField, Stack } from '@mui/material';
 import { useStores } from '../hooks';
 
-export const Login: FC = observer(() => {
+export const Register: FC = observer(() => {
   const navigate = useNavigate();
   const { userStore } = useStores();
   const [loading, setLoading] = useState(false);
-  const [loginForm, setLoginFrom] = useState({
+  const [registerForm, setRegisterFrom] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
   });
 
-  const onLogin = useCallback(async () => {
-    const { email, password } = loginForm;
+  const onRegister = useCallback(async () => {
+    const { email, password, confirmPassword } = registerForm;
     if (!email || !password) {
+      return;
+    }
+    if (password !== confirmPassword) {
       return;
     }
 
     setLoading(true);
-    await userStore.login(email, password);
+    await userStore.register(email, password);
     setLoading(false);
-  }, [userStore, loginForm]);
+  }, [userStore, registerForm]);
 
-  const onRegister = useCallback(async () => navigate('/register'), [navigate]);
+  const onLogin = useCallback(async () => navigate('/login'), [navigate]);
 
   const onEmailChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const email = event.target.value;
-    setLoginFrom((prev) => ({
+    setRegisterFrom((prev) => ({
       ...prev,
       email,
     }));
@@ -36,9 +40,17 @@ export const Login: FC = observer(() => {
 
   const onPasswordChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const password = event.target.value;
-    setLoginFrom((prev) => ({
+    setRegisterFrom((prev) => ({
       ...prev,
       password,
+    }));
+  }, []);
+
+  const onConfirmPasswordChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const confirmPassword = event.target.value;
+    setRegisterFrom((prev) => ({
+      ...prev,
+      confirmPassword,
     }));
   }, []);
 
@@ -53,7 +65,7 @@ export const Login: FC = observer(() => {
           id="login-form-email"
           label="Your Email"
           variant="standard"
-          value={loginForm.email}
+          value={registerForm.email}
           onChange={onEmailChange}
         />
       </FormControl>
@@ -63,16 +75,26 @@ export const Login: FC = observer(() => {
           label="Password"
           variant="standard"
           type="password"
-          value={loginForm.password}
+          value={registerForm.password}
           onChange={onPasswordChange}
         />
       </FormControl>
+      <FormControl fullWidth margin="normal">
+        <TextField
+          id="login-form-confirm-password"
+          label="Confirm Password"
+          variant="standard"
+          type="password"
+          value={registerForm.confirmPassword}
+          onChange={onConfirmPasswordChange}
+        />
+      </FormControl>
       <Stack justifyContent="center" spacing={2} direction="row" mt={2}>
-        <Button variant="outlined" size="medium" onClick={onLogin} disabled={loading}>
-          Login
+        <Button variant="outlined" size="medium" onClick={onRegister} disabled={loading}>
+          Submit
         </Button>
-        <Button variant="text" size="medium" onClick={onRegister} disabled={loading}>
-          Register
+        <Button variant="text" size="medium" onClick={onLogin} disabled={loading}>
+          Back to Login
         </Button>
       </Stack>
     </Box>

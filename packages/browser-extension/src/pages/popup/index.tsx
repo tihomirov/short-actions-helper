@@ -7,6 +7,7 @@ import { Login } from './routes/Login';
 import { Home } from './routes/Home';
 import { NewCommand } from './routes/NewCommand';
 import { StoreProvider, RootStore } from './stores';
+import { Register } from './routes/Register';
 
 const router = createMemoryRouter([
   {
@@ -20,6 +21,10 @@ const router = createMemoryRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'register',
+        element: <Register />,
       },
       {
         path: 'commands/new',

@@ -27,7 +27,6 @@ export class UserStore {
     runInAction(() => (this._currentUserLoading = true));
 
     const currentUser = await userService.getCurrentUser();
-    console.log('USER', currentUser);
 
     runInAction(() => {
       this._currentUser = currentUser ?? undefined;
@@ -53,5 +52,6 @@ export class UserStore {
 
   async logout(): Promise<void> {
     await userService.logout();
+    runInAction(() => (this._currentUser = undefined));
   }
 }
