@@ -12,12 +12,13 @@ export class CommandStore {
   @observable
   private _pendingCommand: PendingCommandForm | undefined = undefined;
   @observable
-  private _isLoading = true;
+  private _isLoading = false;
   @observable
-  private _isPendingCommandLoading = true;
+  private _isPendingCommandLoading = false;
 
   constructor(private readonly _rootStore: RootStore) {
     makeObservable(this);
+    this.loadPendingCommands();
   }
 
   @computed
@@ -77,7 +78,7 @@ export class CommandStore {
     runInAction(() => (this._isLoading = false));
   }
 
-  async loadPendingCommands(): Promise<void> {
+  private async loadPendingCommands(): Promise<void> {
     runInAction(() => (this._isPendingCommandLoading = true));
 
     const pendingCommand = await commandService.getPendingCommand();

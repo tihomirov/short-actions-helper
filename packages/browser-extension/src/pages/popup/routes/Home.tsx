@@ -7,7 +7,7 @@ import { useStores } from '../hooks';
 import { CommandsType } from '../types';
 
 export const Home: FC = observer(() => {
-  const { commandStore, tabStore } = useStores();
+  const { commandStore, tabStore, userStore } = useStores();
 
   const onChangeCommandsType = useCallback(
     (_event: SyntheticEvent, value: CommandsType) => commandStore.setCommandsType(value),
@@ -15,15 +15,11 @@ export const Home: FC = observer(() => {
   );
 
   useEffect(() => {
-    commandStore.loadPendingCommands();
-  }, []);
-
-  useEffect(() => {
     commandStore.loadCommands();
   }, [commandStore.commandsType]);
 
-  if (commandStore.isPendingCommandLoading) {
-    return <div>Loading...</div>;
+  if (!userStore.currentUser) {
+    return <Navigate to="login" replace={true} />;
   }
 
   if (commandStore.pendingCommand) {

@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, { FC, useState, useCallback, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Button } from '@mui/material';
 import { ActionType, assertUnreachable, SupportedAction, truncate } from '../../../../common';
@@ -30,7 +30,7 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
     await messageChannelStore.runInterceptElementMode();
   }, [command]);
 
-  const onNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const onNameChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setCommand((prevCommand) => ({
       ...prevCommand,
       name: event.target.value,

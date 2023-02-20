@@ -1,11 +1,11 @@
-import { observable, computed, action, makeObservable, runInAction } from 'mobx';
+import { observable, computed, makeObservable, runInAction } from 'mobx';
 import { BrowserTab, TabsService } from '../services';
 
 export class TabStore {
   @observable
   private _currentTab: BrowserTab | undefined = undefined;
   @observable
-  private _currentTabLoading = true;
+  private _currentTabLoading = false;
 
   constructor() {
     makeObservable(this);
@@ -34,7 +34,6 @@ export class TabStore {
     return hostname;
   }
 
-  @action
   private async loadCurrentTab(): Promise<void> {
     runInAction(() => (this._currentTabLoading = true));
 

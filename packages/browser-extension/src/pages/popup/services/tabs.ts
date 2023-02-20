@@ -5,8 +5,7 @@ export type BrowserTab = browser.Tabs.Tab;
 
 export class TabsService {
   static async getCurrentTab(): Promise<BrowserTab> {
-    const queryOptions = { active: true };
-    const [tab] = await browser.tabs.query(queryOptions);
+    const [tab] = await browser.tabs.query({ active: true, lastFocusedWindow: true });
 
     return tab;
   }

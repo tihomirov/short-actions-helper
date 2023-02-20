@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Root } from './routes/Root';
+import { Login } from './routes/Login';
 import { Home } from './routes/Home';
 import { NewCommand } from './routes/NewCommand';
 import { StoreProvider, RootStore } from './stores';
@@ -15,6 +16,10 @@ const router = createMemoryRouter([
       {
         path: '/',
         element: <Home />,
+      },
+      {
+        path: 'login',
+        element: <Login />,
       },
       {
         path: 'commands/new',
