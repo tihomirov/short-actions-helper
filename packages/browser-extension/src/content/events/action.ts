@@ -7,7 +7,7 @@ const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void
 };
 
 export class ActionEvent extends MessageEvent<RunDocumentContentActionMessage> {
-  run(): Response<undefined | string> {
+  run(): Response<undefined, string> {
     const { elementEvent } = this._message.action;
     const element = this.queryElement();
 

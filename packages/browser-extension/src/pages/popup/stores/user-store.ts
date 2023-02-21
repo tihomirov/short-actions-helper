@@ -1,4 +1,5 @@
 import { observable, computed, makeObservable, runInAction } from 'mobx';
+import { ResponseFactory } from '../../../common';
 import { userService } from '../services';
 import { CurrentUser } from '../types';
 
@@ -34,9 +35,15 @@ export class UserStore {
     });
   }
 
-  async login(email: string, password: string): Promise<void> {
-    const currentUser = await userService.login(email, password);
-    runInAction(() => (this._currentUser = currentUser));
+  async login(email: string, password: string): Promise<void | string> {
+    const response = await userService.login(email, password);
+
+    if (ResponseFactory.isSuccess(response)) {
+      runInAction(() => (this._currentUser = response.data));
+      return;
+    }
+
+    return response.data;
   }
 
   async register(email: string, password: string): Promise<void> {

@@ -1,7 +1,7 @@
 export type ResponseSuccess<T> = Readonly<{ isSuccess: true; data: T }>;
 export type ResponseFail<T> = Readonly<{ isSuccess: false; data: T }>;
 
-export type Response<T = string | undefined> = ResponseSuccess<T> | ResponseFail<T>;
+export type Response<SuccessT, FailT> = ResponseSuccess<SuccessT> | ResponseFail<FailT>;
 
 export class ResponseFactory {
   static success<T>(data: T): ResponseSuccess<T> {
@@ -11,11 +11,11 @@ export class ResponseFactory {
     return { isSuccess: false, data };
   }
 
-  static isSuccess<T>(response: Response<T>): response is ResponseSuccess<T> {
+  static isSuccess<SuccessT, FailT>(response: Response<SuccessT, FailT>): response is ResponseSuccess<SuccessT> {
     return response.isSuccess;
   }
 
-  static isFail<T>(response: Response<T>): response is ResponseFail<T> {
+  static isFail<SuccessT, FailT>(response: Response<SuccessT, FailT>): response is ResponseFail<FailT> {
     return !response.isSuccess;
   }
 }

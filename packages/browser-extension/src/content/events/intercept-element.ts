@@ -15,7 +15,7 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
     this._removeEventListeners = [];
   }
 
-  run(): Response<undefined | string> {
+  run(): Response<undefined, string> {
     try {
       this.runInterceptMode();
       return ResponseFactory.success(undefined);

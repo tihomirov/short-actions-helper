@@ -1,3 +1,4 @@
+import { Response, ResponseFactory } from '../../../common';
 import { CurrentUser } from '../types';
 import { API_URL } from './constants';
 
@@ -12,14 +13,19 @@ class UserService {
     return response.json();
   }
 
-  async login(email: string, password: string): Promise<CurrentUser> {
+  async login(email: string, password: string): Promise<Response<CurrentUser, string>> {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ email, password }),
     });
 
-    return response.json();
+    if (response.status !== 200) {
+      return ResponseFactory.fail('Can not login with this email and password');
+    }
+
+    const currentUser: CurrentUser = await response.json();
+    return ResponseFactory.success(currentUser);
   }
 
   async logout(): Promise<void> {

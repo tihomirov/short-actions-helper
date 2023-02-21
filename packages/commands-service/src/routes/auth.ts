@@ -82,9 +82,9 @@ authRouter.post('/login', (req, res, next) => {
       res.status(401).json(info); //info contains the error message
     }
 
-    return req.logIn(user, (error) => {
-      if (error) {
-        return res.status(500).json(error);
+    return req.logIn(user, (loginError) => {
+      if (loginError) {
+        return res.status(500).json(loginError);
       }
 
       return res.status(200).json(user);

@@ -6,7 +6,7 @@ import { TabsService } from './tabs';
 class CommandRunnerService {
   async runCommand(command: Command): Promise<void> {
     const { actions } = command;
-    const responses: Array<Response<unknown>> = [];
+    const responses: Array<Response<unknown, string>> = [];
 
     for (const action of actions) {
       const response = await this.runAction(action);
@@ -20,7 +20,7 @@ class CommandRunnerService {
     }
   }
 
-  private async runAction(action: SupportedAction): Promise<Response<unknown>> {
+  private async runAction(action: SupportedAction): Promise<Response<unknown, string>> {
     const currentTab = await TabsService.getCurrentTab();
     const actionInstanse = createAction(action, currentTab);
     const response = await actionInstanse.run();

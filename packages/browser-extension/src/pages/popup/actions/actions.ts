@@ -1,6 +1,6 @@
 import { SupportedAction, unwrap, TabMessageResponse, Response, TabMessageEvent } from '../../../common';
 
-export type RunActionMessageResponse = Response<TabMessageResponse[TabMessageEvent.RunAction]>;
+export type RunActionMessageResponse = Response<TabMessageResponse[TabMessageEvent.RunAction], string>;
 
 export abstract class Action {
   constructor(protected readonly _action: SupportedAction, protected readonly _tab: browser.tabs.Tab) {}
