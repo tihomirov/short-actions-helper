@@ -1,4 +1,4 @@
-import { Response, ResponseFactory } from '../../../common';
+import { Response, ResponseFactory, isString } from '../../../common';
 import { CurrentUser } from '../types';
 import { API_URL } from './constants';
 
@@ -19,13 +19,14 @@ class UserService {
       headers,
       body: JSON.stringify({ email, password }),
     });
+    const responseData = await response.json();
 
     if (response.status !== 200) {
-      return ResponseFactory.fail('Can not login with this email and password');
+      const errorMessage = isString(responseData) ? responseData : 'Can not login with this email and password';
+      return ResponseFactory.fail(errorMessage);
     }
 
-    const currentUser: CurrentUser = await response.json();
-    return ResponseFactory.success(currentUser);
+    return ResponseFactory.success(responseData);
   }
 
   async logout(): Promise<void> {
@@ -37,14 +38,20 @@ class UserService {
     return response.json();
   }
 
-  async register(email: string, password: string): Promise<CurrentUser> {
+  async register(email: string, password: string): Promise<Response<CurrentUser, string>> {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ email, password }),
     });
+    const responseData = await response.json();
 
-    return response.json();
+    if (response.status !== 200) {
+      const errorMessage = isString(responseData) ? responseData : 'Can not register new user';
+      return ResponseFactory.fail(errorMessage);
+    }
+
+    return ResponseFactory.success(responseData);
   }
 }
 

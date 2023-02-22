@@ -46,15 +46,15 @@ export class UserStore {
     return response.data;
   }
 
-  async register(email: string, password: string): Promise<void> {
-    runInAction(() => (this._currentUserLoading = true));
+  async register(email: string, password: string): Promise<void | string> {
+    const response = await userService.register(email, password);
 
-    const currentUser = await userService.register(email, password);
+    if (ResponseFactory.isSuccess(response)) {
+      runInAction(() => (this._currentUser = response.data));
+      return;
+    }
 
-    runInAction(() => {
-      this._currentUser = currentUser;
-      this._currentUserLoading = false;
-    });
+    return response.data;
   }
 
   async logout(): Promise<void> {

@@ -1,99 +1,112 @@
-import React, { FC, useState, useCallback, ChangeEvent } from 'react';
+import React, { FC, useState, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { Box, Button, FormControl, TextField, Stack } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { object, string, TypeOf } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Box, Button, TextField, Stack, Alert } from '@mui/material';
 import { useStores } from '../hooks';
+
+const registerSchema = object({
+  email: string().min(1, 'Email is required').email('Email is invalid'),
+  password: string()
+    .min(8, 'Password must be more than 8 characters')
+    .max(32, 'Password must be less than 32 characters'),
+  confirmPassword: string()
+    .min(8, 'Password must be more than 8 characters')
+    .max(32, 'Password must be less than 32 characters'),
+}).refine((data) => data.password === data.confirmPassword, {
+  path: ['confirmPassword'],
+  message: 'Passwords do not match',
+});
+
+type RegisterForm = TypeOf<typeof registerSchema>;
 
 export const Register: FC = observer(() => {
   const navigate = useNavigate();
   const { userStore } = useStores();
   const [loading, setLoading] = useState(false);
-  const [registerForm, setRegisterFrom] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
+  const [registerError, setRegisterError] = useState<string | undefined>(undefined);
+  const {
+    register,
+    formState: { errors, isSubmitted, isValid },
+    reset,
+    handleSubmit,
+    watch,
+  } = useForm<RegisterForm>({
+    resolver: zodResolver(registerSchema),
   });
+  const submitDisabled = loading || !!registerError || (isSubmitted && !isValid);
 
-  const onRegister = useCallback(async () => {
-    const { email, password, confirmPassword } = registerForm;
-    if (!email || !password) {
-      return;
-    }
-    if (password !== confirmPassword) {
-      return;
-    }
+  const navigateToLogin = useCallback(async () => navigate('/login'), [navigate]);
+
+  const onSubmit = handleSubmit(async (form) => {
+    const { email, password } = form;
 
     setLoading(true);
-    await userStore.register(email, password);
+    const errorText = await userStore.register(email, password);
+
+    if (errorText) {
+      setRegisterError(errorText);
+    } else {
+      reset();
+    }
     setLoading(false);
-  }, [userStore, registerForm]);
+  });
 
-  const onLogin = useCallback(async () => navigate('/login'), [navigate]);
-
-  const onEmailChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const email = event.target.value;
-    setRegisterFrom((prev) => ({
-      ...prev,
-      email,
-    }));
-  }, []);
-
-  const onPasswordChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const password = event.target.value;
-    setRegisterFrom((prev) => ({
-      ...prev,
-      password,
-    }));
-  }, []);
-
-  const onConfirmPasswordChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const confirmPassword = event.target.value;
-    setRegisterFrom((prev) => ({
-      ...prev,
-      confirmPassword,
-    }));
-  }, []);
+  useEffect(() => {
+    const subscription = watch(() => setRegisterError(undefined));
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   if (userStore.currentUser) {
     return <Navigate to="/" replace={true} />;
   }
 
   return (
-    <Box>
-      <FormControl fullWidth margin="normal">
-        <TextField
-          id="login-form-email"
-          label="Your Email"
-          variant="standard"
-          value={registerForm.email}
-          onChange={onEmailChange}
-        />
-      </FormControl>
-      <FormControl fullWidth margin="normal">
-        <TextField
-          id="login-form-password"
-          label="Password"
-          variant="standard"
-          type="password"
-          value={registerForm.password}
-          onChange={onPasswordChange}
-        />
-      </FormControl>
-      <FormControl fullWidth margin="normal">
-        <TextField
-          id="login-form-confirm-password"
-          label="Confirm Password"
-          variant="standard"
-          type="password"
-          value={registerForm.confirmPassword}
-          onChange={onConfirmPasswordChange}
-        />
-      </FormControl>
+    <Box component="form" noValidate onSubmit={onSubmit}>
+      {registerError && <Alert severity="error">{registerError}</Alert>}
+      <TextField
+        sx={{ mt: 2 }}
+        id="register-form-email"
+        label="Your Email"
+        variant="standard"
+        fullWidth
+        required
+        type="email"
+        error={!!errors['email']}
+        helperText={errors['email']?.message ?? ''}
+        {...register('email')}
+      />
+      <TextField
+        sx={{ mt: 2 }}
+        id="register-form-password"
+        label="Password"
+        variant="standard"
+        fullWidth
+        required
+        type="password"
+        error={!!errors['password']}
+        helperText={errors['password']?.message ?? ''}
+        {...register('password')}
+      />
+      <TextField
+        sx={{ mt: 2 }}
+        id="register-form-confirm-password"
+        label="Confirm Password"
+        variant="standard"
+        fullWidth
+        required
+        type="password"
+        error={!!errors['confirmPassword']}
+        helperText={errors['confirmPassword']?.message ?? ''}
+        {...register('confirmPassword')}
+      />
       <Stack justifyContent="center" spacing={2} direction="row" mt={2}>
-        <Button variant="outlined" size="medium" onClick={onRegister} disabled={loading}>
+        <Button variant="outlined" size="medium" type="submit" disabled={submitDisabled}>
           Submit
         </Button>
-        <Button variant="text" size="medium" onClick={onLogin} disabled={loading}>
+        <Button variant="text" size="medium" onClick={navigateToLogin} disabled={loading}>
           Back to Login
         </Button>
       </Stack>

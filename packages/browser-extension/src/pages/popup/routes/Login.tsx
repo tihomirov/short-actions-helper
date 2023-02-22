@@ -32,7 +32,7 @@ export const Login: FC = observer(() => {
   });
   const submitDisabled = loading || !!loginError || (isSubmitted && !isValid);
 
-  const onRegister = useCallback(async () => navigate('/register'), [navigate]);
+  const navigateToRegister = useCallback(async () => navigate('/register'), [navigate]);
 
   const onSubmit = handleSubmit(async (form) => {
     const { email, password } = form;
@@ -81,14 +81,14 @@ export const Login: FC = observer(() => {
         required
         type="password"
         error={!!errors['password']}
-        helperText={errors['password'] ? errors['password'].message : ''}
+        helperText={errors['password']?.message ?? ''}
         {...register('password')}
       />
       <Stack justifyContent="center" spacing={2} direction="row" mt={2}>
         <Button variant="outlined" size="medium" type="submit" disabled={submitDisabled}>
           Login
         </Button>
-        <Button variant="text" size="medium" onClick={onRegister} disabled={loading}>
+        <Button variant="text" size="medium" onClick={navigateToRegister} disabled={loading}>
           Register
         </Button>
       </Stack>
