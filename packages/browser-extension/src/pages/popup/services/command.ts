@@ -1,3 +1,4 @@
+import { ResponseFactory, Response } from '../../../common';
 import { Commands, Command, PendingCommandForm } from '../types';
 import { browserStorageService, IStorageService } from './browser-storage';
 
@@ -12,8 +13,9 @@ class CommandService {
     return await this._storageService.getCommandsByHostname(hostname);
   }
 
-  async createCommand(command: Omit<Command, 'id'>): Promise<void> {
+  async createCommand(command: Omit<Command, 'id'>): Promise<Response<undefined, string>> {
     await this._storageService.createCommand(command);
+    return ResponseFactory.success(undefined);
   }
 
   async deleteCommand(id: string): Promise<void> {

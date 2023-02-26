@@ -1,9 +1,12 @@
-import React, { FC, useState, useCallback, ChangeEvent } from 'react';
+import React, { FC, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, FormControl, Button } from '@mui/material';
-import { ActionType, assertUnreachable, SupportedAction, truncate } from '../../../../common';
+import { TextField, Button, Box, Stack } from '@mui/material';
+import { useForm, FormProvider, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CommandFormActions } from './CommandFormActions';
-import { Command, CommandsType, PendingCommandForm } from '../../types';
+import { getPredefinedName } from './getPredefinedName';
+import { commandSchema, CommandForm as CommandFormType } from './command-schema';
+import { CommandsType, PendingCommandForm } from '../../types';
 import { useStores } from '../../hooks';
 
 type CommandFormProps = Readonly<{
@@ -12,120 +15,79 @@ type CommandFormProps = Readonly<{
 
 export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const navigate = useNavigate();
-  const { commandStore, messageChannelStore, tabStore } = useStores();
-  const [command, setCommand] = useState<PendingCommandForm>(() => {
-    const { name, actions, hostname } = pendingCommand || {};
-    const predefinedName = getPredefinedName(name, actions) ?? '';
-    const defaultHostname = commandStore.commandsType === CommandsType.Hostname ? tabStore.hostname : undefined;
-
-    return {
+  const { commandStore, tabStore } = useStores();
+  const defaultHostname = commandStore.commandsType === CommandsType.Hostname ? tabStore.hostname : undefined;
+  const { name, actions, hostname } = pendingCommand || {};
+  const predefinedName = getPredefinedName(name, actions) ?? '';
+  const [loading, setLoading] = useState(false);
+  const [savingError, setSavingError] = useState<string | undefined>(undefined);
+  const form = useForm<CommandFormType>({
+    resolver: zodResolver(commandSchema),
+    defaultValues: {
       hostname: hostname ?? defaultHostname,
-      name: name ? name : predefinedName,
+      name: name ?? predefinedName ?? '',
       actions: actions ? [...actions] : [{}],
-    };
+    },
+  });
+  const { control, register, formState, handleSubmit, reset, watch } = form;
+  const { errors, isSubmitted, isValid } = formState;
+  const submitDisabled = loading || !!savingError || (isSubmitted && !isValid);
+  const commandName = useWatch({
+    control,
+    name: 'name',
   });
 
-  const onSelectElement = useCallback(async () => {
-    await commandStore.savePendingCommand(command);
-    await messageChannelStore.runInterceptElementMode();
-  }, [command]);
+  const onSubmit = handleSubmit(async (form) => {
+    setLoading(true);
 
-  const onNameChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setCommand((prevCommand) => ({
-      ...prevCommand,
-      name: event.target.value,
-    }));
-  }, []);
+    const error = await commandStore.saveCommand(form);
 
-  const onActionsChange = useCallback((actions: Array<Partial<SupportedAction>>) => {
-    setCommand((prevCommand) => {
-      const predefinedName = getPredefinedName(prevCommand.name, actions);
-      const usePredefinedName = !prevCommand.name && predefinedName;
-
-      return {
-        ...prevCommand,
-        name: usePredefinedName ? predefinedName : prevCommand.name,
-        actions,
-      };
-    });
-  }, []);
-
-  const onSave = useCallback(async () => {
-    // TODO validate form
-    if (!command.name) {
-      return;
+    if (error) {
+      setSavingError(error);
+    } else {
+      await commandStore.removePendingCommand();
+      reset();
+      navigate(`/`);
     }
 
-    if (command.actions.length === 0) {
-      return;
-    }
-
-    // for (const action of command.actions) {
-    //   if (!action.elementEvent || !action.tagName) {
-    //     return;
-    //   }
-    // }
-
-    await commandStore.saveCommand(command as Omit<Command, 'id'>);
-    await commandStore.removePendingCommand();
-
-    navigate(`/`);
-  }, [navigate, command]);
+    setLoading(false);
+  });
 
   const onCancel = useCallback(async () => {
     await commandStore.removePendingCommand();
     navigate(`/`);
   }, [navigate]);
 
+  useEffect(() => {
+    const subscription = watch(() => setSavingError(undefined));
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
   return (
-    <>
-      <CommandFormActions
-        actions={command.actions}
-        onActionsChange={onActionsChange}
-        onSelectElement={onSelectElement}
-      />
-      <FormControl fullWidth margin="normal">
+    <FormProvider {...form}>
+      <Box component="form" noValidate autoComplete="false" onSubmit={onSubmit}>
+        <CommandFormActions />
         <TextField
+          InputLabelProps={{ shrink: commandName ? true : false }}
+          sx={{ mt: 2 }}
           id="form-new-command-name"
-          label="Set Your Command Name First"
+          label="Command Name"
           variant="standard"
-          value={command.name}
-          onChange={onNameChange}
+          fullWidth
+          required
+          error={!!errors.name}
+          helperText={errors.name?.message ?? ''}
+          {...register('name')}
         />
-      </FormControl>
-      <FormControl fullWidth margin="normal" sx={{ justifyContent: 'center', flexDirection: 'row', gap: '12px' }}>
-        <Button variant="contained" onClick={onSave}>
-          Save Command
-        </Button>
-        <Button variant="outlined" onClick={onCancel}>
-          Cancel
-        </Button>
-      </FormControl>
-    </>
+        <Stack justifyContent="center" spacing={2} direction="row" mt={2}>
+          <Button variant="outlined" size="medium" type="submit" disabled={submitDisabled}>
+            Save Command
+          </Button>
+          <Button variant="text" size="medium" onClick={onCancel} disabled={loading}>
+            Cancel
+          </Button>
+        </Stack>
+      </Box>
+    </FormProvider>
   );
 };
-
-function getPredefinedName(name?: string, actions?: Array<Partial<SupportedAction>>): string | undefined {
-  if (name || !actions || actions.length !== 1) {
-    return undefined;
-  }
-
-  const [action] = actions;
-
-  if (action.type === undefined) {
-    return undefined;
-  }
-
-  switch (action.type) {
-    case ActionType.DocumentContentAction: {
-      const { tagName, innerText, elementEvent } = action;
-      return elementEvent && tagName ? `${elementEvent}: <${tagName}> ${truncate(innerText ?? '')}` : undefined;
-    }
-    case ActionType.TabAction: {
-      const { tabEvent } = action;
-      return tabEvent !== undefined ? `${tabEvent} Tab` : undefined;
-    }
-    default:
-      assertUnreachable(action.type);
-  }
-}

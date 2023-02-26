@@ -1,37 +1,19 @@
-import React, { FC, useCallback } from 'react';
-import { SupportedAction } from '../../../../common';
+import React, { FC } from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import { CommandFormAction } from './CommandFormAction';
+import { CommandForm } from './command-schema';
 
-type CommandFormProps = Readonly<{
-  actions: ReadonlyArray<Partial<SupportedAction>>;
-  onActionsChange: (actions: Array<Partial<SupportedAction>>) => void;
-  onSelectElement: () => void;
-}>;
-
-export const CommandFormActions: FC<CommandFormProps> = ({ actions, onActionsChange, onSelectElement }) => {
-  const onActionChange = useCallback(
-    (index: number, action: Partial<SupportedAction>) => {
-      onActionsChange([
-        ...actions.slice(0, index),
-        {
-          ...action,
-        },
-        ...actions.slice(index + 1),
-      ]);
-    },
-    [actions, onActionsChange],
-  );
+export const CommandFormActions: FC = () => {
+  const { control } = useFormContext<CommandForm>();
+  const { fields } = useFieldArray({
+    control,
+    name: 'actions',
+  });
 
   return (
     <>
-      {actions.map((action, index) => (
-        <CommandFormAction
-          key={index}
-          index={index}
-          action={action}
-          onActionChange={onActionChange}
-          onSelectElement={onSelectElement}
-        />
+      {fields.map((field, index) => (
+        <CommandFormAction key={field.id} index={index} />
       ))}
     </>
   );

@@ -1,15 +1,10 @@
 import React, { FC, useCallback } from 'react';
-import { FormControl, Select, MenuItem, InputLabel, SelectChangeEvent } from '@mui/material';
-import {
-  ElementEvent,
-  SupportedAction,
-  ActionType,
-  DocumentContentAction,
-  TabEventType,
-  TabAction,
-} from '../../../../common';
+import { FormControl, Select, MenuItem, InputLabel, FormHelperText, SelectChangeEvent } from '@mui/material';
+import { useController, useFormContext } from 'react-hook-form';
+import { ActionType } from '../../../../common';
 import { DocumentContentActionForm } from './DocumentContentActionForm';
 import { TabActionForm } from './TabActionForm';
+import { CommandForm } from './command-schema';
 
 const actionTypeNames: Record<ActionType, string> = {
   [ActionType.DocumentContentAction]: 'Document Content Action',
@@ -19,54 +14,39 @@ const actionTypeElements = Object.values(ActionType);
 
 type CommandFormActionProps = Readonly<{
   index: number;
-  action: Partial<SupportedAction>;
-  onActionChange: (index: number, action: Partial<SupportedAction>) => void;
-  onSelectElement: () => void;
 }>;
 
-export const CommandFormAction: FC<CommandFormActionProps> = ({ index, action, onActionChange, onSelectElement }) => {
-  const onActionTypeChange = useCallback(
-    (event: SelectChangeEvent) => {
-      const value = event.target.value as ActionType;
-      if (value) {
-        onActionChange(index, {
-          ...action,
-          type: value,
-        });
-      }
-    },
-    [action, index],
-  );
+export const CommandFormAction: FC<CommandFormActionProps> = ({ index }) => {
+  const { control, resetField } = useFormContext<CommandForm>();
+  const {
+    field,
+    fieldState: { error },
+  } = useController({
+    name: `actions.${index}.type`,
+    control,
+  });
 
-  const onElementEventSet = useCallback(
-    (elementEvent: ElementEvent) => {
-      onActionChange(index, {
-        ...action,
-        elementEvent,
-      } as DocumentContentAction);
+  const onTypeChange = useCallback(
+    (value: SelectChangeEvent<ActionType>) => {
+      resetField(`actions.${index}`, {
+        keepDirty: true,
+        keepTouched: true,
+        keepError: true,
+      });
+      field.onChange(value);
     },
-    [action, index],
-  );
-
-  const onSelectTabEventType = useCallback(
-    (tabEvent: TabEventType) => {
-      onActionChange(index, {
-        ...action,
-        tabEvent,
-      } as TabAction);
-    },
-    [action, index],
+    [index, resetField, field.onChange],
   );
 
   return (
     <div>
-      <FormControl size="small" margin="dense" sx={{ width: '35%' }}>
-        <InputLabel id="form-new-command-action-type-label">Action Type</InputLabel>
+      <FormControl size="small" margin="dense" sx={{ width: '35%' }} error={!!error}>
+        <InputLabel id="form-new-command-action-label">Action Type</InputLabel>
         <Select
           labelId="form-new-command-action-label"
-          value={action.type ?? ''}
           label="Action Type"
-          onChange={onActionTypeChange}
+          value={field.value ?? ''}
+          onChange={onTypeChange}
         >
           {actionTypeElements.map((item) => (
             <MenuItem key={item} value={item}>
@@ -74,20 +54,10 @@ export const CommandFormAction: FC<CommandFormActionProps> = ({ index, action, o
             </MenuItem>
           ))}
         </Select>
+        {error && <FormHelperText>{error.message}</FormHelperText>}
       </FormControl>
-      {action.type === ActionType.DocumentContentAction && (
-        <DocumentContentActionForm
-          key={index}
-          actionEvent={action.elementEvent}
-          tagName={action.tagName}
-          innerText={action.innerText}
-          onElementEventSet={onElementEventSet}
-          onSelectElement={onSelectElement}
-        />
-      )}
-      {action.type === ActionType.TabAction && (
-        <TabActionForm key={index} tabEventType={action.tabEvent} onSelectTabEventType={onSelectTabEventType} />
-      )}
+      {field.value === ActionType.DocumentContentAction && <DocumentContentActionForm index={index} />}
+      {field.value === ActionType.TabAction && <TabActionForm index={index} />}
     </div>
   );
 };

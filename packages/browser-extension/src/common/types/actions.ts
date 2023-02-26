@@ -15,7 +15,7 @@ export enum ElementEvent {
 }
 
 export type ElementData = Readonly<{
-  tagName: keyof HTMLElementTagNameMap;
+  tagName: string;
   innerText?: string;
 }>;
 

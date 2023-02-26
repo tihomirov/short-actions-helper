@@ -1,5 +1,5 @@
 import { observable, computed, action, makeObservable, runInAction } from 'mobx';
-import { assertExists, assertUnreachable } from '../../../common';
+import { assertExists, assertUnreachable, ResponseFactory } from '../../../common';
 import { commandService } from '../services';
 import { Command, Commands, PendingCommandForm, CommandsType } from '../types';
 import { RootStore } from './root-store';
@@ -94,9 +94,15 @@ export class CommandStore {
     runInAction(() => (this._commands = this._commands.filter((command) => command.id !== id)));
   }
 
-  async saveCommand(command: Omit<Command, 'id'>): Promise<void> {
+  async saveCommand(command: Omit<Command, 'id'>): Promise<void | string> {
     this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.General;
-    await commandService.createCommand(command);
+    const response = await commandService.createCommand(command);
+
+    if (ResponseFactory.isSuccess(response)) {
+      return undefined;
+    }
+
+    return response.data;
   }
 
   async savePendingCommand(command: PendingCommandForm): Promise<void> {
