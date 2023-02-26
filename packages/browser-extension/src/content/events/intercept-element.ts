@@ -1,4 +1,4 @@
-import { Response, ResponseFactory, InterceptDocumentElementMessage, isSomething } from '../../common';
+import { InterceptDocumentElementMessage, isSomething, Response, ResponseFactory } from '../../common';
 import { MessageEvent } from './event';
 
 const EVENT_LISTENER_OPTIONS: AddEventListenerOptions = {

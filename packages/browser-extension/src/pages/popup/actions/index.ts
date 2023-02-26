@@ -1,7 +1,7 @@
-import { SupportedAction, ActionType, assertUnreachable, TabEventType, TabAction } from '../../../common';
+import { ActionType, assertUnreachable, SupportedAction, TabAction, TabEventType } from '../../../common';
 import { Action } from './actions';
-import { DocumentContentAction } from './document-content-action';
 import { CloseTabAction } from './close-tab-action';
+import { DocumentContentAction } from './document-content-action';
 import { ReloadTabAction } from './reload-tab-action';
 import { ToggleMuteTabAction } from './toggle-mute-tab-action';
 

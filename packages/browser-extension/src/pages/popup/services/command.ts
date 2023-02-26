@@ -1,5 +1,5 @@
-import { ResponseFactory, Response } from '../../../common';
-import { Commands, Command, PendingCommandForm } from '../types';
+import { Response, ResponseFactory } from '../../../common';
+import { Command, Commands, PendingCommandForm } from '../types';
 import { browserStorageService, IStorageService } from './browser-storage';
 
 class CommandService {

@@ -1,9 +1,10 @@
-import React, { FC, useCallback } from 'react';
-import { Box, IconButton, Tooltip } from '@mui/material';
 import { DeleteOutlineOutlined, PlayArrowOutlined } from '@mui/icons-material';
-import { Command } from '../../types';
-import { commandRunnerService } from '../../services';
+import { Box, IconButton, Tooltip } from '@mui/material';
+import React, { FC, useCallback } from 'react';
+
 import { useStores } from '../../hooks';
+import { commandRunnerService } from '../../services';
+import { Command } from '../../types';
 
 type CommandProps = Readonly<{
   command: Command;

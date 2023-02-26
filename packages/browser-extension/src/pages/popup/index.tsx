@@ -1,13 +1,14 @@
+import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
 import { render } from 'react-dom';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Root } from './routes/Root';
-import { Login } from './routes/Login';
+
 import { Home } from './routes/Home';
+import { Login } from './routes/Login';
 import { NewCommand } from './routes/NewCommand';
-import { StoreProvider, RootStore } from './stores';
 import { Register } from './routes/Register';
+import { Root } from './routes/Root';
+import { RootStore, StoreProvider } from './stores';
 
 const router = createMemoryRouter([
   {

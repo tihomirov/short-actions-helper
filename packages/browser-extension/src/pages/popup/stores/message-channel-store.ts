@@ -1,4 +1,4 @@
-import { TabMessageEvent, ResponseFactory } from '../../../common';
+import { ResponseFactory, TabMessageEvent } from '../../../common';
 import { TabsService } from '../services';
 
 export class MessageChannelStore {

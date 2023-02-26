@@ -1,7 +1,8 @@
-import React, { FC, useCallback } from 'react';
-import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
 import { Avatar } from '@mui/material';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { useStores } from '../../hooks';
 import s from './style.scss';
 

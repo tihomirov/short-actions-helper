@@ -1,10 +1,11 @@
-import React, { FC, useCallback } from 'react';
-import { Box, FormControl, Select, MenuItem, InputLabel, Tooltip, IconButton } from '@mui/material';
 import { Colorize } from '@mui/icons-material';
+import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, Tooltip } from '@mui/material';
+import { FormHelperText } from '@mui/material';
+import React, { FC, useCallback } from 'react';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
+
 import { ElementEvent } from '../../../../common';
 import { useStores } from '../../hooks';
-import { FormHelperText } from '@mui/material';
-import { useWatch, useController, useFormContext } from 'react-hook-form';
 import { CommandForm } from './command-schema';
 
 const elementEventNames: Record<ElementEvent, string> = {

@@ -6,8 +6,8 @@
     "release": "cross-env NODE_ENV=production rollup -c",
     "start": "rollup -c -w",
     "test": "jest",
-    "eslint": "eslint 'src/**/*.ts'",
-    "eslint:fix": "eslint --fix 'src/**/*.ts'"
+    "eslint": "eslint 'src/**/*.ts*'",
+    "eslint:fix": "eslint --fix 'src/**/*.ts*'"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

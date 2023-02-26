@@ -1,4 +1,4 @@
-import { SupportedAction, unwrap, TabMessageResponse, Response, TabMessageEvent } from '../../../common';
+import { Response, SupportedAction, TabMessageEvent, TabMessageResponse, unwrap } from '../../../common';
 
 export type RunActionMessageResponse = Response<TabMessageResponse[TabMessageEvent.RunAction], string>;
 

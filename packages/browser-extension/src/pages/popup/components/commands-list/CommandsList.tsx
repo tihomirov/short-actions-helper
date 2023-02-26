@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
 import { observer } from 'mobx-react-lite';
+import React, { FC } from 'react';
+
+import { useStores } from '../../hooks';
 import { CommandItem } from '../command-item';
 import { NewCommandButton } from '../new-command-button';
-import { useStores } from '../../hooks';
 
 export const CommandsList: FC = observer(() => {
   const { commandStore } = useStores();

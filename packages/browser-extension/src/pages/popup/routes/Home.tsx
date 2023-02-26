@@ -1,7 +1,8 @@
-import React, { FC, useEffect, SyntheticEvent, useCallback } from 'react';
+import { Box, Tab, Tabs } from '@mui/material';
 import { observer } from 'mobx-react-lite';
+import React, { FC, SyntheticEvent, useCallback, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Tabs, Tab, Box } from '@mui/material';
+
 import { CommandsList } from '../components/commands-list';
 import { useStores } from '../hooks';
 import { CommandsType } from '../types';

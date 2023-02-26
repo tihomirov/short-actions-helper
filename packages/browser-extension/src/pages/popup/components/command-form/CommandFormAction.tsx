@@ -1,10 +1,11 @@
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { FC, useCallback } from 'react';
-import { FormControl, Select, MenuItem, InputLabel, FormHelperText, SelectChangeEvent } from '@mui/material';
 import { useController, useFormContext } from 'react-hook-form';
+
 import { ActionType } from '../../../../common';
+import { CommandForm } from './command-schema';
 import { DocumentContentActionForm } from './DocumentContentActionForm';
 import { TabActionForm } from './TabActionForm';
-import { CommandForm } from './command-schema';
 
 const actionTypeNames: Record<ActionType, string> = {
   [ActionType.DocumentContentAction]: 'Document Content Action',

@@ -1,6 +1,6 @@
 import { CommandStore } from './command-store';
-import { TabStore } from './tab-store';
 import { MessageChannelStore } from './message-channel-store';
+import { TabStore } from './tab-store';
 import { UserStore } from './user-store';
 
 export class RootStore {

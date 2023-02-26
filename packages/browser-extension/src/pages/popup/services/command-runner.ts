@@ -1,4 +1,4 @@
-import { SupportedAction, ResponseFactory, Response } from '../../../common';
+import { Response, ResponseFactory, SupportedAction } from '../../../common';
 import { createAction } from '../actions';
 import { Command } from '../types';
 import { TabsService } from './tabs';

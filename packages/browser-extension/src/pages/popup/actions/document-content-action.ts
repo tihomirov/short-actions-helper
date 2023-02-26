@@ -1,7 +1,7 @@
 import {
   DocumentContentAction as DocumentContentActionType,
-  TabMessageEvent,
   RunDocumentContentActionMessage,
+  TabMessageEvent,
 } from '../../../common';
 import { TabsService } from '../services/tabs';
 import { Action, RunActionMessageResponse } from './actions';

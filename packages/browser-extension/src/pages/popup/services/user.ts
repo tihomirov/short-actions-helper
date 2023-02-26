@@ -1,4 +1,4 @@
-import { Response, ResponseFactory, isString } from '../../../common';
+import { isString, Response, ResponseFactory } from '../../../common';
 import { CurrentUser } from '../types';
 import { API_URL } from './constants';
 

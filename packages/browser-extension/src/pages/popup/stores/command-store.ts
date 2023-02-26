@@ -1,7 +1,8 @@
-import { observable, computed, action, makeObservable, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+
 import { assertExists, assertUnreachable, ResponseFactory } from '../../../common';
 import { commandService } from '../services';
-import { Command, Commands, PendingCommandForm, CommandsType } from '../types';
+import { Command, Commands, CommandsType, PendingCommandForm } from '../types';
 import { RootStore } from './root-store';
 
 export class CommandStore {

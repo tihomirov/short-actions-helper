@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { CommandFormAction } from './CommandFormAction';
+
 import { CommandForm } from './command-schema';
+import { CommandFormAction } from './CommandFormAction';
 
 export const CommandFormActions: FC = () => {
   const { control } = useFormContext<CommandForm>();

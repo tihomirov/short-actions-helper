@@ -1,13 +1,14 @@
-import React, { FC, useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Stack } from '@mui/material';
-import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Box, Button, Stack, TextField } from '@mui/material';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
+import { useStores } from '../../hooks';
+import { CommandsType, PendingCommandForm } from '../../types';
+import { CommandForm as CommandFormType, commandSchema } from './command-schema';
 import { CommandFormActions } from './CommandFormActions';
 import { getPredefinedName } from './getPredefinedName';
-import { commandSchema, CommandForm as CommandFormType } from './command-schema';
-import { CommandsType, PendingCommandForm } from '../../types';
-import { useStores } from '../../hooks';
 
 type CommandFormProps = Readonly<{
   pendingCommand: PendingCommandForm | undefined;

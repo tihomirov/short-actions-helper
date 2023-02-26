@@ -1,5 +1,6 @@
-import { object, string, array, TypeOf, discriminatedUnion, literal, nativeEnum } from 'zod';
-import { ActionType, TabEventType, ElementEvent } from '../../../../common';
+import { array, discriminatedUnion, literal, nativeEnum, object, string, TypeOf } from 'zod';
+
+import { ActionType, ElementEvent, TabEventType } from '../../../../common';
 
 const tabActionSchema = object({
   type: literal(ActionType.TabAction),

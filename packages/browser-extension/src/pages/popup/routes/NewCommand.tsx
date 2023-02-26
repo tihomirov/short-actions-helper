@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
 import { observer } from 'mobx-react-lite';
+import React, { FC } from 'react';
+
 import { CommandForm } from '../components/command-form';
 import { useStores } from '../hooks';
 

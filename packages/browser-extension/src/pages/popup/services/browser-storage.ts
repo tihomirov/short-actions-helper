@@ -1,7 +1,8 @@
 import hexoid from 'hexoid';
 import browser from 'webextension-polyfill';
-import { Commands, Command, PendingCommandForm } from '../types';
+
 import { ElementData } from '../../../common';
+import { Command, Commands, PendingCommandForm } from '../types';
 
 enum StorageKey {
   Commands = 'commands',

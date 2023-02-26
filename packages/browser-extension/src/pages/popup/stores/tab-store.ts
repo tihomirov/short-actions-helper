@@ -1,4 +1,5 @@
-import { observable, computed, makeObservable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
+
 import { BrowserTab, TabsService } from '../services';
 
 export class TabStore {

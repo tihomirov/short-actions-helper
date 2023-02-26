@@ -1,5 +1,6 @@
-import { assertExists, TabMessageEvent, TabMessage, TabMessageResponse, Response } from '../../../common';
 import browser from 'webextension-polyfill';
+
+import { assertExists, Response, TabMessage, TabMessageEvent, TabMessageResponse } from '../../../common';
 
 export type BrowserTab = browser.Tabs.Tab;
 

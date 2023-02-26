@@ -1,4 +1,4 @@
-import { Response, ResponseFactory, DebbugMessage } from '../../common';
+import { DebbugMessage, Response, ResponseFactory } from '../../common';
 import { MessageEvent } from './event';
 
 export class DebbugEvent extends MessageEvent<DebbugMessage> {
