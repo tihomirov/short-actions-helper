@@ -3,7 +3,7 @@ import {
   RunDocumentContentActionMessage,
   TabMessageEvent,
 } from '../../../common';
-import { TabsService } from '../services/tabs';
+import { TabsService } from '../services/tabs-service';
 import { Action, RunActionMessageResponse } from './actions';
 
 export class DocumentContentAction extends Action {

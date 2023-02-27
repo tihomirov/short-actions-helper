@@ -1,7 +1,7 @@
 import { Response, ResponseFactory, SupportedAction } from '../../../common';
 import { createAction } from '../actions';
 import { Command } from '../types';
-import { TabsService } from './tabs';
+import { TabsService } from './tabs-service';
 
 class CommandRunnerService {
   async runCommand(command: Command): Promise<void> {

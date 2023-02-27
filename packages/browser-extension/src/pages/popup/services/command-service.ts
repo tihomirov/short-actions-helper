@@ -1,6 +1,6 @@
 import { Response, ResponseFactory } from '../../../common';
 import { Command, Commands, PendingCommandForm } from '../types';
-import { browserStorageService, IStorageService } from './browser-storage';
+import { browserStorageService, IStorageService } from './browser-storage-service';
 
 class CommandService {
   constructor(private readonly _storageService: IStorageService) {}

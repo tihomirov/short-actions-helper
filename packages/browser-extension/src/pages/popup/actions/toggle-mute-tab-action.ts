@@ -1,4 +1,4 @@
-import { TabsService } from '../services/tabs';
+import { TabsService } from '../services/tabs-service';
 import { Action } from './actions';
 
 export class ToggleMuteTabAction extends Action {
