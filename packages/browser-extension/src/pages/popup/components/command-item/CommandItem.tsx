@@ -1,6 +1,7 @@
-import { DeleteOutlineOutlined, PlayArrowOutlined } from '@mui/icons-material';
+import { DeleteOutlineOutlined, EditOutlined, PlayArrowOutlined } from '@mui/icons-material';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import React, { FC, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useStores } from '../../hooks';
 import { commandRunnerService } from '../../services';
@@ -11,11 +12,16 @@ type CommandProps = Readonly<{
 }>;
 
 export const CommandItem: FC<CommandProps> = ({ command }) => {
+  const navigate = useNavigate();
   const { commandStore } = useStores();
 
   const onRun = useCallback(() => {
     commandRunnerService.runCommand(command);
   }, [command]);
+
+  const onEdit = useCallback(() => {
+    navigate(`commands/${command.id}`);
+  }, [command, navigate]);
 
   const onDelete = useCallback(() => commandStore.removeCommand(command.id), [command]);
 
@@ -37,6 +43,11 @@ export const CommandItem: FC<CommandProps> = ({ command }) => {
         <Tooltip title="Delete" placement="top">
           <IconButton onClick={onDelete}>
             <DeleteOutlineOutlined />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Edit" placement="top">
+          <IconButton onClick={onEdit}>
+            <EditOutlined />
           </IconButton>
         </Tooltip>
         <Tooltip title="Run" placement="top">

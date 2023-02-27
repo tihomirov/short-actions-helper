@@ -13,7 +13,9 @@ enum StorageKey {
 export interface IStorageService {
   getCommands(): Promise<Commands>;
   getCommandsByHostname(hostname: string): Promise<Commands>;
+  getCommandById(id: string): Promise<Command | undefined>;
   createCommand(command: Omit<Command, 'id'>): Promise<Command>;
+  updateCommand(id: string, command: Omit<Command, 'id'>): Promise<Command | undefined>;
   deleteCommand(id: string): Promise<void>;
   getPendingCommand(): Promise<PendingCommandForm | undefined>;
   savePendingCommand(command: PendingCommandForm): Promise<PendingCommandForm>;
@@ -29,9 +31,14 @@ class BrowserStorageService implements IStorageService {
     const { commands = [] } = await browser.storage.sync.get(StorageKey.Commands);
     return commands.filter((command: Command) => !command.hostname);
   }
-  async getCommandsByHostname(hostname?: string): Promise<Commands> {
+  async getCommandsByHostname(hostname: string): Promise<Commands> {
     const { commands = [] } = await browser.storage.sync.get(StorageKey.Commands);
     return commands.filter((command: Command) => command.hostname === hostname);
+  }
+
+  async getCommandById(id: string): Promise<Command | undefined> {
+    const { commands = [] } = await browser.storage.sync.get(StorageKey.Commands);
+    return commands.find((command: Command) => command.id === id);
   }
 
   async createCommand(command: Omit<Command, 'id'>): Promise<Command> {
@@ -45,6 +52,25 @@ class BrowserStorageService implements IStorageService {
     await browser.storage.sync.set({ [StorageKey.Commands]: commands });
 
     return newCommand;
+  }
+
+  async updateCommand(id: string, command: Omit<Command, 'id'>): Promise<Command | undefined> {
+    const { commands = [] } = await browser.storage.sync.get(StorageKey.Commands);
+
+    const foundIndex = commands.findIndex((c: Command) => c.id == id);
+
+    if (foundIndex === undefined) {
+      return undefined;
+    }
+
+    commands[foundIndex] = {
+      id,
+      ...command,
+    };
+
+    await browser.storage.sync.set({ [StorageKey.Commands]: commands });
+
+    return commands[foundIndex];
   }
 
   async deleteCommand(id: string): Promise<void> {

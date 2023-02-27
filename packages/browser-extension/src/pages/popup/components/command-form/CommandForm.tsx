@@ -4,21 +4,22 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { optionalMap } from '../../../../common/utils/optional';
 import { useStores } from '../../hooks';
-import { CommandsType, PendingCommandForm } from '../../types';
+import { Command, CommandsType, PendingCommandForm } from '../../types';
 import { CommandForm as CommandFormType, commandSchema } from './command-schema';
 import { CommandFormActions } from './CommandFormActions';
 import { getPredefinedName } from './getPredefinedName';
 
 type CommandFormProps = Readonly<{
-  pendingCommand: PendingCommandForm | undefined;
+  command: PendingCommandForm | Command | undefined;
 }>;
 
-export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
+export const CommandForm: FC<CommandFormProps> = ({ command }) => {
   const navigate = useNavigate();
   const { commandStore, tabStore } = useStores();
   const defaultHostname = commandStore.commandsType === CommandsType.Hostname ? tabStore.hostname : undefined;
-  const { name, actions, hostname } = pendingCommand || {};
+  const { name, actions, hostname } = command || {};
   const predefinedName = getPredefinedName(name, actions) ?? '';
   const [loading, setLoading] = useState(false);
   const [savingError, setSavingError] = useState<string | undefined>(undefined);
@@ -41,7 +42,8 @@ export const CommandForm: FC<CommandFormProps> = ({ pendingCommand }) => {
   const onSubmit = handleSubmit(async (form) => {
     setLoading(true);
 
-    const error = await commandStore.saveCommand(form);
+    const id = optionalMap(command, (c) => ('id' in c ? c.id : undefined));
+    const error = await commandStore.saveCommand(form, id);
 
     if (error) {
       setSavingError(error);

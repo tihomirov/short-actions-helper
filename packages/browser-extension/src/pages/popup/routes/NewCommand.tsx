@@ -11,5 +11,5 @@ export const NewCommand: FC = observer(() => {
     return <span>Loading...</span>;
   }
 
-  return <CommandForm pendingCommand={commandStore.pendingCommand} />;
+  return <CommandForm command={commandStore.pendingCommand} />;
 });

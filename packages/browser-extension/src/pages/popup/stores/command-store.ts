@@ -90,14 +90,19 @@ export class CommandStore {
     });
   }
 
+  async getById(id: string): Promise<Command | undefined> {
+    return await commandService.getCommandById(id);
+  }
+
   async removeCommand(id: string): Promise<void> {
     await commandService.deleteCommand(id);
     runInAction(() => (this._commands = this._commands.filter((command) => command.id !== id)));
   }
 
-  async saveCommand(command: Omit<Command, 'id'>): Promise<void | string> {
+  async saveCommand(command: Omit<Command, 'id'>, id: string | undefined): Promise<void | string> {
     this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.General;
-    const response = await commandService.createCommand(command);
+    const response =
+      id !== undefined ? await commandService.updateCommand(id, command) : await commandService.createCommand(command);
 
     if (ResponseFactory.isSuccess(response)) {
       return undefined;

@@ -13,9 +13,19 @@ class CommandService {
     return await this._storageService.getCommandsByHostname(hostname);
   }
 
+  async getCommandById(id: string): Promise<Command | undefined> {
+    return await this._storageService.getCommandById(id);
+  }
+
   async createCommand(command: Omit<Command, 'id'>): Promise<Response<undefined, string>> {
     await this._storageService.createCommand(command);
     return ResponseFactory.success(undefined);
+  }
+
+  async updateCommand(id: string, command: Omit<Command, 'id'>): Promise<Response<undefined, string>> {
+    const updatedCommand = await this._storageService.updateCommand(id, command);
+
+    return updatedCommand ? ResponseFactory.success(undefined) : ResponseFactory.fail('Command to update is not found');
   }
 
   async deleteCommand(id: string): Promise<void> {

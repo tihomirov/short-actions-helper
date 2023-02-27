@@ -1,6 +1,9 @@
 import { ActionType, assertUnreachable, SupportedAction, truncate } from '../../../../common';
 
-export function getPredefinedName(name?: string, actions?: Array<Partial<SupportedAction>>): string | undefined {
+export function getPredefinedName(
+  name?: string,
+  actions?: ReadonlyArray<SupportedAction | Partial<SupportedAction>>,
+): string | undefined {
   if (name || !actions || actions.length !== 1) {
     return undefined;
   }

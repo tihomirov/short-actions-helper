@@ -3,6 +3,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
+import { EditCommand } from './routes/EditCommand';
 import { Home } from './routes/Home';
 import { Login } from './routes/Login';
 import { NewCommand } from './routes/NewCommand';
@@ -30,6 +31,10 @@ const router = createMemoryRouter([
       {
         path: 'commands/new',
         element: <NewCommand />,
+      },
+      {
+        path: 'commands/:id',
+        element: <EditCommand />,
       },
     ],
   },
