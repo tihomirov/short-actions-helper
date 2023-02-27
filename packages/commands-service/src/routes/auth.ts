@@ -1,8 +1,9 @@
-import { Router } from 'express';
 import bcrypt from 'bcryptjs';
+import { Router } from 'express';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { UserModel, User } from '../models/user';
+
+import { User, UserModel } from '../models/user';
 
 export const authRouter = Router();
 

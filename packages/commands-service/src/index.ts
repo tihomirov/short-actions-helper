@@ -1,8 +1,8 @@
-import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import express, { Express, Request, Response } from 'express';
+import expressSession from 'express-session';
 import mongoose from 'mongoose';
 import passport from 'passport';
-import expressSession from 'express-session';
 
 import { authRouter } from './routes';
 
