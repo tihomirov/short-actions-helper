@@ -9,7 +9,7 @@ export class CommandStore {
   @observable
   private _commands: Commands = [];
   @observable
-  private _commandsType: CommandsType = CommandsType.General;
+  private _commandsType: CommandsType = CommandsType.All;
   @observable
   private _pendingCommand: PendingCommandForm | undefined = undefined;
   @observable
@@ -61,7 +61,7 @@ export class CommandStore {
     runInAction(() => (this._isLoading = true));
 
     switch (this._commandsType) {
-      case CommandsType.General:
+      case CommandsType.All:
         const generalCommands = await commandService.getCommands();
         runInAction(() => (this._commands = generalCommands));
         break;
@@ -96,13 +96,23 @@ export class CommandStore {
 
   async removeCommand(id: string): Promise<void> {
     await commandService.deleteCommand(id);
-    runInAction(() => (this._commands = this._commands.filter((command) => command.id !== id)));
+    runInAction(() => (this._commands = this._commands.filter((command) => command._id !== id)));
   }
 
-  async saveCommand(command: Omit<Command, 'id'>, id: string | undefined): Promise<void | string> {
-    this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.General;
-    const response =
-      id !== undefined ? await commandService.updateCommand(id, command) : await commandService.createCommand(command);
+  async createCommand(command: Omit<Command, '_id'>): Promise<void | string> {
+    this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.All;
+    const response = await commandService.createCommand(command);
+
+    if (ResponseFactory.isSuccess(response)) {
+      return undefined;
+    }
+
+    return response.data;
+  }
+
+  async updateCommand(command: Command): Promise<void | string> {
+    this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.All;
+    const response = await commandService.updateCommand(command);
 
     if (ResponseFactory.isSuccess(response)) {
       return undefined;

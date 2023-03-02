@@ -4,7 +4,7 @@ import expressSession from 'express-session';
 import mongoose from 'mongoose';
 import passport from 'passport';
 
-import { authRouter } from './routes';
+import { authRouter, commandRouter } from './routes';
 
 dotenv.config();
 
@@ -31,6 +31,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api/auth', authRouter);
+app.use('/api/command', commandRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');

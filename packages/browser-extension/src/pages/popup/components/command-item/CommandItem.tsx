@@ -20,10 +20,10 @@ export const CommandItem: FC<CommandProps> = ({ command }) => {
   }, [command]);
 
   const onEdit = useCallback(() => {
-    navigate(`commands/${command.id}`);
+    navigate(`commands/${command._id}`);
   }, [command, navigate]);
 
-  const onDelete = useCallback(() => commandStore.removeCommand(command.id), [command]);
+  const onDelete = useCallback(() => commandStore.removeCommand(command._id), [command]);
 
   return (
     <Box

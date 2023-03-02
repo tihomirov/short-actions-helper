@@ -16,7 +16,9 @@ export const Home: FC = observer(() => {
   );
 
   useEffect(() => {
-    commandStore.loadCommands();
+    if (userStore.currentUser) {
+      commandStore.loadCommands();
+    }
   }, [commandStore.commandsType]);
 
   if (!userStore.currentUser) {
@@ -31,7 +33,7 @@ export const Home: FC = observer(() => {
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={commandStore.commandsType} onChange={onChangeCommandsType}>
-          <Tab value={CommandsType.General} label="General" />
+          <Tab value={CommandsType.All} label="All" />
           {tabStore.hostname && <Tab value={CommandsType.Hostname} label={tabStore.hostname} />}
         </Tabs>
       </Box>

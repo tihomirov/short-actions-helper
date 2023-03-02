@@ -1,12 +1,12 @@
 import { SupportedAction } from '../../../common';
 
 export enum CommandsType {
-  General,
+  All,
   Hostname,
 }
 
 export type Command = Readonly<{
-  id: string;
+  _id: string;
   hostname?: string;
   name: string;
   actions: ReadonlyArray<SupportedAction>;

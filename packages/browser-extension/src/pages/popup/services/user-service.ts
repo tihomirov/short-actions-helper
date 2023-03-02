@@ -1,11 +1,6 @@
 import { isString, Response, ResponseFactory } from '../../../common';
 import { CurrentUser } from '../types';
-import { API_URL } from './constants';
-
-const headers = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-};
+import { API_URL, headers } from './constants';
 
 class UserService {
   async getCurrentUser(): Promise<CurrentUser> {

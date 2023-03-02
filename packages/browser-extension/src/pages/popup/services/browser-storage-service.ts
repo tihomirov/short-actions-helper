@@ -38,7 +38,7 @@ class BrowserStorageService implements IStorageService {
 
   async getCommandById(id: string): Promise<Command | undefined> {
     const { commands = [] } = await browser.storage.sync.get(StorageKey.Commands);
-    return commands.find((command: Command) => command.id === id);
+    return commands.find((command: Command) => command._id === id);
   }
 
   async createCommand(command: Omit<Command, 'id'>): Promise<Command> {
@@ -57,7 +57,7 @@ class BrowserStorageService implements IStorageService {
   async updateCommand(id: string, command: Omit<Command, 'id'>): Promise<Command | undefined> {
     const { commands = [] } = await browser.storage.sync.get(StorageKey.Commands);
 
-    const foundIndex = commands.findIndex((c: Command) => c.id == id);
+    const foundIndex = commands.findIndex((c: Command) => c._id == id);
 
     if (foundIndex === undefined) {
       return undefined;
@@ -75,7 +75,7 @@ class BrowserStorageService implements IStorageService {
 
   async deleteCommand(id: string): Promise<void> {
     const { commands = [] } = await browser.storage.sync.get(StorageKey.Commands);
-    const filteredCommands = commands.filter((command: Command) => command.id !== id);
+    const filteredCommands = commands.filter((command: Command) => command._id !== id);
 
     await browser.storage.sync.set({ [StorageKey.Commands]: filteredCommands });
   }

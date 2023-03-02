@@ -4,7 +4,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { optionalMap } from '../../../../common/utils/optional';
+import { isString } from '../../../../common/utils';
 import { useStores } from '../../hooks';
 import { Command, CommandsType, PendingCommandForm } from '../../types';
 import { CommandForm as CommandFormType, commandSchema } from './command-schema';
@@ -26,6 +26,8 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
   const form = useForm<CommandFormType>({
     resolver: zodResolver(commandSchema),
     defaultValues: {
+      // TODO:refactor
+      _id: command && ('_id' in command ? command._id : undefined),
       hostname: hostname ?? defaultHostname,
       name: name ?? predefinedName ?? '',
       actions: actions ? [...actions] : [{}],
@@ -42,8 +44,9 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
   const onSubmit = handleSubmit(async (form) => {
     setLoading(true);
 
-    const id = optionalMap(command, (c) => ('id' in c ? c.id : undefined));
-    const error = await commandStore.saveCommand(form, id);
+    const error = isString(form._id)
+      ? await commandStore.updateCommand(form as Command)
+      : await commandStore.createCommand(form);
 
     if (error) {
       setSavingError(error);

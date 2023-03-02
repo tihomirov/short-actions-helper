@@ -21,6 +21,7 @@ const documentContentActionSchema = object({
 });
 
 export const commandSchema = object({
+  _id: string().optional(),
   hostname: string().optional(),
   name: string().min(1, 'Name is required').max(140, 'Name must be less than 140 characters'),
   actions: array(
