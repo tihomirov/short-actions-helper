@@ -6,13 +6,8 @@ import { API_URL, headers } from './constants';
 class CommandService {
   constructor(private readonly _storageService: IStorageService) {}
 
-  async getCommands(): Promise<Commands> {
-    const response = await fetch(`${API_URL}/command`);
-    return await response.json();
-  }
-
-  async getCommandsByHostname(hostname: string): Promise<Commands> {
-    const response = await fetch(`${API_URL}/command/hostname/${hostname}`);
+  async getCommands(hostname?: string): Promise<Commands> {
+    const response = await fetch(`${API_URL}/command?hostname=${hostname ?? ''}`);
     return await response.json();
   }
 

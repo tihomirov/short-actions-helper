@@ -29,7 +29,7 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
       // TODO:refactor
       _id: command && ('_id' in command ? command._id : undefined),
       hostname: hostname ?? defaultHostname,
-      name: name ?? predefinedName ?? '',
+      name: name || predefinedName,
       actions: actions ? [...actions] : [{}],
     },
   });

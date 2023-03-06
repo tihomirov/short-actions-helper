@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { assertExists, assertUnreachable, ResponseFactory } from '../../../common';
+import { assertUnreachable, ResponseFactory } from '../../../common';
 import { commandService } from '../services';
 import { Command, Commands, CommandsType, PendingCommandForm } from '../types';
 import { RootStore } from './root-store';
@@ -24,7 +24,14 @@ export class CommandStore {
 
   @computed
   get commands(): Commands {
-    return this._commands;
+    switch (this._commandsType) {
+      case CommandsType.All:
+        return this._commands;
+      case CommandsType.Hostname:
+        return this._commands.filter(({ hostname }) => !!hostname);
+      default:
+        assertUnreachable(this._commandsType);
+    }
   }
 
   @computed
@@ -60,21 +67,9 @@ export class CommandStore {
   async loadCommands(): Promise<void> {
     runInAction(() => (this._isLoading = true));
 
-    switch (this._commandsType) {
-      case CommandsType.All:
-        const generalCommands = await commandService.getCommands();
-        runInAction(() => (this._commands = generalCommands));
-        break;
-      case CommandsType.Hostname:
-        const hostname = this._rootStore.tabStore.hostname;
-        assertExists(hostname, 'can not load commands by hostname; hostname is missing');
-
-        const hostnameCommands = await commandService.getCommandsByHostname(hostname);
-        runInAction(() => (this._commands = hostnameCommands));
-        break;
-      default:
-        assertUnreachable(this._commandsType);
-    }
+    const hostname = this._rootStore.tabStore.hostname;
+    const commands = await commandService.getCommands(hostname);
+    runInAction(() => (this._commands = commands));
 
     runInAction(() => (this._isLoading = false));
   }

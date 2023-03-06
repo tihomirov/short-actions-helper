@@ -88,24 +88,14 @@ commandRouter.get('/', async (req, res) => {
       return res.status(403).json('You need to login before fetching commands');
     }
     const { _id: createdUserId } = currentUser as { _id: string };
-    const commands = await CommandModel.find({ createdUserId });
+    const hostname = req.query.hostname;
 
-    return res.status(200).json(commands);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-});
-
-//get All posts
-commandRouter.get('/hostname/:hostname', async (req, res) => {
-  try {
-    const currentUser = req.user;
-
-    if (!currentUser) {
-      return res.status(403).json('You need to login before fetching commands');
-    }
-    const { _id: createdUserId } = currentUser as { _id: string };
-    const commands = await CommandModel.find({ createdUserId, hostname: req.params.hostname });
+    const commands = await CommandModel.find({
+      createdUserId,
+      hostname: {
+        $in: [hostname, undefined],
+      },
+    });
 
     return res.status(200).json(commands);
   } catch (error) {
