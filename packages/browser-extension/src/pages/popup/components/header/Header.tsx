@@ -12,13 +12,13 @@ type HeaderProps = Readonly<{
 
 export const Header: FC<HeaderProps> = observer(({ hostname }) => {
   const navigate = useNavigate();
-  const { userStore } = useStores();
+  const { userStore, authStore } = useStores();
   const { currentUser } = userStore;
 
   const onLogout = useCallback(async () => {
-    await userStore.logout();
+    await authStore.logout();
     navigate('login');
-  }, [navigate, userStore]);
+  }, [navigate, authStore]);
 
   return (
     <header className={s.header}>

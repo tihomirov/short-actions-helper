@@ -1,4 +1,6 @@
-import { Response, SupportedAction, TabMessageEvent, TabMessageResponse, unwrap } from '../../../common';
+import { Response } from 'remote-shortcuts-common/src/utils';
+
+import { SupportedAction, TabMessageEvent, TabMessageResponse, unwrap } from '../../../common';
 
 export type RunActionMessageResponse = Response<TabMessageResponse[TabMessageEvent.RunAction], string>;
 

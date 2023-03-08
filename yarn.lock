@@ -3695,21 +3695,6 @@
   dependencies:
     "source-map" "^0.6.1"
 
-"concurrently@^7.6.0":
-  "integrity" "sha512-BKtRgvcJGeZ4XttiDiNcFiRlxoAeZOseqUvyYRUp/Vtd+9p1ULmeoSqGsDA+2ivdeDFpqrJvGvmI+StKfKl5hw=="
-  "resolved" "https://registry.npmjs.org/concurrently/-/concurrently-7.6.0.tgz"
-  "version" "7.6.0"
-  dependencies:
-    "chalk" "^4.1.0"
-    "date-fns" "^2.29.1"
-    "lodash" "^4.17.21"
-    "rxjs" "^7.0.0"
-    "shell-quote" "^1.7.3"
-    "spawn-command" "^0.0.2-1"
-    "supports-color" "^8.1.0"
-    "tree-kill" "^1.2.2"
-    "yargs" "^17.3.1"
-
 "config-chain@1.1.12":
   "integrity" "sha512-a1eOIcu8+7lUInge4Rpf/n4Krkf3Dd9lqhljRzII1/Zno/kRtUWnznPO3jOKBmTEktkt3fkxisUcivoj0ebzoA=="
   "resolved" "https://registry.npmjs.org/config-chain/-/config-chain-1.1.12.tgz"
@@ -3841,8 +3826,6 @@
   "version" "0.4.1"
 
 "cookie@0.4.2":
-  "integrity" "sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA=="
-  "resolved" "https://registry.npmjs.org/cookie/-/cookie-0.4.2.tgz"
   "version" "0.4.2"
 
 "cookie@0.5.0":
@@ -4065,8 +4048,6 @@
     "whatwg-url" "^8.0.0"
 
 "date-fns@^2.29.1":
-  "integrity" "sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA=="
-  "resolved" "https://registry.npmjs.org/date-fns/-/date-fns-2.29.3.tgz"
   "version" "2.29.3"
 
 "dateformat@^3.0.0":
@@ -8847,8 +8828,6 @@
   "version" "0.1.1"
 
 "passport-strategy@1.x.x":
-  "integrity" "sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA=="
-  "resolved" "https://registry.npmjs.org/passport-strategy/-/passport-strategy-1.0.0.tgz"
   "version" "1.0.0"
 
 "path-exists@^3.0.0":
@@ -8904,8 +8883,6 @@
   "version" "4.0.0"
 
 "pause@0.0.1":
-  "integrity" "sha512-KG8UEiEVkR3wGEb4m5yZkVCzigAD+cVEJck2CzYZO37ZGJfctvVptVO192MwrtPhzONn6go8ylnOdMhKqi4nfg=="
-  "resolved" "https://registry.npmjs.org/pause/-/pause-0.0.1.tgz"
   "version" "0.0.1"
 
 "picocolors@^1.0.0":
@@ -9402,8 +9379,6 @@
   "version" "4.0.1"
 
 "random-bytes@~1.0.0":
-  "integrity" "sha512-iv7LhNVO047HzYR3InF6pUcUsPQiHTM1Qal51DcGSuZFBil1aBBWG5eHPNek7bvILMaYJ/8RU1e8w1AMdHmLQQ=="
-  "resolved" "https://registry.npmjs.org/random-bytes/-/random-bytes-1.0.0.tgz"
   "version" "1.0.0"
 
 "range-parser@~1.2.1":
@@ -9680,9 +9655,14 @@
     "react-dom" "^17.0.2"
     "react-hook-form" "^7.43.1"
     "react-router-dom" "^6.8.0"
+    "remote-shortcuts-common" "*"
     "sort-by" "^1.2.0"
     "webextension-polyfill" "^0.7.0"
     "zod" "^3.20.6"
+
+"remote-shortcuts-common@*", "remote-shortcuts-common@file:/Users/antontihomirov/Desktop/projects/remote-shortcuts/packages/remote-shortcuts-common":
+  "resolved" "file:packages/remote-shortcuts-common"
+  "version" "1.0.0"
 
 "remove-accents@0.4.2":
   "integrity" "sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA=="
@@ -10138,8 +10118,6 @@
   "version" "3.0.0"
 
 "shell-quote@^1.7.3":
-  "integrity" "sha512-QHsz8GgQIGKlRi24yFc6a6lN69Idnx634w49ay6+jA5yFh7a1UY+4Rp6HPx/L/1zcEDPEij8cIsiqR6bQsE5VQ=="
-  "resolved" "https://registry.npmjs.org/shell-quote/-/shell-quote-1.8.0.tgz"
   "version" "1.8.0"
 
 "shellwords@^0.1.1":
@@ -10346,8 +10324,6 @@
     "memory-pager" "^1.0.2"
 
 "spawn-command@^0.0.2-1":
-  "integrity" "sha512-n98l9E2RMSJ9ON1AKisHzz7V42VDiBQGY6PB1BwRglz99wpVsSuGzQ+jOi6lFXBGVTCrRpltvjm+/XA+tpeJrg=="
-  "resolved" "https://registry.npmjs.org/spawn-command/-/spawn-command-0.0.2-1.tgz"
   "version" "0.0.2-1"
 
 "spdx-correct@^3.0.0":
@@ -10642,8 +10618,6 @@
     "has-flag" "^4.0.0"
 
 "supports-color@^8.1.0":
-  "integrity" "sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q=="
-  "resolved" "https://registry.npmjs.org/supports-color/-/supports-color-8.1.1.tgz"
   "version" "8.1.1"
   dependencies:
     "has-flag" "^4.0.0"
@@ -10868,8 +10842,6 @@
   "version" "0.0.3"
 
 "tree-kill@^1.2.2":
-  "integrity" "sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A=="
-  "resolved" "https://registry.npmjs.org/tree-kill/-/tree-kill-1.2.2.tgz"
   "version" "1.2.2"
 
 "treeverse@^2.0.0":
@@ -11057,8 +11029,6 @@
   "version" "3.17.4"
 
 "uid-safe@~2.1.5":
-  "integrity" "sha512-KPHm4VL5dDXKz01UuEd88Df+KzynaohSL9fBh096KWAxSKZQDI2uBrVqtvRM4rwrIrRRKsdLNML/lnaaVSRioA=="
-  "resolved" "https://registry.npmjs.org/uid-safe/-/uid-safe-2.1.5.tgz"
   "version" "2.1.5"
   dependencies:
     "random-bytes" "~1.0.0"
@@ -11609,8 +11579,6 @@
     "yargs-parser" "^21.1.1"
 
 "yargs@^17.3.1":
-  "integrity" "sha512-dwqOPg5trmrre9+v8SUo2q/hAwyKoVfu8OC1xPHKJGNdxAvPl4sKxL4vBnh3bQz/ZvvGAFeA5H3ou2kcOY8sQQ=="
-  "resolved" "https://registry.npmjs.org/yargs/-/yargs-17.7.0.tgz"
   "version" "17.7.0"
   dependencies:
     "cliui" "^8.0.1"

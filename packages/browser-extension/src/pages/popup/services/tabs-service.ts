@@ -1,6 +1,7 @@
+import { Response } from 'remote-shortcuts-common/src/utils';
 import browser from 'webextension-polyfill';
 
-import { assertExists, Response, TabMessage, TabMessageEvent, TabMessageResponse } from '../../../common';
+import { assertExists, TabMessage, TabMessageEvent, TabMessageResponse } from '../../../common';
 
 export type BrowserTab = browser.Tabs.Tab;
 

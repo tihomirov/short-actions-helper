@@ -1,6 +1,7 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
 
-import { assertUnreachable, ResponseFactory } from '../../../common';
+import { assertUnreachable } from '../../../common';
 import { commandService } from '../services';
 import { Command, Commands, CommandsType, PendingCommandForm } from '../types';
 import { RootStore } from './root-store';

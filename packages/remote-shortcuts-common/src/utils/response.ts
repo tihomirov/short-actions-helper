@@ -7,6 +7,7 @@ export class ResponseFactory {
   static success<T>(data: T): ResponseSuccess<T> {
     return { isSuccess: true, data };
   }
+
   static fail<T>(data: T): ResponseFail<T> {
     return { isSuccess: false, data };
   }

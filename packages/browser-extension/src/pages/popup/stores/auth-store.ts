@@ -1,4 +1,5 @@
-import { ResponseFactory } from '../../../common';
+import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
 import { authService } from '../services';
 import { RootStore } from './root-store';
 

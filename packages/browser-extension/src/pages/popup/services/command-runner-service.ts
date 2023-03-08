@@ -1,4 +1,6 @@
-import { Response, ResponseFactory, SupportedAction } from '../../../common';
+import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
+import { SupportedAction } from '../../../common';
 import { createAction } from '../actions';
 import { Command } from '../types';
 import { TabsService } from './tabs-service';

@@ -1,4 +1,6 @@
-import { ResponseFactory, TabMessageEvent } from '../../../common';
+import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
+import { TabMessageEvent } from '../../../common';
 import { TabsService } from '../services';
 
 export class MessageChannelStore {

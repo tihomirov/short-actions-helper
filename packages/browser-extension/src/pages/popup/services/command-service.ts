@@ -1,4 +1,5 @@
-import { Response, ResponseFactory } from '../../../common';
+import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
 import { Command, Commands, PendingCommandForm } from '../types';
 import { browserStorageService, IStorageService } from './browser-storage-service';
 import { API_URL, headers } from './constants';

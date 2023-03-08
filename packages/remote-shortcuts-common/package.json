@@ -1,0 +1,12 @@
+{
+  "name": "remote-shortcuts-common",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc src/**/*.ts"
+  },
+  "types": "dist",
+  "main": "dist",
+  "files": [
+    "/dist"
+  ]
+}

@@ -1,4 +1,6 @@
-import { isString, Response, ResponseFactory } from '../../../common';
+import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
+import { isString } from '../../../common';
 import { CurrentUser } from '../types';
 import { API_URL, headers } from './constants';
 

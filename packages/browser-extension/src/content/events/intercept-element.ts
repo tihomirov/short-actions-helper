@@ -1,4 +1,6 @@
-import { InterceptDocumentElementMessage, isSomething, Response, ResponseFactory } from '../../common';
+import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
+import { InterceptDocumentElementMessage, isSomething } from '../../common';
 import { MessageEvent } from './event';
 
 const EVENT_LISTENER_OPTIONS: AddEventListenerOptions = {

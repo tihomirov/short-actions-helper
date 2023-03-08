@@ -1,4 +1,6 @@
-import { ElementEvent, Response, ResponseFactory, RunDocumentContentActionMessage } from '../../common';
+import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
+import { ElementEvent, RunDocumentContentActionMessage } from '../../common';
 import { MessageEvent } from './event';
 
 const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void> = {
