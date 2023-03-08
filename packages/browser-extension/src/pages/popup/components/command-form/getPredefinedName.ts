@@ -1,4 +1,6 @@
-import { ActionType, assertUnreachable, SupportedAction, truncate } from '../../../../common';
+import { assertUnreachable } from 'remote-shortcuts-common/src/utils';
+
+import { ActionType, SupportedAction, truncate } from '../../../../common';
 
 export function getPredefinedName(
   name?: string,

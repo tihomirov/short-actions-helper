@@ -3,8 +3,8 @@ import { Box, Button, Stack, TextField } from '@mui/material';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { isString } from 'remote-shortcuts-common/src/utils';
 
-import { isString } from '../../../../common/utils';
 import { useStores } from '../../hooks';
 import { Command, CommandsType, PendingCommandForm } from '../../types';
 import { CommandForm as CommandFormType, commandSchema } from './command-schema';

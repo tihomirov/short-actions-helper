@@ -1,14 +1,18 @@
+import { isBoolean, isSomething, typeguard } from './is-it';
+import { Typeguard } from './types';
+
+type PayloadFail = Readonly<{ message: string }>;
 export type ResponseSuccess<T> = Readonly<{ isSuccess: true; data: T }>;
 export type ResponseFail<T> = Readonly<{ isSuccess: false; data: T }>;
 
-export type Response<SuccessT, FailT> = ResponseSuccess<SuccessT> | ResponseFail<FailT>;
+export type Response<SuccessT, FailT = PayloadFail> = ResponseSuccess<SuccessT> | ResponseFail<FailT>;
 
 export class ResponseFactory {
   static success<T>(data: T): ResponseSuccess<T> {
     return { isSuccess: true, data };
   }
 
-  static fail<T>(data: T): ResponseFail<T> {
+  static fail<T = PayloadFail>(data: T): ResponseFail<T> {
     return { isSuccess: false, data };
   }
 
@@ -20,3 +24,8 @@ export class ResponseFactory {
     return !response.isSuccess;
   }
 }
+
+// export const responseTypeguard = typeguard<Response>(['isSuccess', isBoolean], ['data', isSomething]);
+
+export const responseTypeguard = <T>(dataTypeguard?: Typeguard<T>) =>
+  typeguard<Response<T>>(['isSuccess', isBoolean], ['data', dataTypeguard ?? isSomething]);

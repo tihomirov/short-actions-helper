@@ -1,48 +1,49 @@
-import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+import {
+  assertWithTypeguard,
+  isString,
+  ResponseFactory,
+  responseTypeguard,
+  typeguard,
+} from 'remote-shortcuts-common/src/utils';
 
-import { isString } from '../../../common';
 import { CurrentUser } from '../types';
 import { API_URL, headers } from './constants';
 
 class AuthService {
-  async login(email: string, password: string): Promise<Response<string, string>> {
+  async login(email: string, password: string): Promise<string | undefined> {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ email, password }),
-    });
-    const data = await response.json();
+    }).then((res) => res.json());
 
-    if (data.status === 'success') {
-      return ResponseFactory.success(data.accessToken);
-    } else {
-      return ResponseFactory.fail(data.message);
-    }
+    assertWithTypeguard(response, responseTypeguard());
+
+    return ResponseFactory.isSuccess(response) ? undefined : response.data.message;
   }
 
-  async logout(): Promise<void> {
+  async logout(): Promise<string | undefined> {
     const response = await fetch(`${API_URL}/auth/logout`, {
       method: 'POST',
       headers,
-    });
+    }).then((res) => res.json());
 
-    return response.json();
+    assertWithTypeguard(response, responseTypeguard());
+
+    return ResponseFactory.isSuccess(response) ? undefined : response.data.message;
   }
 
-  async register(email: string, password: string): Promise<Response<CurrentUser, string>> {
+  async register(email: string, password: string): Promise<CurrentUser | string> {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ email, password }),
-    });
-    const responseData = await response.json();
+    }).then((res) => res.json());
 
-    if (response.status >= 200 && response.status < 300) {
-      const errorMessage = isString(responseData) ? responseData : 'Can not register new user';
-      return ResponseFactory.fail(errorMessage);
-    }
+    const userTypeguard = typeguard<CurrentUser>(['_id', isString], ['email', isString]);
+    assertWithTypeguard(response, responseTypeguard(userTypeguard));
 
-    return ResponseFactory.success(responseData);
+    return ResponseFactory.isSuccess(response) ? response.data : response.data.message;
   }
 }
 

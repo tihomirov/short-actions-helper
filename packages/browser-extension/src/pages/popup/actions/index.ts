@@ -1,4 +1,6 @@
-import { ActionType, assertUnreachable, SupportedAction, TabAction, TabEventType } from '../../../common';
+import { assertUnreachable } from 'remote-shortcuts-common/src/utils';
+
+import { ActionType, SupportedAction, TabAction, TabEventType } from '../../../common';
 import { Action } from './actions';
 import { CloseTabAction } from './close-tab-action';
 import { DocumentContentAction } from './document-content-action';

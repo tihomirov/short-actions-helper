@@ -1,5 +1,6 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express';
 import { MongoError } from 'mongodb';
+import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
 
 import { createUser, findUser, signToken } from '../services';
 import { AppError } from '../utils';
@@ -29,18 +30,11 @@ export const registerHandler = async (req: Request, res: Response, next: NextFun
       password: req.body.password,
     });
 
-    return res.status(201).json({
-      status: 'success',
-      data: {
-        user,
-      },
-    });
+    return res.status(201).json(ResponseFactory.success({ user }));
   } catch (err: unknown) {
     if (err instanceof MongoError && err?.code === 11000) {
-      return res.status(409).json({
-        status: 'fail',
-        message: 'Email already exist',
-      });
+      const message = 'Email already exist';
+      return res.status(409).json(ResponseFactory.fail({ message }));
     }
 
     return next(err);
@@ -68,10 +62,7 @@ export const loginHandler = async (req: Request, res: Response, next: NextFuncti
     });
 
     // Send Access Token
-    return res.status(200).json({
-      status: 'success',
-      accessToken,
-    });
+    return res.status(200).json(ResponseFactory.success({ accessToken }));
   } catch (err: unknown) {
     return next(err);
   }
