@@ -25,7 +25,7 @@ type RegisterForm = TypeOf<typeof registerSchema>;
 
 export const Register: FC = observer(() => {
   const navigate = useNavigate();
-  const { userStore } = useStores();
+  const { userStore, authStore } = useStores();
   const [loading, setLoading] = useState(false);
   const [registerError, setRegisterError] = useState<string | undefined>(undefined);
   const {
@@ -45,7 +45,7 @@ export const Register: FC = observer(() => {
     const { email, password } = form;
 
     setLoading(true);
-    const errorText = await userStore.register(email, password);
+    const errorText = await authStore.register(email, password);
 
     if (errorText) {
       setRegisterError(errorText);

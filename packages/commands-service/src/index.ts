@@ -1,42 +1,64 @@
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import express, { Express, Request, Response } from 'express';
-import expressSession from 'express-session';
-import mongoose from 'mongoose';
-import passport from 'passport';
+import express, { Express, NextFunction, Request, Response } from 'express';
+import morgan from 'morgan';
 
-import { authRouter, commandRouter } from './routes';
+import { authRouter, commandRouter, userRouter } from './routes';
+import { connectDB, connectRedis } from './utils';
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
 
-if (process.env.DB_URL) {
-  mongoose.set('strictQuery', false);
-  mongoose.connect(process.env.DB_URL);
-} else {
-  throw new Error('Database URL is not define in .env config');
+app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
 }
 
-app.use(express.json());
-app.use(
-  expressSession({
-    secret: 'remote-shortcuts',
-    resave: false,
-    saveUninitialized: false,
-  }),
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(
+//   cors({
+//     origin: config.get<string>('origin'),
+//     credentials: true,
+//   }),
+// );
 
 app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
 app.use('/api/command', commandRouter);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
+app.get('/healthChecker', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Welcome',
+  });
 });
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+// UnKnown Routes
+app.all('*', (req: Request, res: Response, next: NextFunction) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const err = new Error(`Route ${req.originalUrl} not found`) as any;
+  err.statusCode = 404;
+  next(err);
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+  err.status = err.status || 'error';
+  err.statusCode = err.statusCode || 500;
+
+  return res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+  });
+});
+
+console.log(`[server]: Server starting at http://localhost:${port}`);
+app.listen(port, async () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+
+  await connectDB();
+  await connectRedis();
 });

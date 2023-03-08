@@ -16,8 +16,12 @@ export const Home: FC = observer(() => {
   );
 
   useEffect(() => {
+    if (!userStore.currentUser) {
+      return;
+    }
+
     commandStore.loadCommands();
-  }, []);
+  }, [userStore.currentUser]);
 
   if (!userStore.currentUser) {
     return <Navigate to="login" replace={true} />;

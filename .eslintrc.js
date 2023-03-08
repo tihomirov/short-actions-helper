@@ -9,7 +9,7 @@ module.exports = {
   plugins: ['simple-import-sort'],
   parser: '@typescript-eslint/parser',
   rules: {
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-explicit-any': 'error',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
@@ -26,6 +26,15 @@ module.exports = {
         ignoreUrls: true,
         ignoreStrings: true,
         ignoreTemplateLiterals: true,
+      },
+    ],
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        extendDefaults: true,
+        types: {
+          '{}': false,
+        },
       },
     ],
   },

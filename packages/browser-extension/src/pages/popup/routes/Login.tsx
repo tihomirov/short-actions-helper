@@ -19,7 +19,7 @@ type LoginForm = TypeOf<typeof loginSchema>;
 
 export const Login: FC = observer(() => {
   const navigate = useNavigate();
-  const { userStore } = useStores();
+  const { authStore, userStore } = useStores();
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const {
@@ -39,7 +39,7 @@ export const Login: FC = observer(() => {
     const { email, password } = form;
 
     setLoading(true);
-    const errorText = await userStore.login(email, password);
+    const errorText = await authStore.login(email, password);
 
     if (errorText) {
       setLoginError(errorText);

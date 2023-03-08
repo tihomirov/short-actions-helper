@@ -6,14 +6,26 @@ import { API_URL, headers } from './constants';
 class CommandService {
   constructor(private readonly _storageService: IStorageService) {}
 
-  async getCommands(hostname?: string): Promise<Commands> {
+  async getCommands(hostname?: string): Promise<Response<Commands, string>> {
     const response = await fetch(`${API_URL}/command?hostname=${hostname ?? ''}`);
-    return await response.json();
+    const data = await response.json();
+
+    if (data.status === 'success') {
+      return ResponseFactory.success(data.data.commands);
+    } else {
+      return ResponseFactory.fail(data.message);
+    }
   }
 
-  async getCommandById(id: string): Promise<Command | undefined> {
+  async getCommandById(id: string): Promise<Response<Command, string>> {
     const response = await fetch(`${API_URL}/command/${id}`);
-    return await response.json();
+    const data = await response.json();
+
+    if (data.status === 'success') {
+      return ResponseFactory.success(data.data.command);
+    } else {
+      return ResponseFactory.fail(data.message);
+    }
   }
 
   async createCommand(command: Omit<Command, '_id'>): Promise<Response<undefined, string>> {

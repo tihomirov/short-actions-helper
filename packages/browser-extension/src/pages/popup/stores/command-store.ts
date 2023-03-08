@@ -68,8 +68,11 @@ export class CommandStore {
     runInAction(() => (this._isLoading = true));
 
     const hostname = this._rootStore.tabStore.hostname;
-    const commands = await commandService.getCommands(hostname);
-    runInAction(() => (this._commands = commands));
+    const response = await commandService.getCommands(hostname);
+
+    if (ResponseFactory.isSuccess(response)) {
+      runInAction(() => (this._commands = response.data));
+    }
 
     runInAction(() => (this._isLoading = false));
   }
@@ -86,7 +89,13 @@ export class CommandStore {
   }
 
   async getById(id: string): Promise<Command | undefined> {
-    return await commandService.getCommandById(id);
+    const response = await commandService.getCommandById(id);
+
+    if (ResponseFactory.isSuccess(response)) {
+      return response.data;
+    }
+
+    return undefined;
   }
 
   async removeCommand(id: string): Promise<void> {
