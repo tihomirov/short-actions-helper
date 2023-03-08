@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+const RECONNECT_TIMEOUT = 5 * 1000;
+
 export const connectDB = async () => {
   if (!process.env.DB_URL) {
     throw new Error('Database URL(DB_URL) is not define in .env config');
@@ -9,6 +11,6 @@ export const connectDB = async () => {
     mongoose.set('strictQuery', false);
     mongoose.connect(process.env.DB_URL);
   } catch (error: unknown) {
-    setTimeout(connectDB, 5000);
+    setTimeout(connectDB, RECONNECT_TIMEOUT);
   }
 };
