@@ -25,7 +25,5 @@ export class ResponseFactory {
   }
 }
 
-// export const responseTypeguard = typeguard<Response>(['isSuccess', isBoolean], ['data', isSomething]);
-
 export const responseTypeguard = <T>(dataTypeguard?: Typeguard<T>) =>
   typeguard<Response<T>>(['isSuccess', isBoolean], ['data', dataTypeguard ?? isSomething]);
