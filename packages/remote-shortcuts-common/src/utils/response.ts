@@ -27,7 +27,7 @@ export class ResponseFactory {
 
 export const responseTypeguard =
   <T, K = PayloadFail>(successDataTypeguard?: Typeguard<T>, errorDataTypeguard?: Typeguard<K>) =>
-  (response: unknown): response is Response<T, K> => {
+  (response: unknown | Response<T, K>): response is Response<T, K> => {
     const successTypeguard = typeguard<Response<T, K>>(
       ['isSuccess', (value) => value === true],
       ['data', successDataTypeguard ?? isObject],

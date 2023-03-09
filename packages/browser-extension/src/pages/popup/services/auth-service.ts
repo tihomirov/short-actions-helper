@@ -1,15 +1,8 @@
-import {
-  assertWithTypeguard,
-  isString,
-  ResponseFactory,
-  responseTypeguard,
-  typeguard,
-} from 'remote-shortcuts-common/src/utils';
+import { assertWithTypeguard, ResponseFactory, responseTypeguard } from 'remote-shortcuts-common/src/utils';
 
 import { CurrentUser } from '../types';
 import { API_URL, headers } from './constants';
-
-const userTypeguard = typeguard<{ user: CurrentUser }>(['user', typeguard(['_id', isString], ['email', isString])]);
+import { currentUserTypeguard } from './typeguards';
 
 class AuthService {
   async login(email: string, password: string): Promise<string | undefined> {
@@ -42,7 +35,7 @@ class AuthService {
       body: JSON.stringify({ email, password }),
     }).then((res) => res.json());
 
-    assertWithTypeguard(response, responseTypeguard(userTypeguard));
+    assertWithTypeguard(response, responseTypeguard(currentUserTypeguard));
 
     return ResponseFactory.isSuccess(response) ? response.data.user : response.data.message;
   }

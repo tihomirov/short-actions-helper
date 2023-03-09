@@ -1,4 +1,5 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
+import { isString } from 'remote-shortcuts-common/src/utils';
 
 import { userService } from '../services';
 import { CurrentUser } from '../types';
@@ -29,13 +30,11 @@ export class UserStore {
 
     const response = await userService.getCurrentUser();
 
-    if (response.isSuccess) {
-      runInAction(() => {
-        this._currentUser = response.data;
-      });
-    }
-
     runInAction(() => {
+      if (!isString(response)) {
+        this._currentUser = response;
+      }
+
       this._currentUserLoading = false;
     });
   }
