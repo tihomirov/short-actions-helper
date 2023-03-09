@@ -56,13 +56,27 @@ export const loginHandler = async (req: Request, res: Response, next: NextFuncti
 
     // Send Access Token in Cookie
     res.cookie('accessToken', accessToken, accessTokenCookieOptions);
-    res.cookie('logged_in', true, {
+    res.cookie('loggedIn', true, {
       ...accessTokenCookieOptions,
       httpOnly: false,
     });
 
     // Send Access Token
     return res.status(200).json(ResponseFactory.success({ accessToken }));
+  } catch (err: unknown) {
+    return next(err);
+  }
+};
+
+export const logoutHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = res.locals.user;
+
+    res.clearCookie('accessToken');
+    res.clearCookie('loggedIn');
+    res.removeHeader('authorization');
+
+    return res.status(200).json(ResponseFactory.success({ user }));
   } catch (err: unknown) {
     return next(err);
   }

@@ -17,7 +17,7 @@ export const Header: FC<HeaderProps> = observer(({ hostname }) => {
 
   const onLogout = useCallback(async () => {
     await authStore.logout();
-    navigate('login');
+    navigate('/login');
   }, [navigate, authStore]);
 
   return (

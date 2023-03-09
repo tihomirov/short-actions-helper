@@ -9,6 +9,8 @@ import {
 import { CurrentUser } from '../types';
 import { API_URL, headers } from './constants';
 
+const userTypeguard = typeguard<{ user: CurrentUser }>(['user', typeguard(['_id', isString], ['email', isString])]);
+
 class AuthService {
   async login(email: string, password: string): Promise<string | undefined> {
     const response = await fetch(`${API_URL}/auth/login`, {
@@ -40,10 +42,9 @@ class AuthService {
       body: JSON.stringify({ email, password }),
     }).then((res) => res.json());
 
-    const userTypeguard = typeguard<CurrentUser>(['_id', isString], ['email', isString]);
     assertWithTypeguard(response, responseTypeguard(userTypeguard));
 
-    return ResponseFactory.isSuccess(response) ? response.data : response.data.message;
+    return ResponseFactory.isSuccess(response) ? response.data.user : response.data.message;
   }
 }
 

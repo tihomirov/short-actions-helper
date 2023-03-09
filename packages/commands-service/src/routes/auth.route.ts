@@ -1,6 +1,7 @@
 import express from 'express';
 
-import { loginHandler, registerHandler } from '../controllers';
+import { loginHandler, logoutHandler, registerHandler } from '../controllers';
+import { deserializeUser, requireUser } from '../middleware';
 
 export const authRouter = express.Router();
 
@@ -9,3 +10,6 @@ authRouter.post('/register', registerHandler);
 
 // Login user route
 authRouter.post('/login', loginHandler);
+
+// Logout user route
+authRouter.post('/logout', deserializeUser, requireUser, logoutHandler);

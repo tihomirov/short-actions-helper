@@ -11,13 +11,6 @@ export const Root: FC = observer(() => {
   const { tabStore, userStore, commandStore } = useStores();
   const loading = userStore.currentUserLoading || tabStore.currentTabLoading || commandStore.isPendingCommandLoading;
 
-  console.log(`
-    !!!! Loading
-    userStore.currentUserLoading = ${userStore.currentUserLoading}
-    tabStore.currentTabLoading = ${tabStore.currentTabLoading}
-    commandStore.isPendingCommandLoading = ${commandStore.isPendingCommandLoading}
-  `);
-
   return (
     <div className={s.app}>
       <Header hostname={tabStore.hostname} />
