@@ -42,8 +42,9 @@ export const postCommand = async (req: Request, res: Response, next: NextFunctio
 
 export const putCommand = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = res.locals.user;
-    const command = updateCommand(user._id, req.body);
+    const userId = res.locals.user._id;
+    const commandId = req.params.id;
+    const command = updateCommand(userId, commandId, req.body);
 
     return res.status(200).json(ResponseFactory.success({ command }));
   } catch (err: unknown) {

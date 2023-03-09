@@ -36,27 +36,27 @@ class CommandService {
     return ResponseFactory.isSuccess(response) ? response.data.command : response.data.message;
   }
 
-  async updateCommand(command: Command): Promise<Command | string> {
+  async updateCommand(command: Command): Promise<undefined | string> {
     const response = await fetch(`${API_URL}/command/${command._id}`, {
       method: 'PUT',
       headers,
       body: JSON.stringify(command),
     }).then((res) => res.json());
 
-    assertWithTypeguard(response, responseTypeguard(commandResponseTypeguard));
+    assertWithTypeguard(response, responseTypeguard());
 
-    return ResponseFactory.isSuccess(response) ? response.data.command : response.data.message;
+    return ResponseFactory.isSuccess(response) ? undefined : response.data.message;
   }
 
-  async deleteCommand(id: string): Promise<Command | string> {
+  async deleteCommand(id: string): Promise<undefined | string> {
     const response = await fetch(`${API_URL}/command/${id}`, {
       method: 'DELETE',
       headers,
     }).then((res) => res.json());
 
-    assertWithTypeguard(response, responseTypeguard(commandResponseTypeguard));
+    assertWithTypeguard(response, responseTypeguard());
 
-    return ResponseFactory.isSuccess(response) ? response.data.command : response.data.message;
+    return ResponseFactory.isSuccess(response) ? undefined : response.data.message;
   }
 
   async getPendingCommand(): Promise<PendingCommandForm | undefined> {

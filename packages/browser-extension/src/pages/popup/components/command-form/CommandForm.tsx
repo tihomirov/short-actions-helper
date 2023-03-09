@@ -33,7 +33,7 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
       actions: actions ? [...actions] : [{}],
     },
   });
-  const { control, register, formState, handleSubmit, reset, watch } = form;
+  const { control, register, formState, handleSubmit, watch } = form;
   const { errors, isSubmitted, isValid } = formState;
   const submitDisabled = loading || !!savingError || (isSubmitted && !isValid);
   const commandName = useWatch({
@@ -50,13 +50,11 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
 
     if (error) {
       setSavingError(error);
+      setLoading(false);
     } else {
       await commandStore.removePendingCommand();
-      reset();
       navigate(`/`);
     }
-
-    setLoading(false);
   });
 
   const onCancel = useCallback(async () => {

@@ -1,3 +1,5 @@
+import { omit } from 'lodash';
+
 import { Command, CommandModel } from '../models';
 import { AppError } from '../utils';
 
@@ -27,8 +29,9 @@ export const createCommand = async (input: Partial<Command>) => {
   return command.toJSON();
 };
 
-export const updateCommand = async (userId: string, input: Partial<Command>) => {
-  const command = await CommandModel.findOne({ $set: input });
+export const updateCommand = async (userId: string, commandId: string, input: Partial<Command>) => {
+  const updatedCommand = omit(input, '_id');
+  const command = await CommandModel.findByIdAndUpdate(commandId, { $set: updatedCommand });
 
   if (!command) {
     throw new AppError('Command not Found', 404);
@@ -38,7 +41,7 @@ export const updateCommand = async (userId: string, input: Partial<Command>) => 
     throw new AppError('Command can not e updated', 403);
   }
 
-  command.update({ $set: input });
+  command.update({ $set: updatedCommand });
   return command.toJSON();
 };
 
