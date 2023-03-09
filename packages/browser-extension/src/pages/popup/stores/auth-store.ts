@@ -20,8 +20,9 @@ export class AuthStore {
     const response = await authService.register(email, password);
 
     if (isString(response)) {
-      return;
+      return response;
     }
+
     this._rootStore.userStore.setCurrentUser(response);
   }
 

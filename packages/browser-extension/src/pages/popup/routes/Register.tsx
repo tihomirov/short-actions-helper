@@ -31,7 +31,6 @@ export const Register: FC = observer(() => {
   const {
     register,
     formState: { errors, isSubmitted, isValid },
-    reset,
     handleSubmit,
     watch,
   } = useForm<RegisterForm>({
@@ -48,11 +47,11 @@ export const Register: FC = observer(() => {
     const errorText = await authStore.register(email, password);
 
     if (errorText) {
-      setRegisterError(errorText);
-    } else {
-      reset();
+      setLoading(false);
+      return setRegisterError(errorText);
     }
-    setLoading(false);
+
+    navigate('/');
   });
 
   useEffect(() => {

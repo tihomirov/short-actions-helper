@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
+import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
 
 import { authRouter, commandRouter, userRouter } from './routes';
 import { connectDB, connectRedis } from './utils';
@@ -30,10 +31,7 @@ app.use('/api/users', userRouter);
 app.use('/api/command', commandRouter);
 
 app.get('/healthChecker', (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Welcome',
-  });
+  res.status(200).json(ResponseFactory.success({ message: 'Welcome' }));
 });
 
 // UnKnown Routes
@@ -49,10 +47,7 @@ app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
   err.status = err.status || 'error';
   err.statusCode = err.statusCode || 500;
 
-  return res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
+  return res.status(err.statusCode).json(ResponseFactory.fail({ message: err.message }));
 });
 
 console.log(`[server]: Server starting at http://localhost:${port}`);

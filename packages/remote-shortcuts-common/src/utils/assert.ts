@@ -12,6 +12,6 @@ export function assertUnreachable(_value: never): never {
 
 export function assertWithTypeguard<T>(value: unknown, typeguard: Typeguard<T>): asserts value is T {
   if (!typeguard(value)) {
-    throw new Error(`assertWithTypeguard: typeguard: ${typeguard.name}, value: ${JSON.stringify(value)}`);
+    throw new Error(`assertWithTypeguard: value = ${JSON.stringify(value)}`);
   }
 }

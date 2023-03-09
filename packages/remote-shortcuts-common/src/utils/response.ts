@@ -1,4 +1,4 @@
-import { isBoolean, isSomething, typeguard } from './is-it';
+import { isObject, isString, typeguard } from './is-it';
 import { Typeguard } from './types';
 
 type PayloadFail = Readonly<{ message: string }>;
@@ -25,5 +25,17 @@ export class ResponseFactory {
   }
 }
 
-export const responseTypeguard = <T>(dataTypeguard?: Typeguard<T>) =>
-  typeguard<Response<T>>(['isSuccess', isBoolean], ['data', dataTypeguard ?? isSomething]);
+export const responseTypeguard =
+  <T, K = PayloadFail>(successDataTypeguard?: Typeguard<T>, errorDataTypeguard?: Typeguard<K>) =>
+  (response: unknown): response is Response<T, K> => {
+    const successTypeguard = typeguard<Response<T, K>>(
+      ['isSuccess', (value) => value === true],
+      ['data', successDataTypeguard ?? isObject],
+    );
+    const failTypeguard = typeguard<Response<T, K>>(
+      ['isSuccess', (value) => value === false],
+      ['data', errorDataTypeguard ?? typeguard(['message', isString])],
+    );
+
+    return successTypeguard(response) || failTypeguard(response);
+  };

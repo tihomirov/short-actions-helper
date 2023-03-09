@@ -25,7 +25,6 @@ export const Login: FC = observer(() => {
   const {
     register,
     formState: { errors, isSubmitted, isValid },
-    reset,
     handleSubmit,
     watch,
   } = useForm<LoginForm>({
@@ -42,11 +41,11 @@ export const Login: FC = observer(() => {
     const errorText = await authStore.login(email, password);
 
     if (errorText) {
-      setLoginError(errorText);
-    } else {
-      reset();
+      setLoading(false);
+      return setLoginError(errorText);
     }
-    setLoading(false);
+
+    navigate('/');
   });
 
   useEffect(() => {
