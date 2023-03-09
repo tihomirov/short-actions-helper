@@ -2,7 +2,7 @@ import { assertWithTypeguard, ResponseFactory, responseTypeguard } from 'remote-
 
 import { CurrentUser } from '../types';
 import { API_URL, headers } from './constants';
-import { currentUserTypeguard } from './typeguards';
+import { currentUserResponseTypeguard } from './typeguards';
 
 class AuthService {
   async login(email: string, password: string): Promise<string | undefined> {
@@ -35,7 +35,7 @@ class AuthService {
       body: JSON.stringify({ email, password }),
     }).then((res) => res.json());
 
-    assertWithTypeguard(response, responseTypeguard(currentUserTypeguard));
+    assertWithTypeguard(response, responseTypeguard(currentUserResponseTypeguard));
 
     return ResponseFactory.isSuccess(response) ? response.data.user : response.data.message;
   }

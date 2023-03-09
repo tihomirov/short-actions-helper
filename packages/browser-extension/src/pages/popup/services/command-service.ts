@@ -1,70 +1,62 @@
-import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+import { assertWithTypeguard, ResponseFactory, responseTypeguard } from 'remote-shortcuts-common/src/utils';
 
 import { Command, Commands, PendingCommandForm } from '../types';
 import { browserStorageService, IStorageService } from './browser-storage-service';
 import { API_URL, headers } from './constants';
+import { commandResponseTypeguard, commandsResponseTypeguard } from './typeguards';
 
 class CommandService {
   constructor(private readonly _storageService: IStorageService) {}
 
-  async getCommands(hostname?: string): Promise<Response<Commands, string>> {
-    const response = await fetch(`${API_URL}/command?hostname=${hostname ?? ''}`);
-    const data = await response.json();
+  async getCommands(hostname?: string): Promise<Commands | string> {
+    const response = await fetch(`${API_URL}/command?hostname=${hostname ?? ''}`).then((res) => res.json());
 
-    if (data.status === 'success') {
-      return ResponseFactory.success(data.data.commands);
-    } else {
-      return ResponseFactory.fail(data.message);
-    }
+    assertWithTypeguard(response, responseTypeguard(commandsResponseTypeguard));
+
+    return ResponseFactory.isSuccess(response) ? response.data.commands : response.data.message;
   }
 
-  async getCommandById(id: string): Promise<Response<Command, string>> {
-    const response = await fetch(`${API_URL}/command/${id}`);
-    const data = await response.json();
+  async getCommandById(id: string): Promise<Command | string> {
+    const response = await fetch(`${API_URL}/command/${id}`).then((res) => res.json());
 
-    if (data.status === 'success') {
-      return ResponseFactory.success(data.data.command);
-    } else {
-      return ResponseFactory.fail(data.message);
-    }
+    assertWithTypeguard(response, responseTypeguard(commandResponseTypeguard));
+
+    return ResponseFactory.isSuccess(response) ? response.data.command : response.data.message;
   }
 
-  async createCommand(command: Omit<Command, '_id'>): Promise<Response<undefined, string>> {
+  async createCommand(command: Omit<Command, '_id'>): Promise<Command | string> {
     const response = await fetch(`${API_URL}/command`, {
       method: 'POST',
       headers,
       body: JSON.stringify(command),
-    });
-    const data = await response.json();
+    }).then((res) => res.json());
 
-    if (response.status === 200) {
-      return ResponseFactory.success(undefined);
-    } else {
-      return ResponseFactory.fail(data.toString());
-    }
+    assertWithTypeguard(response, responseTypeguard(commandResponseTypeguard));
+
+    return ResponseFactory.isSuccess(response) ? response.data.command : response.data.message;
   }
 
-  async updateCommand(command: Command): Promise<Response<undefined, string>> {
+  async updateCommand(command: Command): Promise<Command | string> {
     const response = await fetch(`${API_URL}/command/${command._id}`, {
       method: 'PUT',
       headers,
       body: JSON.stringify(command),
-    });
-    const data = await response.json();
+    }).then((res) => res.json());
 
-    if (response.status === 200) {
-      return ResponseFactory.success(undefined);
-    } else {
-      return ResponseFactory.fail(data.toString());
-    }
+    assertWithTypeguard(response, responseTypeguard(commandResponseTypeguard));
+
+    return ResponseFactory.isSuccess(response) ? response.data.command : response.data.message;
   }
 
-  async deleteCommand(id: string): Promise<void> {
+  async deleteCommand(id: string): Promise<Command | string> {
     const response = await fetch(`${API_URL}/command/${id}`, {
       method: 'DELETE',
       headers,
-    });
-    return await response.json();
+    }).then((res) => res.json());
+
+    assertWithTypeguard(response, responseTypeguard(commandResponseTypeguard));
+
+    return ResponseFactory.isSuccess(response) ? response.data.command : response.data.message;
   }
 
   async getPendingCommand(): Promise<PendingCommandForm | undefined> {

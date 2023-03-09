@@ -4,11 +4,15 @@ export function isSomething<T>(x: T | undefined | null): x is NonNullable<T> {
   return x != null;
 }
 
-export function isString<T = unknown>(value: string | T): value is string {
+export function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
-export function isBoolean<T = unknown>(value: boolean | T): value is boolean {
+export function isNumber(item: unknown): item is number {
+  return typeof item === 'number';
+}
+
+export function isBoolean(value: unknown): value is boolean {
   return typeof value === 'boolean';
 }
 
@@ -19,6 +23,13 @@ export function isObject(item: unknown): item is PlainObject | readonly unknown[
 export function isNonArrayObject(item: unknown): item is NonNullable<PlainObject> {
   return isObject(item) && !Array.isArray(item);
 }
+
+export const isEnum = <T extends object>(EnumType: T) => {
+  const isNumberEnumValue = (value: unknown) => isNumber(value) && value in EnumType;
+  const values = Object.values(EnumType);
+  const validValues = new Set(values.filter(values.some(isNumberEnumValue) ? isNumberEnumValue : isString));
+  return (item: unknown): item is T[keyof T] => validValues.has(item);
+};
 
 export function typeguard<T>(
   ...props: Array<keyof T | [keyof T, (value: unknown) => boolean, boolean?]>
@@ -34,4 +45,8 @@ export function typeguard<T>(
         return prop in object;
       }
     });
+}
+
+export function arrayTypeguard<T>(elementTypeguard: Typeguard<T>): Typeguard<ReadonlyArray<T>> {
+  return (array: unknown): array is ReadonlyArray<T> => Array.isArray(array) && array.every(elementTypeguard);
 }

@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
-import { assertUnreachable, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+import { assertUnreachable, isString } from 'remote-shortcuts-common/src/utils';
 
 import { commandService } from '../services';
 import { Command, Commands, CommandsType, PendingCommandForm } from '../types';
@@ -70,11 +70,15 @@ export class CommandStore {
     const hostname = this._rootStore.tabStore.hostname;
     const response = await commandService.getCommands(hostname);
 
-    if (ResponseFactory.isSuccess(response)) {
-      runInAction(() => (this._commands = response.data));
-    }
+    runInAction(() => {
+      if (isString(response)) {
+        // TODO: handle error
+      } else {
+        this._commands = response;
+      }
 
-    runInAction(() => (this._isLoading = false));
+      this._isLoading = false;
+    });
   }
 
   private async loadPendingCommands(): Promise<void> {
@@ -91,15 +95,22 @@ export class CommandStore {
   async getById(id: string): Promise<Command | undefined> {
     const response = await commandService.getCommandById(id);
 
-    if (ResponseFactory.isSuccess(response)) {
-      return response.data;
+    if (isString(response)) {
+      // TODO: handle error
+      return;
     }
 
-    return undefined;
+    return response;
   }
 
   async removeCommand(id: string): Promise<void> {
-    await commandService.deleteCommand(id);
+    const response = await commandService.deleteCommand(id);
+
+    if (isString(response)) {
+      // TODO: handle error
+      return;
+    }
+
     runInAction(() => (this._commands = this._commands.filter((command) => command._id !== id)));
   }
 
@@ -107,22 +118,22 @@ export class CommandStore {
     this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.All;
     const response = await commandService.createCommand(command);
 
-    if (ResponseFactory.isSuccess(response)) {
-      return undefined;
+    if (isString(response)) {
+      return response;
     }
 
-    return response.data;
+    return;
   }
 
   async updateCommand(command: Command): Promise<void | string> {
     this._commandsType = command.hostname ? CommandsType.Hostname : CommandsType.All;
     const response = await commandService.updateCommand(command);
 
-    if (ResponseFactory.isSuccess(response)) {
-      return undefined;
+    if (isString(response)) {
+      return response;
     }
 
-    return response.data;
+    return;
   }
 
   async savePendingCommand(command: PendingCommandForm): Promise<void> {
