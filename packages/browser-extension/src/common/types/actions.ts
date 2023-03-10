@@ -17,6 +17,10 @@ export enum ElementEvent {
 export type ElementData = Readonly<{
   tagName: string;
   innerText?: string;
+  innerHTML?: string;
+  href?: string;
+  title?: string;
+  src?: string;
 }>;
 
 export type DocumentContentAction = ElementData &

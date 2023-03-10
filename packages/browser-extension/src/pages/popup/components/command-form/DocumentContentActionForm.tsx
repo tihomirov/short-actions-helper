@@ -18,6 +18,12 @@ type DocumentContentActionFormProps = Readonly<{
   index: number;
 }>;
 
+const actionElementProps = {
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+} as const;
+
 export const DocumentContentActionForm: FC<DocumentContentActionFormProps> = ({ index }) => {
   const { commandStore, messageChannelStore } = useStores();
   const { control, getValues } = useFormContext<CommandForm>();
@@ -36,6 +42,10 @@ export const DocumentContentActionForm: FC<DocumentContentActionFormProps> = ({ 
     control,
   });
   const innerTextValue = useWatch({ control, name: `actions.${index}.innerText` });
+  const innerHTMLValue = useWatch({ control, name: `actions.${index}.innerHTML` });
+  const hrefValue = useWatch({ control, name: `actions.${index}.href` });
+  const titleValue = useWatch({ control, name: `actions.${index}.title` });
+  const srcValue = useWatch({ control, name: `actions.${index}.src` });
 
   const onSelectElement = useCallback(async () => {
     const pendingCommand = getValues();
@@ -76,11 +86,22 @@ export const DocumentContentActionForm: FC<DocumentContentActionFormProps> = ({ 
         }}
         error={!!tagNameError}
       >
-        <Box display="flex" justifyContent="center" flexDirection="column" fontSize="12px" paddingLeft="12px">
+        <Box
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
+          fontSize="12px"
+          paddingLeft="12px"
+          overflow="hidden"
+        >
           {tagNameField.value ? (
             <>
-              <Box>Tag Name: {tagNameField.value}</Box>
-              {innerTextValue && <Box>Inner Text: {innerTextValue}</Box>}
+              <Box {...actionElementProps}>Tag Name: {tagNameField.value}</Box>
+              {innerTextValue && <Box {...actionElementProps}>Inner Text: {innerTextValue}</Box>}
+              {innerHTMLValue && <Box {...actionElementProps}>Inner Html: {innerHTMLValue}</Box>}
+              {hrefValue && <Box {...actionElementProps}>Link URL: {hrefValue}</Box>}
+              {titleValue && <Box {...actionElementProps}>Title: {titleValue}</Box>}
+              {srcValue && <Box {...actionElementProps}>Image URL: {srcValue}</Box>}
             </>
           ) : (
             <FormHelperText>

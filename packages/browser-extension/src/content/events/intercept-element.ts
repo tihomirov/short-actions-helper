@@ -53,16 +53,37 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
   private eventHandler = (event: Event): void => {
     event.preventDefault();
     event.stopPropagation();
+    const { target } = event;
 
-    if (!event.target) {
+    if (!target) {
       throw new Error('Target of event is not presented');
     }
 
-    if (this._notSupportedBackgroundIframes.includes(event.target as HTMLIFrameElement)) {
+    if (target instanceof HTMLIFrameElement && this._notSupportedBackgroundIframes.includes(target)) {
       return;
     }
 
-    const { tagName, innerText } = event.target as HTMLElement;
+    let tagName: string | undefined;
+    let innerHTML: string | undefined;
+    let innerText: string | undefined;
+    let href: string | undefined;
+    let title: string | undefined;
+    let src: string | undefined;
+
+    if (target instanceof HTMLElement) {
+      tagName = target.tagName;
+      innerHTML = target.innerHTML.length < 2000 ? target.innerHTML.trim() : '';
+      innerText = target.innerText?.trim();
+      title = target.title?.trim();
+    }
+
+    if (target instanceof HTMLAnchorElement) {
+      href = target.href;
+    }
+
+    if (target instanceof HTMLImageElement) {
+      src = target.src;
+    }
 
     if (!tagName) {
       throw new Error('Target can not be parsed. "tagName" is not defined');
@@ -72,6 +93,10 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
       interceptedElement: {
         tagName,
         innerText,
+        innerHTML,
+        title,
+        href,
+        src,
       },
     });
 

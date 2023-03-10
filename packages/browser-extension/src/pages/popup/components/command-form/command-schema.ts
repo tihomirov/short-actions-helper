@@ -17,7 +17,11 @@ const documentContentActionSchema = object({
   tagName: string({
     required_error: 'Tag Name is required',
   }),
-  innerText: string(),
+  innerText: string().optional(),
+  innerHTML: string().optional(),
+  title: string().optional(),
+  href: string().optional(),
+  src: string().optional(),
 });
 
 export const commandSchema = object({

@@ -15,6 +15,10 @@ const documentContentActionTypeguard = typeguard<DocumentContentAction>(
   ['elementEvent', isEnum(ElementEvent)],
   ['tagName', isString],
   ['innerText', isString, true],
+  ['innerHTML', isString, true],
+  ['title', isString, true],
+  ['href', isString, true],
+  ['src', isString, true],
 );
 
 const tabActionTypeguard = typeguard<TabAction>(

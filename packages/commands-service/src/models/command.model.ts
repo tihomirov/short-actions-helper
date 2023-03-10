@@ -9,6 +9,10 @@ const ActionSchema = new Schema({
   elementEvent: String,
   tagName: String,
   innerText: String,
+  innerHTML: String,
+  title: String,
+  href: String,
+  src: String,
 });
 
 const commandSchema = new Schema(
