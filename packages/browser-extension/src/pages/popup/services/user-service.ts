@@ -1,16 +1,20 @@
 import { assertWithTypeguard, ResponseFactory, responseTypeguard } from 'remote-shortcuts-common/src/utils';
 
 import { CurrentUser } from '../types';
-import { API_URL, headers } from './constants';
+import { API_URL, connectionError, headers } from './constants';
 import { currentUserResponseTypeguard } from './typeguards';
 
 class UserService {
   async getCurrentUser(): Promise<CurrentUser | string> {
-    const response = await fetch(`${API_URL}/users/current-user`, { headers }).then((res) => res.json());
+    try {
+      const response = await fetch(`${API_URL}/users/current-user`, { headers }).then((res) => res.json());
 
-    assertWithTypeguard(response, responseTypeguard(currentUserResponseTypeguard));
+      assertWithTypeguard(response, responseTypeguard(currentUserResponseTypeguard));
 
-    return ResponseFactory.isSuccess(response) ? response.data.user : response.data.message;
+      return ResponseFactory.isSuccess(response) ? response.data.user : response.data.message;
+    } catch (error: unknown) {
+      return connectionError;
+    }
   }
 }
 

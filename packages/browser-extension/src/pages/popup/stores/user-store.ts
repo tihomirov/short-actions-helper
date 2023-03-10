@@ -1,8 +1,9 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { isString } from 'remote-shortcuts-common/src/utils';
 
-import { userService } from '../services';
+import { connectionError, userService } from '../services';
 import { CurrentUser } from '../types';
+import { RootStore } from './root-store';
 
 export class UserStore {
   @observable
@@ -10,7 +11,7 @@ export class UserStore {
   @observable
   private _currentUserLoading = false;
 
-  constructor() {
+  constructor(private readonly _rootStore: RootStore) {
     makeObservable(this);
     void this.loadCurrentUser();
   }
@@ -33,6 +34,8 @@ export class UserStore {
     runInAction(() => {
       if (!isString(response)) {
         this._currentUser = response;
+      } else if (response === connectionError) {
+        this._rootStore.connectionStore.setConnectionError(true);
       }
 
       this._currentUserLoading = false;
