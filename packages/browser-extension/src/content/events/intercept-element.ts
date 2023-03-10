@@ -30,10 +30,16 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
   private runInterceptMode(): void {
     this.appendBackgroundElement();
     const iframesDocuments = this.querySupportedIframeDocuments();
+    const linkElements = document.querySelectorAll('a');
 
     iframesDocuments.forEach((iframeDocument) => {
       iframeDocument.addEventListener('click', this.eventHandler);
       this._removeEventListeners.push(() => iframeDocument.removeEventListener('click', this.eventHandler));
+    });
+
+    linkElements.forEach((linkElement) => {
+      linkElement.addEventListener('click', this.eventHandler);
+      this._removeEventListeners.push(() => linkElement.removeEventListener('click', this.eventHandler));
     });
 
     document.addEventListener('click', this.eventHandler);
