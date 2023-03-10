@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { isString } from 'remote-shortcuts-common/src/utils';
 
@@ -9,6 +9,7 @@ import { useStores } from '../../hooks';
 import { Command, CommandsType, PendingCommandForm } from '../../types';
 import { CommandForm as CommandFormType, commandSchema } from './command-schema';
 import { CommandFormActions } from './CommandFormActions';
+import { CommandFormName } from './CommandFormName';
 import { getPredefinedName } from './getPredefinedName';
 
 type CommandFormProps = Readonly<{
@@ -33,13 +34,9 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
       actions: actions ? [...actions] : [{}],
     },
   });
-  const { control, register, formState, handleSubmit, watch } = form;
-  const { errors, isSubmitted, isValid } = formState;
+  const { formState, handleSubmit, watch } = form;
+  const { isSubmitted, isValid } = formState;
   const submitDisabled = loading || !!savingError || (isSubmitted && !isValid);
-  const commandName = useWatch({
-    control,
-    name: 'name',
-  });
 
   const onSubmit = handleSubmit(async (form) => {
     setLoading(true);
@@ -71,18 +68,7 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
     <FormProvider {...form}>
       <Box component="form" noValidate autoComplete="false" onSubmit={onSubmit}>
         <CommandFormActions />
-        <TextField
-          InputLabelProps={{ shrink: commandName ? true : false }}
-          sx={{ mt: 2 }}
-          id="form-new-command-name"
-          label="Command Name"
-          variant="standard"
-          fullWidth
-          required
-          error={!!errors.name}
-          helperText={errors.name?.message ?? ''}
-          {...register('name')}
-        />
+        <CommandFormName />
         <Stack justifyContent="center" spacing={2} direction="row" mt={2}>
           <Button variant="outlined" size="medium" type="submit" disabled={submitDisabled}>
             Save Command
