@@ -20,10 +20,14 @@ export const Header: FC<HeaderProps> = observer(({ hostname }) => {
     navigate('/login');
   }, [navigate, authStore]);
 
+  const onTitleClick = useCallback(async () => navigate('/'), [navigate]);
+
   return (
     <header className={s.header}>
       <div className={s.headerLink}>
-        <div className={s.headerTitle}>Remote Shortcuts</div>
+        <div className={s.headerTitle} onClick={onTitleClick}>
+          Remote Shortcuts
+        </div>
         {hostname !== undefined && <span className={s.headerSubTitle}>{hostname}</span>}
       </div>
       {currentUser && <Avatar onClick={onLogout}>{currentUser.email[0].toUpperCase()}</Avatar>}
