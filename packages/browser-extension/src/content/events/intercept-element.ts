@@ -3,6 +3,8 @@ import { isSomething, Response, ResponseFactory } from 'remote-shortcuts-common/
 import { InterceptDocumentElementMessage } from '../../common';
 import { MessageEvent } from './event';
 
+const MAX_SAVED_INNER_HTML_LENGTH = 2000;
+
 export class InterceptElementEvent extends MessageEvent<InterceptDocumentElementMessage> {
   private readonly _backgroundElement: HTMLDivElement;
   private readonly _notSupportedBackgroundIframes: HTMLDivElement[] = [];
@@ -78,7 +80,7 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
 
     if (target instanceof HTMLElement) {
       tagName = target.tagName;
-      innerHTML = target.innerHTML.length < 2000 ? target.innerHTML.trim() : '';
+      innerHTML = target.innerHTML.length < MAX_SAVED_INNER_HTML_LENGTH ? target.innerHTML.trim() : '';
       innerText = target.innerText?.trim();
       title = target.title?.trim();
     }
