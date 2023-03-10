@@ -3,12 +3,9 @@ import { isSomething, Response, ResponseFactory } from 'remote-shortcuts-common/
 import { InterceptDocumentElementMessage } from '../../common';
 import { MessageEvent } from './event';
 
-const EVENT_LISTENER_OPTIONS: AddEventListenerOptions = {
-  once: true,
-};
-
 export class InterceptElementEvent extends MessageEvent<InterceptDocumentElementMessage> {
   private readonly _backgroundElement: HTMLDivElement;
+  private readonly _notSupportedBackgroundIframes: HTMLDivElement[] = [];
   private readonly _removeEventListeners: Array<() => void>;
 
   constructor(protected readonly _message: InterceptDocumentElementMessage) {
@@ -35,16 +32,20 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
     const iframesDocuments = this.querySupportedIframeDocuments();
 
     iframesDocuments.forEach((iframeDocument) => {
-      iframeDocument.addEventListener('click', this.eventHandler, EVENT_LISTENER_OPTIONS);
+      iframeDocument.addEventListener('click', this.eventHandler);
       this._removeEventListeners.push(() => iframeDocument.removeEventListener('click', this.eventHandler));
     });
 
-    document.addEventListener('click', this.eventHandler, EVENT_LISTENER_OPTIONS);
+    document.addEventListener('click', this.eventHandler);
     this._removeEventListeners.push(() => document.removeEventListener('click', this.eventHandler));
   }
 
   private finishInterceptMode(): void {
     this._backgroundElement.remove();
+
+    this._notSupportedBackgroundIframes.forEach((element) => element.remove());
+    this._notSupportedBackgroundIframes.length = 0;
+
     this._removeEventListeners.forEach((removeEventListener) => removeEventListener());
     this._removeEventListeners.length = 0;
   }
@@ -55,6 +56,10 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
 
     if (!event.target) {
       throw new Error('Target of event is not presented');
+    }
+
+    if (this._notSupportedBackgroundIframes.includes(event.target as HTMLIFrameElement)) {
+      return;
     }
 
     const { tagName, innerText } = event.target as HTMLElement;
@@ -81,13 +86,23 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
     const iframes = document.getElementsByTagName('iframe');
 
     return Array.from(iframes)
-      .filter(filterOtherDomainIframes)
+      .filter((iframe) => !isElementHidden(iframe))
+      .filter((iframe: HTMLIFrameElement) => {
+        const isSupported = isIframesSupported(iframe);
+
+        if (!isSupported) {
+          const backgroundElement = markIframeAsNotSupported(iframe);
+          this._notSupportedBackgroundIframes.push(backgroundElement);
+        }
+
+        return isSupported;
+      })
       .map((iframe) => iframe.contentWindow || iframe.contentDocument)
       .filter(isSomething);
   }
 }
 
-function filterOtherDomainIframes(iframe: HTMLIFrameElement): boolean {
+function isIframesSupported(iframe: HTMLIFrameElement): boolean {
   if (!iframe.src) {
     return true;
   }
@@ -132,4 +147,36 @@ function getBackgroundElement(): HTMLDivElement {
   }
 
   return element;
+}
+
+function markIframeAsNotSupported(iframe: HTMLIFrameElement): HTMLDivElement {
+  const divElement = document.createElement('div');
+  const { left, top, height, width } = iframe.getBoundingClientRect();
+  const topPosition = top + document.documentElement.scrollTop;
+  const leftPosition = left + document.documentElement.scrollLeft;
+  const cssProps: Partial<CSSStyleDeclaration> = {
+    position: 'absolute',
+    top: `${topPosition}px`,
+    left: `${leftPosition}px`,
+    width: `${width}px`,
+    height: `${height}px`,
+    backgroundColor: 'rgba(241, 42, 42, 0.7)',
+    zIndex: '999999999',
+    cursor: 'not-allowed',
+  };
+
+  for (const property in cssProps) {
+    const propertyValue = cssProps[property];
+    if (property && propertyValue) {
+      divElement.style[property] = propertyValue;
+    }
+  }
+
+  document.body.appendChild(divElement);
+
+  return divElement;
+}
+
+function isElementHidden(element: HTMLElement) {
+  return element.offsetParent === null;
 }
