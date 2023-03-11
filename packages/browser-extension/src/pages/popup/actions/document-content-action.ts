@@ -7,8 +7,16 @@ import { TabsService } from '../services/tabs-service';
 import { Action, RunActionMessageResponse } from './actions';
 
 export class DocumentContentAction extends Action {
+  before(): Promise<void> {
+    return Promise.resolve();
+  }
+
   run(): Promise<RunActionMessageResponse> {
     return this.sendMessageToCurrentTab();
+  }
+
+  after(): Promise<void> {
+    return Promise.resolve();
   }
 
   private async sendMessageToCurrentTab(): Promise<RunActionMessageResponse> {

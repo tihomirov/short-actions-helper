@@ -25,7 +25,10 @@ class CommandRunnerService {
   private async runAction(action: SupportedAction): Promise<Response<unknown, string>> {
     const currentTab = await TabsService.getCurrentTab();
     const actionInstanse = createAction(action, currentTab);
+
+    await actionInstanse.before();
     const response = await actionInstanse.run();
+    await actionInstanse.after();
 
     return response || ResponseFactory.success(undefined);
   }
