@@ -1,13 +1,12 @@
 import { assertWithTypeguard, ResponseFactory, responseTypeguard } from 'remote-shortcuts-common/src/utils';
 
-import { Command, Commands, PendingCommandForm } from '../types';
-import { browserStorageService, IStorageService } from './browser-storage-service';
+import { PendingCommandForm } from '../../../common';
+import { Command, Commands } from '../types';
+import { browserStorageService } from './browser-storage-service';
 import { API_URL, headers } from './constants';
 import { commandResponseTypeguard, commandsResponseTypeguard } from './typeguards';
 
 class CommandService {
-  constructor(private readonly _storageService: IStorageService) {}
-
   async getCommands(hostname?: string): Promise<Commands | string> {
     const response = await fetch(`${API_URL}/command?hostname=${hostname ?? ''}`).then((res) => res.json());
 
@@ -60,37 +59,16 @@ class CommandService {
   }
 
   async getPendingCommand(): Promise<PendingCommandForm | undefined> {
-    const pendingCommand = await this._storageService.getPendingCommand();
-    const interceptedElement = await this._storageService.getInterceptedElement();
-
-    // TODO: update intercepted element logic
-    if (pendingCommand) {
-      if (pendingCommand.actions.length === 0) {
-        pendingCommand.actions.push({
-          ...interceptedElement,
-        });
-      } else {
-        const lastIndex = pendingCommand.actions.length - 1;
-        pendingCommand.actions[lastIndex] = {
-          ...pendingCommand.actions[lastIndex],
-          ...interceptedElement,
-        };
-      }
-
-      return pendingCommand;
-    }
-
-    return undefined;
+    return await browserStorageService.getPendingCommand();
   }
 
   async savePendingCommand(command: PendingCommandForm): Promise<void> {
-    await this._storageService.savePendingCommand(command);
+    await browserStorageService.savePendingCommand(command);
   }
 
   async removePendingCommand(): Promise<void> {
-    await this._storageService.removeInterceptedElement();
-    await this._storageService.removePendingCommand();
+    await browserStorageService.removePendingCommand();
   }
 }
 
-export const commandService = new CommandService(browserStorageService);
+export const commandService = new CommandService();

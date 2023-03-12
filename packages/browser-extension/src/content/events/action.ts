@@ -22,7 +22,7 @@ export class ActionEvent extends MessageEvent<RunDocumentContentActionMessage> {
   }
 
   private queryElement(): HTMLElement | undefined {
-    const { tagName, innerText, innerHTML, href, title, src } = this._message.action;
+    const { tagName, innerText, innerHTML, href, title, src } = this._message.action.elementData;
 
     const elementsByTagName = document.getElementsByTagName(tagName as keyof HTMLElementTagNameMap);
     let elementsArray = Array.from(elementsByTagName);

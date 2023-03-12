@@ -3,6 +3,7 @@ import { arrayTypeguard, isEnum, isString, typeguard } from 'remote-shortcuts-co
 import {
   ActionType,
   DocumentContentAction,
+  ElementData,
   ElementEvent,
   SupportedAction,
   TabAction,
@@ -10,15 +11,19 @@ import {
 } from '../../../common';
 import { Command, Commands, CurrentUser } from '../types';
 
-const documentContentActionTypeguard = typeguard<DocumentContentAction>(
-  ['type', (value) => value === ActionType.DocumentContentAction],
-  ['elementEvent', isEnum(ElementEvent)],
+const elementDataTypeguard = typeguard<ElementData>(
   ['tagName', isString],
   ['innerText', isString, true],
   ['innerHTML', isString, true],
   ['title', isString, true],
   ['href', isString, true],
   ['src', isString, true],
+);
+
+const documentContentActionTypeguard = typeguard<DocumentContentAction>(
+  ['type', (value) => value === ActionType.DocumentContentAction],
+  ['elementEvent', isEnum(ElementEvent)],
+  ['elementData', elementDataTypeguard],
 );
 
 const tabActionTypeguard = typeguard<TabAction>(

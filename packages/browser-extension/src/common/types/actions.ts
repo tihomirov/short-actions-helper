@@ -23,11 +23,11 @@ export type ElementData = Readonly<{
   src?: string;
 }>;
 
-export type DocumentContentAction = ElementData &
-  Readonly<{
-    type: ActionType.DocumentContentAction;
-    elementEvent: ElementEvent;
-  }>;
+export type DocumentContentAction = Readonly<{
+  type: ActionType.DocumentContentAction;
+  elementEvent: ElementEvent;
+  elementData: ElementData;
+}>;
 
 export type TabAction = Readonly<{
   type: ActionType.TabAction;

@@ -1,9 +1,9 @@
 import { DocumentContentAction } from './actions';
 
 export enum TabMessageEvent {
-  Debbug = 'SAH_Debbug',
-  RunAction = 'SAH_RunAction',
-  InterceptElement = 'SAH_InterceptElement',
+  Debbug = 'RS_Debbug',
+  RunAction = 'RS_RunAction',
+  InterceptElement = 'RS_InterceptElement',
 }
 
 export type RunDocumentContentActionMessage = Readonly<{
@@ -13,6 +13,7 @@ export type RunDocumentContentActionMessage = Readonly<{
 
 export type InterceptDocumentElementMessage = Readonly<{
   event: TabMessageEvent.InterceptElement;
+  actionIndex: number;
 }>;
 
 export type DebbugMessage = Readonly<{

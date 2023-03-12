@@ -14,14 +14,16 @@ const documentContentActionSchema = object({
   elementEvent: nativeEnum(ElementEvent, {
     required_error: 'Element Event is required',
   }),
-  tagName: string({
-    required_error: 'Tag Name is required',
+  elementData: object({
+    tagName: string({
+      required_error: 'Tag Name is required',
+    }),
+    innerText: string().optional(),
+    innerHTML: string().optional(),
+    title: string().optional(),
+    href: string().optional(),
+    src: string().optional(),
   }),
-  innerText: string().optional(),
-  innerHTML: string().optional(),
-  title: string().optional(),
-  href: string().optional(),
-  src: string().optional(),
 });
 
 export const commandSchema = object({

@@ -38,19 +38,19 @@ export const DocumentContentActionForm: FC<DocumentContentActionFormProps> = ({ 
     field: tagNameField,
     fieldState: { error: tagNameError },
   } = useController({
-    name: `actions.${index}.tagName`,
+    name: `actions.${index}.elementData.tagName`,
     control,
   });
-  const innerTextValue = useWatch({ control, name: `actions.${index}.innerText` });
-  const innerHTMLValue = useWatch({ control, name: `actions.${index}.innerHTML` });
-  const hrefValue = useWatch({ control, name: `actions.${index}.href` });
-  const titleValue = useWatch({ control, name: `actions.${index}.title` });
-  const srcValue = useWatch({ control, name: `actions.${index}.src` });
+  const innerTextValue = useWatch({ control, name: `actions.${index}.elementData.innerText` });
+  const innerHTMLValue = useWatch({ control, name: `actions.${index}.elementData.innerHTML` });
+  const hrefValue = useWatch({ control, name: `actions.${index}.elementData.href` });
+  const titleValue = useWatch({ control, name: `actions.${index}.elementData.title` });
+  const srcValue = useWatch({ control, name: `actions.${index}.elementData.src` });
 
   const onSelectElement = useCallback(async () => {
     const pendingCommand = getValues();
     await commandStore.savePendingCommand(pendingCommand);
-    await messageChannelStore.runInterceptElementMode();
+    await messageChannelStore.runInterceptElementMode(index);
   }, []);
 
   return (

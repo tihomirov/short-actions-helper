@@ -1,0 +1,34 @@
+import { ElementData } from '../../../common';
+
+const MAX_SAVED_INNER_HTML_LENGTH = 2000;
+
+export function getElementData(target: EventTarget): ElementData {
+  if (!(target instanceof HTMLElement)) {
+    throw new Error('Target can not be parsed. target should be target');
+  }
+
+  const tagName = target.tagName;
+  const innerHTML = target.innerHTML.length < MAX_SAVED_INNER_HTML_LENGTH ? target.innerHTML.trim() : '';
+  const innerText = target.innerText?.trim();
+  const title = target.title?.trim();
+
+  let href: string | undefined;
+  let src: string | undefined;
+
+  if (target instanceof HTMLAnchorElement) {
+    href = target.href;
+  }
+
+  if (target instanceof HTMLImageElement) {
+    src = target.src;
+  }
+
+  return {
+    tagName,
+    innerHTML,
+    innerText,
+    href,
+    title,
+    src,
+  };
+}

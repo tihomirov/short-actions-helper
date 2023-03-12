@@ -12,10 +12,4 @@ export type Command = Readonly<{
   actions: ReadonlyArray<SupportedAction>;
 }>;
 
-export type PendingCommandForm = Readonly<{
-  name: string;
-  actions: Array<Partial<SupportedAction>>;
-  hostname?: string;
-}>;
-
 export type Commands = ReadonlyArray<Command>;
