@@ -9,7 +9,7 @@ const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void
 };
 
 export class ActionEvent extends MessageEvent<RunDocumentContentActionMessage> {
-  run(): Response<undefined, string> {
+  run(): Response<undefined> {
     const { elementEvent } = this._message.action;
     const element = this.queryElement();
 
@@ -17,7 +17,9 @@ export class ActionEvent extends MessageEvent<RunDocumentContentActionMessage> {
       elementActionsMethods[elementEvent](element);
       return ResponseFactory.success(undefined);
     } else {
-      return ResponseFactory.fail('Element is not found');
+      return ResponseFactory.fail({
+        message: 'Element is not found',
+      });
     }
   }
 

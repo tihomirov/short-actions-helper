@@ -24,16 +24,20 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
     this._backgroundElement = createBackgroundElement();
   }
 
-  run(): Response<undefined, string> {
+  run(): Response<undefined> {
     try {
       this.runInterceptMode();
       return ResponseFactory.success(undefined);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return ResponseFactory.fail(`Error: ${error.message}`);
+        return ResponseFactory.fail({
+          message: `Error: ${error.message}`,
+        });
       }
 
-      return ResponseFactory.fail(`Unexpected Error: ${error}`);
+      return ResponseFactory.fail({
+        message: `Unexpected Error: ${error}`,
+      });
     }
   }
 
