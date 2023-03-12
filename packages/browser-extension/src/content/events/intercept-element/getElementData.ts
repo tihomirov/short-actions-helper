@@ -8,18 +8,18 @@ export function getElementData(target: EventTarget): ElementData {
   }
 
   const tagName = target.tagName;
-  const innerHTML = target.innerHTML.length < MAX_SAVED_INNER_HTML_LENGTH ? target.innerHTML.trim() : '';
   const innerText = target.innerText?.trim();
   const title = target.title?.trim();
+  const innerHTML = !innerText && target.innerHTML.length < MAX_SAVED_INNER_HTML_LENGTH ? target.innerHTML.trim() : '';
 
   let href: string | undefined;
   let src: string | undefined;
 
-  if (target instanceof HTMLAnchorElement) {
+  if (!innerText && target instanceof HTMLAnchorElement) {
     href = target.href;
   }
 
-  if (target instanceof HTMLImageElement) {
+  if (!innerText && target instanceof HTMLImageElement) {
     src = target.src;
   }
 
