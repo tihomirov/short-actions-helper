@@ -27,7 +27,7 @@ export class TabsService {
 
   static async sendMessageToCurrentTab<T extends TabMessageEvent>(
     message: TabMessage,
-  ): Promise<Response<TabMessageResponse[T], string>> {
+  ): Promise<Response<TabMessageResponse[T]>> {
     const { id } = await TabsService.getCurrentTab();
     assertExists(id, 'currentTab id must be defined to send message');
 
@@ -37,7 +37,7 @@ export class TabsService {
   static async sendMessageToTab<T extends TabMessageEvent>(
     tabId: number,
     message: TabMessage,
-  ): Promise<Response<TabMessageResponse[T], string>> {
+  ): Promise<Response<TabMessageResponse[T]>> {
     return await browser.tabs.sendMessage(tabId, message);
   }
 }

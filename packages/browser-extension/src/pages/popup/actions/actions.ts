@@ -1,15 +1,13 @@
 import { Response, unwrap } from 'remote-shortcuts-common/src/utils';
 
-import { SupportedAction, TabMessageEvent, TabMessageResponse } from '../../../common';
+import { SupportedAction } from '../../../common';
 
-export type RunActionMessageResponse = Response<TabMessageResponse[TabMessageEvent.RunAction], string>;
-
-export abstract class Action {
+export abstract class Action<TSuccessResponse = undefined> {
   constructor(protected readonly _action: SupportedAction, protected readonly _tab: browser.tabs.Tab) {}
 
   abstract before(): Promise<void>;
 
-  abstract run(): Promise<RunActionMessageResponse | void>;
+  abstract run(): Promise<Response<TSuccessResponse>>;
 
   abstract after(): Promise<void>;
 

@@ -1,16 +1,19 @@
+import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
+
 import { TabsService } from '../services/tabs-service';
 import { Action } from './actions';
 
 export class CloseTabAction extends Action {
-  before(): Promise<void> {
+  before() {
     return Promise.resolve();
   }
 
-  run(): Promise<void> {
-    return this.removeTab();
+  async run() {
+    await this.removeTab();
+    return ResponseFactory.success(undefined);
   }
 
-  after(): Promise<void> {
+  after() {
     return Promise.resolve();
   }
 

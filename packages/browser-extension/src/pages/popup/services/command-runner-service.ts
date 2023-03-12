@@ -8,7 +8,7 @@ import { TabsService } from './tabs-service';
 class CommandRunnerService {
   async runCommand(command: Command): Promise<void> {
     const { actions } = command;
-    const responses: Array<Response<unknown, string>> = [];
+    const responses: Array<Response<unknown>> = [];
 
     for (const action of actions) {
       const response = await this.runAction(action);
@@ -22,7 +22,7 @@ class CommandRunnerService {
     }
   }
 
-  private async runAction(action: SupportedAction): Promise<Response<unknown, string>> {
+  private async runAction(action: SupportedAction): Promise<Response<unknown>> {
     const currentTab = await TabsService.getCurrentTab();
     const actionInstanse = createAction(action, currentTab);
 
