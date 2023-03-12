@@ -1,5 +1,7 @@
-import { TabMessage, TabMessageEvent } from '../common';
-import { ActionEvent, DebbugEvent, InterceptElementEvent, MessageEvent } from './events';
+import { assertUnreachable } from 'remote-shortcuts-common/src/utils';
+
+import { TabMessage, TabMessageEvent, TabMessageResponse } from '../common';
+import { ActionEvent, CheckElementExistEvent, DebbugEvent, InterceptElementEvent, MessageEvent } from './events';
 
 chrome.runtime.onMessage.addListener((message: TabMessage, sender, sendResponse) => {
   const event = mapMessageToEvent(message);
@@ -11,15 +13,19 @@ chrome.runtime.onMessage.addListener((message: TabMessage, sender, sendResponse)
   return sendResponse(response);
 });
 
-function mapMessageToEvent(message: TabMessage): MessageEvent | undefined {
-  switch (message.event) {
+function mapMessageToEvent(message: TabMessage): MessageEvent<TabMessage, TabMessageResponse[TabMessageEvent]> {
+  const event = message.event;
+
+  switch (event) {
     case TabMessageEvent.Debbug:
       return new DebbugEvent(message);
     case TabMessageEvent.RunAction:
       return new ActionEvent(message);
     case TabMessageEvent.InterceptElement:
       return new InterceptElementEvent(message);
+    case TabMessageEvent.CheckElementExist:
+      return new CheckElementExistEvent(message);
     default:
-      return undefined;
+      assertUnreachable(event);
   }
 }

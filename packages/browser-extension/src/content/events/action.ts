@@ -1,6 +1,7 @@
-import { Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
 
-import { ElementEvent, RunDocumentContentActionMessage } from '../../common';
+import { ElementEvent, RunDocumentContentActionMessage, TabMessageEvent, TabMessageResponse } from '../../common';
+import { queryElement } from '../utils';
 import { MessageEvent } from './event';
 
 const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void> = {
@@ -8,10 +9,13 @@ const elementActionsMethods: Record<ElementEvent, (element: HTMLElement) => void
   [ElementEvent.Focus]: (element) => element.focus(),
 };
 
-export class ActionEvent extends MessageEvent<RunDocumentContentActionMessage> {
-  run(): Response<undefined> {
+export class ActionEvent extends MessageEvent<
+  RunDocumentContentActionMessage,
+  TabMessageResponse[TabMessageEvent.RunAction]
+> {
+  run() {
     const { elementEvent } = this._message.action;
-    const element = this.queryElement();
+    const element = queryElement(this._message.action.elementData);
 
     if (element) {
       elementActionsMethods[elementEvent](element);
@@ -21,35 +25,5 @@ export class ActionEvent extends MessageEvent<RunDocumentContentActionMessage> {
         message: 'Element is not found',
       });
     }
-  }
-
-  private queryElement(): HTMLElement | undefined {
-    const { tagName, innerText, innerHTML, href, title, src } = this._message.action.elementData;
-
-    const elementsByTagName = document.getElementsByTagName(tagName as keyof HTMLElementTagNameMap);
-    let elementsArray = Array.from(elementsByTagName);
-
-    if (innerText) {
-      elementsArray = elementsArray.filter((e) => e.innerText.toLowerCase() === innerText.toLowerCase());
-    }
-
-    if (innerHTML) {
-      elementsArray = elementsArray.filter((e) => e.innerHTML === innerHTML);
-    }
-
-    if (title) {
-      elementsArray = elementsArray.filter((e) => e.title === title);
-    }
-
-    if (href) {
-      elementsArray = elementsArray.filter((e) => e instanceof HTMLAnchorElement && e.href === href);
-    }
-
-    if (src) {
-      elementsArray = elementsArray.filter((e) => e instanceof HTMLImageElement && e.src === src);
-    }
-
-    // just get first element for now
-    return elementsArray[0];
   }
 }

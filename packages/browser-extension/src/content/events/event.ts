@@ -1,8 +1,8 @@
 import { Response } from 'remote-shortcuts-common/src/utils';
 
-import { TabMessage } from '../../common';
+import { TabMessage, TabMessageEvent, TabMessageResponse } from '../../common';
 
-export abstract class MessageEvent<T = TabMessage, K = undefined> {
+export abstract class MessageEvent<T extends TabMessage, K extends TabMessageResponse[TabMessageEvent]> {
   constructor(protected readonly _message: T) {}
   abstract run(): Response<K>;
 }

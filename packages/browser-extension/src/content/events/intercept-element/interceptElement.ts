@@ -1,4 +1,4 @@
-import { isSomething, Response, ResponseFactory } from 'remote-shortcuts-common/src/utils';
+import { isSomething, ResponseFactory } from 'remote-shortcuts-common/src/utils';
 import browser from 'webextension-polyfill';
 
 import {
@@ -6,6 +6,8 @@ import {
   InterceptDocumentElementMessage,
   PendingCommandForm,
   StorageKey,
+  TabMessageEvent,
+  TabMessageResponse,
 } from '../../../common';
 import { MessageEvent } from '../event';
 import { createBackgroundElement } from './createBackgroundElement';
@@ -14,7 +16,10 @@ import { isElementHidden } from './isElementHidden';
 import { isIframesSupported } from './isIframesSupported';
 import { markIframeAsNotSupported } from './markIframeAsNotSupported';
 
-export class InterceptElementEvent extends MessageEvent<InterceptDocumentElementMessage> {
+export class InterceptElementEvent extends MessageEvent<
+  InterceptDocumentElementMessage,
+  TabMessageResponse[TabMessageEvent.InterceptElement]
+> {
   private readonly _notSupportedBackgroundIframes: HTMLDivElement[] = [];
   private readonly _removeEventListeners: Array<() => void> = [];
   private readonly _backgroundElement: HTMLDivElement;
@@ -24,7 +29,7 @@ export class InterceptElementEvent extends MessageEvent<InterceptDocumentElement
     this._backgroundElement = createBackgroundElement();
   }
 
-  run(): Response<undefined> {
+  run() {
     try {
       this.runInterceptMode();
       return ResponseFactory.success(undefined);
