@@ -35,7 +35,12 @@ export type DocumentContentAction = Readonly<{
 export type TabAction = Readonly<{
   type: ActionType.TabAction;
   tabEvent: TabEventType;
-  value?: string;
+}>;
+
+export type SetZoomTabAction = Readonly<{
+  type: ActionType.TabAction;
+  tabEvent: TabEventType.SetZoom;
+  value: string;
 }>;
 
 export type SupportedAction = DocumentContentAction | TabAction;

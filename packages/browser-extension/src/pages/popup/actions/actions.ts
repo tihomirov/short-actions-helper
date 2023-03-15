@@ -2,8 +2,8 @@ import { Response, unwrap } from 'remote-shortcuts-common/src/utils';
 
 import { SupportedAction } from '../../../common';
 
-export abstract class Action<TSuccessResponse = undefined> {
-  constructor(protected readonly _action: SupportedAction, protected readonly _tab: browser.tabs.Tab) {}
+export abstract class Action<TAction extends SupportedAction, TSuccessResponse = undefined> {
+  constructor(protected readonly _action: TAction, protected readonly _tab: browser.tabs.Tab) {}
 
   abstract before(): Promise<void>;
 

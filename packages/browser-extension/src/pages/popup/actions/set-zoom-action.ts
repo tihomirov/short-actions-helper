@@ -1,11 +1,10 @@
 import { ResponseFactory } from 'remote-shortcuts-common/src/utils';
 
+import { SetZoomTabAction } from '../../../common';
 import { TabsService } from '../services/tabs-service';
 import { Action } from './actions';
 
-const DEFAULT_ZOOM_VALUE = 1;
-
-export class SetZoomAction extends Action {
+export class SetZoomAction extends Action<SetZoomTabAction> {
   before() {
     return Promise.resolve();
   }
@@ -20,11 +19,6 @@ export class SetZoomAction extends Action {
   }
 
   private async setZoom(): Promise<void> {
-    TabsService.setZoomTab(
-      this.tabId,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this._action.value === undefined ? DEFAULT_ZOOM_VALUE : +this._action.value / 100,
-    );
+    TabsService.setZoomTab(this.tabId, +this._action.value / 100);
   }
 }

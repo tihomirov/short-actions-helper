@@ -12,7 +12,7 @@ import { Action } from './actions';
 const CHECK_ELEMENT_EXIST_TIMEOUT = 200;
 const MAX_CHECK_ELEMENT_EXIST_ITERATIONS = 25;
 
-export class DocumentContentAction extends Action {
+export class DocumentContentAction extends Action<DocumentContentActionType> {
   async before() {
     const elementExist = await this.checkElementExist();
 
@@ -51,7 +51,7 @@ export class DocumentContentAction extends Action {
   private async runAction(): Promise<Response<undefined>> {
     const message: RunDocumentContentActionMessage = {
       event: TabMessageEvent.RunAction,
-      action: this._action as DocumentContentActionType,
+      action: this._action,
     };
 
     return await TabsService.sendMessageToTab<TabMessageEvent.RunAction>(this.tabId, message);
@@ -60,7 +60,7 @@ export class DocumentContentAction extends Action {
   private async checkElementExist(): Promise<boolean> {
     const message: CheckElementExistMessage = {
       event: TabMessageEvent.CheckElementExist,
-      elementData: (this._action as DocumentContentActionType).elementData,
+      elementData: this._action.elementData,
     };
 
     const response = await TabsService.sendMessageToTab<TabMessageEvent.CheckElementExist>(this.tabId, message);
