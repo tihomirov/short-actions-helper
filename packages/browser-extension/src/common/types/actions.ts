@@ -7,6 +7,9 @@ export enum TabEventType {
   Reload = 'Reload',
   Close = 'Close',
   ToggleMute = 'Toggle Mute',
+  IncreaseZoom = 'Increase Zoom',
+  DecreaseZoom = 'Decrease Zoom',
+  SetZoom = 'Set Zoom',
 }
 
 export enum ElementEvent {
@@ -32,6 +35,7 @@ export type DocumentContentAction = Readonly<{
 export type TabAction = Readonly<{
   type: ActionType.TabAction;
   tabEvent: TabEventType;
+  value?: string;
 }>;
 
 export type SupportedAction = DocumentContentAction | TabAction;

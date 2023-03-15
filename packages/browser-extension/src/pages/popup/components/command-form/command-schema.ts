@@ -7,6 +7,7 @@ const tabActionSchema = object({
   tabEvent: nativeEnum(TabEventType, {
     required_error: 'Tab Event is required',
   }),
+  value: string().optional(),
 });
 
 const documentContentActionSchema = object({
@@ -33,7 +34,18 @@ export const commandSchema = object({
   actions: array(
     discriminatedUnion('type', [tabActionSchema, documentContentActionSchema], {
       required_error: 'Action Type is required',
-    }),
+    }).refine(
+      (data) => {
+        if (data.type === ActionType.TabAction) {
+          return data.tabEvent === TabEventType.SetZoom ? data.value : true;
+        }
+        return true;
+      },
+      {
+        path: ['value'],
+        message: 'Value is required for SetZoom action',
+      },
+    ),
   ).min(1, 'Command should have at least one action'),
 });
 

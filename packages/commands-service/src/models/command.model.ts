@@ -6,6 +6,7 @@ const ActionSchema = new Schema({
     required: true,
   },
   tabEvent: String,
+  value: String,
   elementEvent: String,
   elementData: {
     tagName: String,

@@ -3,8 +3,11 @@ import { assertUnreachable } from 'remote-shortcuts-common/src/utils';
 import { ActionType, SupportedAction, TabAction, TabEventType } from '../../../common';
 import { Action } from './actions';
 import { CloseTabAction } from './close-tab-action';
+import { DecreaseZoomAction } from './descrease-zoom-action';
 import { DocumentContentAction } from './document-content-action';
+import { IncreaseZoomAction } from './increase-zoom-action';
 import { ReloadTabAction } from './reload-tab-action';
+import { SetZoomAction } from './set-zoom-action';
 import { ToggleMuteTabAction } from './toggle-mute-tab-action';
 
 export function createAction(action: SupportedAction, tab: browser.tabs.Tab): Action {
@@ -34,6 +37,15 @@ export function createTabAction(action: TabAction, tab: browser.tabs.Tab): Actio
     }
     case TabEventType.ToggleMute: {
       return new ToggleMuteTabAction(action, tab);
+    }
+    case TabEventType.IncreaseZoom: {
+      return new IncreaseZoomAction(action, tab);
+    }
+    case TabEventType.DecreaseZoom: {
+      return new DecreaseZoomAction(action, tab);
+    }
+    case TabEventType.SetZoom: {
+      return new SetZoomAction(action, tab);
     }
     default: {
       assertUnreachable(type);

@@ -21,6 +21,20 @@ export class TabsService {
     await browser.tabs.reload(tabId);
   }
 
+  static async setZoomTab(tabId: number, zoomFactor: number): Promise<void> {
+    await browser.tabs.setZoom(tabId, zoomFactor);
+  }
+
+  static async increaseZoomTab(tabId: number): Promise<void> {
+    const zoom = await browser.tabs.getZoom(tabId);
+    await browser.tabs.setZoom(tabId, zoom + 0.05);
+  }
+
+  static async decreaseZoomTab(tabId: number): Promise<void> {
+    const zoom = await browser.tabs.getZoom(tabId);
+    await browser.tabs.setZoom(tabId, zoom - 0.05);
+  }
+
   static async updateTab(tabId: number, update: browser.Tabs.UpdateUpdatePropertiesType): Promise<BrowserTab> {
     return await browser.tabs.update(tabId, update);
   }
