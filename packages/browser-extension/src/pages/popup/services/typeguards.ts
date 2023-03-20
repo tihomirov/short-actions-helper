@@ -14,7 +14,7 @@ import { Command, Commands, CurrentUser } from '../types';
 const elementDataTypeguard = typeguard<ElementData>(
   ['tagName', isString],
   ['innerText', isString, true],
-  ['innerHTML', isString, true],
+  ['id', isString, true],
   ['title', isString, true],
   ['href', isString, true],
   ['src', isString, true],

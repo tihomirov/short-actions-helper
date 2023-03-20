@@ -23,8 +23,8 @@ export function getPredefinedName(
         return undefined;
       }
 
-      const { tagName, innerText, title, src, href, innerHTML } = elementData;
-      const elementSelector = truncate(innerText || title || src || href || innerHTML || '');
+      const { tagName, innerText, title, src, href } = elementData;
+      const elementSelector = truncate(innerText || title || src || href || '');
 
       return `${elementEvent}: <${tagName}> ${elementSelector}`;
     }

@@ -1,7 +1,7 @@
 import { ElementData } from '../../common';
 
 export function queryElement(elementData: ElementData): HTMLElement | undefined {
-  const { tagName, innerText, innerHTML, href, title, src } = elementData;
+  const { tagName, id, innerText, href, title, src } = elementData;
 
   const elementsByTagName = document.getElementsByTagName(tagName as keyof HTMLElementTagNameMap);
   let elementsArray = Array.from(elementsByTagName);
@@ -10,8 +10,8 @@ export function queryElement(elementData: ElementData): HTMLElement | undefined 
     elementsArray = elementsArray.filter((e) => e.innerText.toLowerCase() === innerText.toLowerCase());
   }
 
-  if (innerHTML) {
-    elementsArray = elementsArray.filter((e) => e.innerHTML === innerHTML);
+  if (id) {
+    elementsArray = elementsArray.filter((e) => e.id.toLowerCase() === id.toLowerCase());
   }
 
   if (title) {

@@ -40,7 +40,9 @@ export default {
     simpleReloader(),
     resolve(),
     commonjs(),
-    typescript(),
+    typescript({
+      verbosity: 0,
+    }),
     postcss({
       modules: true,
       extensions: ['.scss'],

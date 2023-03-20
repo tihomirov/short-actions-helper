@@ -1998,14 +1998,6 @@
     "@rollup/pluginutils" "^3.1.0"
     "magic-string" "^0.25.7"
 
-"@rollup/plugin-typescript@^8.1.0":
-  "integrity" "sha512-wMv1/scv0m/rXx21wD2IsBbJFba8wGF3ErJIr6IKRfRj49S85Lszbxb4DCo8iILpluTjk2GAAu9CoZt4G3ppgQ=="
-  "resolved" "https://registry.npmjs.org/@rollup/plugin-typescript/-/plugin-typescript-8.5.0.tgz"
-  "version" "8.5.0"
-  dependencies:
-    "@rollup/pluginutils" "^3.1.0"
-    "resolve" "^1.17.0"
-
 "@rollup/pluginutils@^3.1.0":
   "integrity" "sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg=="
   "resolved" "https://registry.npmjs.org/@rollup/pluginutils/-/pluginutils-3.1.0.tgz"
@@ -9866,15 +9858,14 @@
     "safe-identifier" "^0.4.2"
     "style-inject" "^0.3.0"
 
-"rollup-plugin-typescript2@^0.34.1":
-  "integrity" "sha512-P4cHLtGikESmqi1CA+tdMDUv8WbQV48mzPYt77TSTOPJpERyZ9TXdDgjSDix8Fkqce6soYz3+fa4lrC93IEkcw=="
-  "resolved" "https://registry.npmjs.org/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.34.1.tgz"
-  "version" "0.34.1"
+"rollup-plugin-typescript2@0.33.0":
+  "integrity" "sha512-7ZXoZeX93kNb4/ICzOi2AlperVV6cAsNz8THqrbz+KNvpn47P2F/nFdK/BGhkoOsOwuYDuY57vccdZZrcd8/dA=="
+  "resolved" "https://registry.npmjs.org/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.33.0.tgz"
+  "version" "0.33.0"
   dependencies:
     "@rollup/pluginutils" "^4.1.2"
     "find-cache-dir" "^3.3.2"
     "fs-extra" "^10.0.0"
-    "semver" "^7.3.7"
     "tslib" "^2.4.0"
 
 "rollup-plugin-zip@^1.0.3":

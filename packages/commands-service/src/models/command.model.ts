@@ -11,6 +11,7 @@ const ActionSchema = new Schema({
   elementData: {
     tagName: String,
     innerText: String,
+    id: String,
     innerHTML: String,
     title: String,
     href: String,
