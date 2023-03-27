@@ -10,6 +10,7 @@ import { useStores } from '../../hooks';
 import { Command, CommandsType } from '../../types';
 import { CommandForm as CommandFormType, commandSchema } from './command-schema';
 import { CommandFormActions } from './CommandFormActions';
+import { CommandFormHostname } from './CommandFormHostname';
 import { CommandFormName } from './CommandFormName';
 import { getPredefinedName } from './getPredefinedName';
 
@@ -42,6 +43,10 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
   const onSubmit = handleSubmit(async (form) => {
     setLoading(true);
 
+    if (form.hostname?.trim() === '') {
+      form.hostname = undefined;
+    }
+
     const error = isString(form._id)
       ? await commandStore.updateCommand(form as Command)
       : await commandStore.createCommand(form);
@@ -70,6 +75,7 @@ export const CommandForm: FC<CommandFormProps> = ({ command }) => {
       <Box component="form" noValidate autoComplete="false" onSubmit={onSubmit}>
         <CommandFormActions />
         <CommandFormName />
+        <CommandFormHostname />
         <Stack justifyContent="center" spacing={2} direction="row" mt={2}>
           <Button variant="outlined" size="medium" type="submit" disabled={submitDisabled}>
             Save Command
