@@ -7,6 +7,7 @@ import { CommandForm } from './command-schema';
 
 const tabEventWithValue: Record<TabEventType, boolean> = {
   [TabEventType.SetZoom]: true,
+  [TabEventType.Create]: true,
   [TabEventType.Close]: false,
   [TabEventType.Reload]: false,
   [TabEventType.ToggleMute]: false,
@@ -20,6 +21,7 @@ const tabEventTypeNames: Record<TabEventType, string> = {
   [TabEventType.IncreaseZoom]: 'Increase Zoom',
   [TabEventType.DecreaseZoom]: 'Decrease Zoom',
   [TabEventType.SetZoom]: 'Set Zoom',
+  [TabEventType.Create]: 'Create',
 };
 const tabEventTypeElements = Object.values(TabEventType);
 

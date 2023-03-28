@@ -17,6 +17,10 @@ export class TabsService {
     await browser.tabs.remove(tabId);
   }
 
+  static async openTab(url: string): Promise<void> {
+    await browser.tabs.create({ url });
+  }
+
   static async reloadTab(tabId: number): Promise<void> {
     await browser.tabs.reload(tabId);
   }

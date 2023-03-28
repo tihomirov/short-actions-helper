@@ -1,8 +1,16 @@
 import { assertUnreachable } from 'remote-shortcuts-common/src/utils';
 
-import { ActionType, SetZoomTabAction, SupportedAction, TabAction, TabEventType } from '../../../common';
+import {
+  ActionType,
+  CreateTabAction as CreateTabActionType,
+  SetZoomTabAction,
+  SupportedAction,
+  TabAction,
+  TabEventType,
+} from '../../../common';
 import { Action } from './actions';
 import { CloseTabAction } from './close-tab-action';
+import { CreateTabAction } from './create-tab-action';
 import { DecreaseZoomAction } from './descrease-zoom-action';
 import { DocumentContentAction } from './document-content-action';
 import { IncreaseZoomAction } from './increase-zoom-action';
@@ -46,6 +54,9 @@ export function createTabAction(action: TabAction, tab: browser.tabs.Tab): Actio
     }
     case TabEventType.SetZoom: {
       return new SetZoomAction(action as SetZoomTabAction, tab);
+    }
+    case TabEventType.Create: {
+      return new CreateTabAction(action as CreateTabActionType, tab);
     }
     default: {
       assertUnreachable(type);

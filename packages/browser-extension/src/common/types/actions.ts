@@ -10,6 +10,7 @@ export enum TabEventType {
   IncreaseZoom = 'Increase Zoom',
   DecreaseZoom = 'Decrease Zoom',
   SetZoom = 'Set Zoom',
+  Create = 'Create',
 }
 
 export enum ElementEvent {
@@ -40,6 +41,12 @@ export type TabAction = Readonly<{
 export type SetZoomTabAction = Readonly<{
   type: ActionType.TabAction;
   tabEvent: TabEventType.SetZoom;
+  value: string;
+}>;
+
+export type CreateTabAction = Readonly<{
+  type: ActionType.TabAction;
+  tabEvent: TabEventType.Create;
   value: string;
 }>;
 
