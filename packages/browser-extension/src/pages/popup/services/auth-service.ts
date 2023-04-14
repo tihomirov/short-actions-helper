@@ -1,6 +1,6 @@
 import { assertWithTypeguard, ResponseFactory, responseTypeguard } from 'remote-shortcuts-common/src/utils';
 
-import { CurrentUser } from '../types';
+import { CurrentUser } from '../../../common';
 import { API_URL, headers } from './constants';
 import { currentUserResponseTypeguard } from './typeguards';
 

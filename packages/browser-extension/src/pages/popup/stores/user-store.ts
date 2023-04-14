@@ -1,8 +1,8 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 import { isString } from 'remote-shortcuts-common/src/utils';
 
+import { CurrentUser } from '../../../common';
 import { connectionError, userService } from '../services';
-import { CurrentUser } from '../types';
 import { RootStore } from './root-store';
 
 export class UserStore {

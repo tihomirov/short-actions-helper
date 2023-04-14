@@ -3,9 +3,9 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
+import { Command } from '../../../common';
 import { CommandForm } from '../components/command-form';
 import { useStores } from '../hooks';
-import { Command } from '../types';
 
 export const EditCommand: FC = observer(() => {
   const { id } = useParams<{ id: string }>();

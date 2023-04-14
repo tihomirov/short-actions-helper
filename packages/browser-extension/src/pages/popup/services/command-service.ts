@@ -1,7 +1,6 @@
 import { assertWithTypeguard, ResponseFactory, responseTypeguard } from 'remote-shortcuts-common/src/utils';
 
-import { PendingCommandForm } from '../../../common';
-import { Command, Commands } from '../types';
+import { Command, Commands, PendingCommandForm } from '../../../common';
 import { browserStorageService } from './browser-storage-service';
 import { API_URL, headers } from './constants';
 import { commandResponseTypeguard, commandsResponseTypeguard } from './typeguards';

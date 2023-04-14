@@ -3,9 +3,9 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, SyntheticEvent, useCallback, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
+import { CommandsType } from '../../../common';
 import { CommandsList } from '../components/commands-list';
 import { useStores } from '../hooks';
-import { CommandsType } from '../types';
 
 export const Home: FC = observer(() => {
   const { commandStore, tabStore, userStore } = useStores();

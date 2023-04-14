@@ -2,6 +2,9 @@ import { arrayTypeguard, isEnum, isString, typeguard } from 'remote-shortcuts-co
 
 import {
   ActionType,
+  Command,
+  Commands,
+  CurrentUser,
   DocumentContentAction,
   ElementData,
   ElementEvent,
@@ -9,7 +12,6 @@ import {
   TabAction,
   TabEventType,
 } from '../../../common';
-import { Command, Commands, CurrentUser } from '../types';
 
 const elementDataTypeguard = typeguard<ElementData>(
   ['tagName', isString],

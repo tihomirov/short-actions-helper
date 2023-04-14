@@ -1,4 +1,4 @@
-import { SupportedAction } from '../../../common';
+import { SupportedAction } from './actions';
 
 export enum CommandsType {
   All,

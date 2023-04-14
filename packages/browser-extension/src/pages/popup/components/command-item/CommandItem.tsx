@@ -3,9 +3,9 @@ import { Box, IconButton, Tooltip } from '@mui/material';
 import React, { FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { Command } from '../../../../common';
 import { useStores } from '../../hooks';
 import { commandRunnerService } from '../../services';
-import { Command } from '../../types';
 
 type CommandProps = Readonly<{
   command: Command;

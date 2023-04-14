@@ -5,9 +5,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { isString } from 'remote-shortcuts-common/src/utils';
 
-import { PendingCommandForm } from '../../../../common';
+import { Command, CommandsType, PendingCommandForm } from '../../../../common';
 import { useStores } from '../../hooks';
-import { Command, CommandsType } from '../../types';
 import { CommandForm as CommandFormType, commandSchema } from './command-schema';
 import { CommandFormActions } from './CommandFormActions';
 import { CommandFormHostname } from './CommandFormHostname';
